@@ -1,0 +1,2062 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>SIGAP — AI Advisor Karir</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  /* ── PALETTE — dark navy ── */
+  --bg:#0E0F1A;
+  --bg2:#13141F;
+  --bg3:#191A28;
+  --bg4:#1E1F30;
+  --fg:#F0F0F8;
+  --fg-dim:#B0B3CC;
+  --dim:#6B6E8A;
+  --border:rgba(255,255,255,0.08);
+  --border-strong:rgba(255,255,255,0.14);
+  --glass:rgba(255,255,255,0.025);
+
+  /* ── ACCENT — gold + slate ── */
+  --indigo:#C8A84C;                      /* warm gold — CTA, active */
+  --indigo-dim:rgba(200,168,76,0.10);
+  --indigo-glow:rgba(200,168,76,0.18);
+  --gold:#C8A84C;
+  --gold-dim:rgba(200,168,76,0.10);
+  --green:#50D890;
+  --green-dim:rgba(80,216,144,0.10);
+  --red:#F0706A;
+  --red-dim:rgba(240,112,106,0.09);
+  --amber:#C8A84C;
+
+  /* backward compat */
+  --cyan:var(--indigo);
+
+  --r:8px;
+  --r-sm:5px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:'DM Sans','Outfit',sans-serif;
+  background:var(--bg);
+  color:var(--fg);
+  min-height:100vh;
+  overflow-x:hidden;
+  -webkit-font-smoothing:antialiased;
+}
+
+/* ── NAV ── */
+nav{
+  position:sticky;top:0;z-index:100;
+  background:rgba(14,15,26,0.92);
+  backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--border);
+}
+.nav-i{
+  max-width:1140px;margin:0 auto;padding:0 28px;
+  height:58px;display:flex;align-items:center;justify-content:space-between;
+}
+.nav-logo{display:flex;align-items:center;gap:8px;cursor:pointer}
+.nav-logo-text{
+  font-family:'Outfit',sans-serif;
+  font-weight:800;font-size:17px;letter-spacing:-0.3px;text-transform:uppercase;
+  color:var(--fg);
+}
+.nav-logo-text span{color:var(--indigo)}
+.nav-links{display:flex;gap:2px}
+.nav-links a{
+  font-family:'Outfit',sans-serif;
+  font-size:11px;color:var(--dim);padding:6px 13px;
+  border-radius:5px;cursor:pointer;text-decoration:none;
+  transition:all .2s;font-weight:600;text-transform:uppercase;letter-spacing:0.8px;
+}
+.nav-links a:hover{color:var(--fg);background:rgba(255,255,255,0.05)}
+.nav-links a.active{color:var(--indigo);background:var(--indigo-dim)}
+.nav-badge{
+  font-family:'Outfit',sans-serif;
+  font-size:10px;font-weight:700;
+  color:var(--indigo);background:var(--indigo-dim);
+  border:1px solid rgba(110,106,244,0.3);
+  padding:4px 12px;border-radius:20px;
+  text-transform:uppercase;letter-spacing:0.8px;
+}
+
+.wrap{max-width:1140px;margin:0 auto;padding:0 28px;position:relative;z-index:1}
+.kicker{
+  font-family:'Outfit',sans-serif;
+  font-size:11px;font-weight:700;letter-spacing:2px;
+  text-transform:uppercase;color:var(--indigo);
+}
+.it{font-family:"Instrument Serif",serif;font-style:italic;font-weight:400;color:var(--fg-dim);letter-spacing:-0.5px}
+.card{
+  background:var(--bg2);
+  border:1px solid var(--border);
+  border-radius:var(--r);
+  padding:24px;
+}
+.card-head{
+  font-family:'Outfit',sans-serif;
+  font-size:11px;font-weight:700;letter-spacing:1.5px;
+  text-transform:uppercase;color:var(--dim);
+  margin-bottom:20px;padding-bottom:12px;
+  border-bottom:1px solid var(--border);
+}
+
+/* ── FORM ── */
+.fg{display:flex;flex-direction:column;gap:5px;margin-bottom:14px}
+.fg label{
+  font-family:'Outfit',sans-serif;
+  font-size:10px;font-weight:700;color:var(--dim);
+  text-transform:uppercase;letter-spacing:1.2px;
+}
+input,select,textarea{
+  background:var(--bg3);border:1px solid var(--border);border-radius:var(--r-sm);
+  padding:10px 12px;color:var(--fg);
+  font-family:'DM Sans','Outfit',sans-serif;font-size:13.5px;
+  transition:border-color .18s;outline:none;width:100%;
+}
+input:focus,select:focus,textarea:focus{
+  border-color:var(--indigo);
+  box-shadow:0 0 0 3px rgba(110,106,244,0.10);
+}
+input::placeholder{color:var(--dim)}
+select option{background:var(--bg3)}
+
+/* ── SKILL TAGS ── */
+.skill-wrap{
+  display:flex;flex-wrap:wrap;gap:5px;padding:8px 10px;
+  background:var(--bg3);border:1px solid var(--border);border-radius:var(--r-sm);
+  min-height:46px;max-height:130px;overflow-y:auto;overflow-x:hidden;
+  cursor:text;transition:border-color .18s;
+}
+.skill-wrap::-webkit-scrollbar{width:3px}
+.skill-wrap::-webkit-scrollbar-thumb{background:var(--border)}
+.skill-wrap:focus-within{
+  border-color:var(--indigo);
+  box-shadow:0 0 0 3px rgba(110,106,244,0.10);
+}
+.skill-tag{
+  display:flex;align-items:center;gap:4px;
+  background:var(--indigo-dim);
+  color:var(--indigo);
+  border:1px solid rgba(110,106,244,0.3);
+  padding:3px 9px;border-radius:20px;
+  font-size:11px;font-weight:600;
+  letter-spacing:0.3px;white-space:nowrap;flex-shrink:0;
+}
+.skill-tag button{background:none;border:none;color:var(--indigo);cursor:pointer;font-size:12px;opacity:0.6;padding:0;line-height:1}
+.skill-tag button:hover{opacity:1}
+.skill-input{
+  border:none;background:transparent;outline:none;
+  color:var(--fg);font-family:'DM Sans','Outfit',sans-serif;
+  font-size:13px;min-width:80px;flex:1;padding:2px 0;
+}
+.skill-input::placeholder{color:var(--dim)}
+.skill-suggestions{display:flex;flex-wrap:wrap;gap:5px;margin-top:7px}
+.skill-suggest{
+  font-size:11px;padding:3px 10px;border-radius:20px;
+  background:transparent;border:1px solid var(--border-strong);
+  color:var(--dim);cursor:pointer;transition:all .18s;
+  letter-spacing:0.3px;
+}
+.skill-suggest:hover{border-color:var(--indigo);color:var(--indigo);background:var(--indigo-dim)}
+
+/* ── CV UPLOAD ── */
+.cv-upload-zone{
+  border:1px dashed var(--border-strong);border-radius:var(--r-sm);
+  padding:20px;text-align:center;cursor:pointer;transition:all .2s;
+}
+.cv-upload-zone:hover,.cv-upload-zone.dragover{
+  border-color:var(--indigo);border-style:solid;
+  background:var(--indigo-dim);
+}
+.cv-text{font-size:12px;font-weight:600;color:var(--fg);margin-bottom:4px;letter-spacing:0.3px}
+.cv-sub{font-size:11px;color:var(--dim)}
+.cv-status{background:var(--green-dim);border:1px solid rgba(80,216,144,0.25);border-radius:var(--r-sm);padding:10px 12px;margin-top:8px}
+.cv-status-inner{display:flex;align-items:center;justify-content:space-between;font-size:12px;font-weight:600;color:var(--green)}
+
+/* ── BUTTONS ── */
+.btn-p{
+  background:var(--indigo);color:#fff;
+  font-family:'Outfit',sans-serif;font-weight:700;
+  font-size:13px;letter-spacing:0.8px;text-transform:uppercase;
+  padding:13px 28px;
+  border:none;border-radius:var(--r-sm);cursor:pointer;
+  transition:all .2s;width:100%;
+  box-shadow:0 4px 20px var(--indigo-glow);
+}
+.btn-p:hover{filter:brightness(1.08);box-shadow:0 6px 28px var(--indigo-glow)}
+.btn-p:disabled{opacity:0.4;cursor:not-allowed;box-shadow:none}
+.spin{display:none;width:14px;height:14px;border:2px solid rgba(255,255,255,0.3);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;margin:0 auto}
+.btn-p.loading .spin{display:block}
+.btn-p.loading .lbl{display:none}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* ── ANALYZER LAYOUT ── */
+#page-analyzer{display:none}
+.analyzer-layout{display:grid;grid-template-columns:400px minmax(0,680px);gap:20px;padding:32px 0 48px;align-items:start}
+@media(max-width:1100px){.analyzer-layout{grid-template-columns:380px minmax(0,1fr)}}
+@media(max-width:900px){.analyzer-layout{grid-template-columns:1fr}}
+
+.analyzer-left{
+  position:sticky;top:70px;max-height:calc(100vh - 88px);overflow-y:auto;
+  scrollbar-width:thin;scrollbar-color:var(--border) transparent;padding-right:4px;
+}
+.analyzer-right{
+  position:sticky;top:70px;max-height:calc(100vh - 88px);overflow-y:auto;
+  scrollbar-width:thin;scrollbar-color:var(--border) transparent;padding-right:2px;
+}
+.analyzer-left::-webkit-scrollbar,.analyzer-right::-webkit-scrollbar{width:3px}
+.analyzer-left::-webkit-scrollbar-thumb,.analyzer-right::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
+
+#result-panel{display:none}
+#result-panel.show{display:block;animation:fadeUp .35s ease both}
+
+/* ── RESULT 2-COL ── */
+.result-inner{display:grid;grid-template-columns:192px 1fr;gap:16px;margin-top:0;align-items:start}
+@media(max-width:600px){.result-inner{grid-template-columns:1fr}}
+.result-col-a{}
+.result-col-b{}
+
+/* ── READINESS SCORE ── */
+.readiness-wrap{
+  text-align:center;padding:22px 14px;
+  border-radius:var(--r);margin-bottom:12px;
+  border:1px solid var(--border);
+  background:var(--bg2);
+}
+.readiness-wrap.high{background:linear-gradient(145deg,rgba(80,216,144,0.06),var(--bg2));border-color:rgba(80,216,144,0.3)}
+.readiness-wrap.mid{background:linear-gradient(145deg,rgba(244,185,66,0.06),var(--bg2));border-color:rgba(244,185,66,0.3)}
+.readiness-wrap.low{background:linear-gradient(145deg,rgba(240,112,106,0.06),var(--bg2));border-color:rgba(240,112,106,0.25)}
+.readiness-num{font-size:54px;font-weight:800;letter-spacing:-3px;line-height:1;font-family:'Outfit',sans-serif}
+.readiness-wrap.high .readiness-num{color:var(--green)}
+.readiness-wrap.mid  .readiness-num{color:var(--amber)}
+.readiness-wrap.low  .readiness-num{color:var(--red)}
+.readiness-label{font-size:10px;color:var(--dim);letter-spacing:1.5px;text-transform:uppercase;margin-top:6px;font-family:'Outfit',sans-serif}
+.readiness-level{
+  display:inline-block;margin-top:10px;padding:5px 12px;
+  border-radius:20px;font-size:10px;font-weight:700;
+  letter-spacing:0.8px;text-transform:uppercase;
+  font-family:'Outfit',sans-serif;
+}
+.readiness-wrap.high .readiness-level{background:rgba(80,216,144,0.12);color:var(--green)}
+.readiness-wrap.mid  .readiness-level{background:rgba(244,185,66,0.12);color:var(--amber)}
+.readiness-wrap.low  .readiness-level{background:rgba(240,112,106,0.10);color:var(--red)}
+
+/* ── RECO BANNER ── */
+.reco-banner{
+  padding:14px 16px;
+  background:var(--indigo-dim);
+  border:1px solid rgba(110,106,244,0.25);
+  border-radius:var(--r);
+  margin-bottom:16px;display:none;
+}
+.reco-banner.show{display:block}
+.reco-banner-title{font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--indigo);margin-bottom:6px;font-family:'Outfit',sans-serif}
+.reco-banner-body{font-size:11px;color:var(--dim);text-transform:uppercase;letter-spacing:1px}
+.reco-banner-job{font-size:22px;font-weight:800;color:var(--fg);margin:6px 0;letter-spacing:-0.5px}
+
+/* ── AI SUMMARY ── */
+.ai-summary{
+  padding:14px 16px;
+  background:var(--bg3);
+  border:1px solid var(--border);
+  border-left:3px solid var(--indigo);
+  border-radius:0 var(--r-sm) var(--r-sm) 0;
+  font-size:13.5px;line-height:1.75;color:var(--fg-dim);
+  margin-bottom:16px;
+  font-family:'DM Sans','Outfit',sans-serif;
+}
+.ai-label{
+  font-size:10px;font-weight:700;letter-spacing:1.5px;
+  text-transform:uppercase;color:var(--indigo);
+  margin-bottom:8px;display:block;
+  font-family:'Outfit',sans-serif;
+}
+
+/* ── SECTION TITLES ── */
+.rtitle{
+  font-size:10px;font-weight:700;letter-spacing:1.5px;
+  text-transform:uppercase;color:var(--dim);
+  margin:18px 0 9px;
+  display:flex;align-items:center;gap:8px;
+  font-family:'Outfit',sans-serif;
+}
+.rtitle::after{content:'';flex:1;height:1px;background:var(--border)}
+.rtitle:first-child,.result-col-b .rtitle:first-of-type{margin-top:0}
+
+/* ── SKILL PILLS ── */
+.skill-status-grid{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:8px}
+.skill-pill{
+  padding:4px 11px;border-radius:20px;
+  font-size:10.5px;font-weight:600;
+  letter-spacing:0.2px;
+  font-family:'Outfit',sans-serif;
+}
+.skill-pill.have{background:var(--green-dim);color:var(--green);border:1px solid rgba(80,216,144,0.3)}
+.skill-pill.missing{background:var(--red-dim);color:var(--red);border:1px dashed rgba(240,112,106,0.35)}
+.skill-pill.bonus{background:var(--gold-dim);color:var(--gold);border:1px solid rgba(244,185,66,0.3)}
+
+/* ── KURSUS CARDS ── */
+.kursus-grid{display:grid;gap:7px}
+.kursus-item{
+  display:flex;align-items:center;gap:12px;
+  padding:11px 14px;
+  border-radius:var(--r-sm);
+  border:1px solid var(--border);
+  background:var(--bg2);
+  transition:all .18s;
+  border-left:3px solid transparent;
+}
+.kursus-item:hover{
+  border-color:rgba(110,106,244,0.3);
+  border-left-color:var(--indigo);
+  background:var(--bg3);
+}
+.kursus-badge{
+  font-size:9px;font-weight:800;letter-spacing:0.8px;
+  text-transform:uppercase;padding:3px 8px;
+  border-radius:20px;flex-shrink:0;
+  font-family:'Outfit',sans-serif;
+}
+.kursus-badge.free{background:var(--green-dim);color:var(--green)}
+.kursus-badge.paid{background:var(--gold-dim);color:var(--gold)}
+.kursus-name{font-size:12.5px;font-weight:500;flex:1;line-height:1.4}
+.kursus-platform{font-size:10px;color:var(--dim);letter-spacing:0.5px;margin-top:2px;font-family:'Outfit',sans-serif}
+
+/* ── ROADMAP ── */
+.roadmap-wrap{margin-bottom:8px}
+.roadmap-step{display:flex;gap:14px;margin-bottom:14px;position:relative}
+.roadmap-step::before{
+  content:'';position:absolute;left:15px;top:36px;
+  width:1px;height:calc(100% - 4px);
+  background:linear-gradient(to bottom,var(--indigo),transparent);
+}
+.roadmap-step:last-child::before{display:none}
+.step-dot{
+  width:32px;height:32px;border-radius:var(--r-sm);
+  background:var(--indigo-dim);
+  border:1px solid rgba(110,106,244,0.4);
+  display:flex;align-items:center;justify-content:center;
+  font-size:11px;font-weight:700;color:var(--indigo);
+  flex-shrink:0;z-index:1;
+  font-family:'Outfit',sans-serif;
+}
+.step-body{flex:1;padding-bottom:6px}
+.step-fase{
+  font-size:10px;color:var(--indigo);font-weight:700;
+  letter-spacing:1px;text-transform:uppercase;margin-bottom:3px;
+  font-family:'Outfit',sans-serif;
+}
+.step-nama{font-size:13px;font-weight:700;margin-bottom:6px;letter-spacing:0.2px}
+.step-skills{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:6px}
+.step-skill{
+  font-size:10px;padding:2px 9px;border-radius:20px;
+  background:transparent;border:1px solid var(--border-strong);
+  color:var(--fg-dim);
+}
+.step-kursus{font-size:11.5px;color:var(--fg-dim);margin-bottom:3px;line-height:1.5}
+.step-milestone{font-size:11px;color:var(--dim);line-height:1.5}
+
+/* ── JOB INFO ── */
+.job-info-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:8px}
+.job-info-item{
+  padding:11px 13px;
+  background:var(--bg3);
+  border:1px solid var(--border);
+  border-radius:var(--r-sm);
+}
+.job-info-label{font-size:9px;color:var(--dim);text-transform:uppercase;letter-spacing:1.2px;margin-bottom:4px;font-family:'Outfit',sans-serif}
+.job-info-val{font-size:13px;font-weight:600;line-height:1.4}
+
+/* ── HOME ── */
+#page-home{}
+.hero{padding:88px 0 52px;max-width:640px}
+.hero-kicker{display:flex;align-items:center;gap:10px;margin-bottom:20px}
+.hero-kicker::before{content:'';display:block;width:24px;height:1px;background:var(--indigo)}
+h1{
+  font-family:'Outfit',sans-serif;
+  font-size:clamp(38px,5vw,64px);font-weight:800;
+  line-height:1.06;letter-spacing:-2px;margin-bottom:22px;
+}
+.hero-p{
+  color:var(--fg-dim);font-size:15.5px;line-height:1.8;
+  max-width:480px;margin-bottom:36px;font-weight:400;
+  font-family:'DM Sans','Outfit',sans-serif;
+}
+.cta-row{display:flex;gap:12px;flex-wrap:wrap}
+.btn-hero{
+  background:var(--indigo);color:#fff;
+  font-family:'Outfit',sans-serif;font-weight:700;
+  font-size:13px;letter-spacing:0.8px;text-transform:uppercase;
+  padding:14px 28px;border:none;border-radius:var(--r-sm);
+  cursor:pointer;transition:all .2s;
+  box-shadow:0 4px 24px var(--indigo-glow);
+}
+.btn-hero:hover{filter:brightness(1.08);box-shadow:0 6px 32px var(--indigo-glow);transform:translateY(-1px)}
+.btn-g{
+  background:transparent;color:var(--fg-dim);
+  font-family:'Outfit',sans-serif;font-weight:600;
+  font-size:12px;letter-spacing:0.8px;text-transform:uppercase;
+  padding:14px 24px;border:1px solid var(--border-strong);
+  border-radius:var(--r-sm);cursor:pointer;transition:all .2s;
+}
+.btn-g:hover{border-color:var(--fg-dim);color:var(--fg);background:rgba(255,255,255,0.04)}
+
+.stats-row{
+  display:flex;border:1px solid var(--border);
+  border-radius:var(--r);overflow:hidden;margin:0 0 56px;
+  background:var(--bg2);
+}
+.stat{flex:1;padding:24px;border-right:1px solid var(--border)}
+.stat:last-child{border-right:none}
+.stat-n{font-size:28px;font-weight:800;letter-spacing:-1px;color:var(--fg);font-family:'Outfit',sans-serif}
+.stat-n .u{color:var(--dim);font-size:15px;font-weight:400}
+.stat-l{font-size:11px;color:var(--fg-dim);margin-top:4px;font-family:'DM Sans',sans-serif}
+.stat-src{font-size:10px;color:var(--dim);margin-top:3px;font-family:'Outfit',sans-serif;letter-spacing:0.5px}
+
+.how-grid{
+  display:grid;grid-template-columns:repeat(4,1fr);
+  gap:1px;background:var(--border);
+  border-radius:var(--r);overflow:hidden;margin-bottom:56px;
+}
+.how-cell{background:var(--bg2);padding:24px 20px;transition:background .18s}
+.how-cell:hover{background:var(--bg3)}
+.how-num{
+  font-size:10px;font-weight:700;letter-spacing:1.5px;
+  color:var(--indigo);margin-bottom:10px;text-transform:uppercase;
+  font-family:'Outfit',sans-serif;
+  display:inline-block;
+}
+.how-t{font-size:15px;font-weight:700;margin-bottom:8px;letter-spacing:-0.2px}
+.how-d{font-size:12.5px;color:var(--dim);line-height:1.7;font-family:'DM Sans',sans-serif}
+
+/* ── CHAT ── */
+#page-chat{display:none}
+.chat-wrap{max-width:100%;padding:24px 0 48px}
+.chat-box{
+  background:var(--bg2);border:1px solid var(--border);
+  border-radius:var(--r);overflow:hidden;
+  min-height:70vh;display:flex;flex-direction:column;
+}
+.chat-header{
+  padding:18px 24px;
+  border-bottom:1px solid var(--border);
+  display:flex;align-items:center;gap:14px;
+  background:var(--bg3);
+}
+.chat-av{
+  width:38px;height:38px;border-radius:var(--r-sm);
+  background:var(--indigo-dim);
+  border:1px solid rgba(110,106,244,0.3);
+  display:flex;align-items:center;justify-content:center;
+  font-size:11px;font-weight:700;
+  font-family:'Outfit',sans-serif;color:var(--indigo);
+}
+.chat-title{font-size:13px;font-weight:700;letter-spacing:0.5px;font-family:'Outfit',sans-serif}
+.chat-sub{font-size:10.5px;color:var(--dim);font-family:'Outfit',sans-serif}
+.online{
+  width:7px;height:7px;border-radius:50%;
+  background:var(--green);
+  box-shadow:0 0 6px var(--green);
+  animation:pulse 2s infinite;margin-left:auto;
+}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.35}}
+
+.messages{
+  flex:1;min-height:500px;overflow-y:auto;
+  padding:24px 28px;display:flex;flex-direction:column;gap:14px;
+}
+.messages::-webkit-scrollbar{width:3px}
+.messages::-webkit-scrollbar-thumb{background:var(--border)}
+.msg{max-width:75%;animation:fadeUp .3s ease both}
+.msg.user{align-self:flex-end}
+.msg.assistant{align-self:flex-start}
+.msg-bubble{
+  padding:12px 16px;border-radius:var(--r);
+  font-size:13.5px;line-height:1.7;
+  white-space:pre-wrap;
+  font-family:'DM Sans','Outfit',sans-serif;
+}
+.msg.user .msg-bubble{
+  background:var(--indigo);color:#fff;
+  border-bottom-right-radius:3px;font-weight:400;
+}
+.msg.assistant .msg-bubble{
+  background:var(--bg3);border:1px solid var(--border);
+  border-bottom-left-radius:3px;color:var(--fg-dim);
+}
+.msg-time{
+  font-size:9px;color:var(--dim);margin-top:5px;padding:0 4px;
+  text-transform:uppercase;letter-spacing:1px;
+  font-family:'Outfit',sans-serif;
+}
+.msg.user .msg-time{text-align:right}
+.typing{display:none;align-self:flex-start}
+.typing.show{display:flex}
+.typing-bubble{
+  padding:12px 16px;border-radius:var(--r);
+  border-bottom-left-radius:3px;
+  background:var(--bg3);border:1px solid var(--border);
+  display:flex;gap:4px;align-items:center;
+}
+.tdot{width:4px;height:4px;border-radius:50%;background:var(--dim);animation:tdot 1.2s infinite}
+.tdot:nth-child(2){animation-delay:.2s}
+.tdot:nth-child(3){animation-delay:.4s}
+@keyframes tdot{0%,80%,100%{opacity:.2}40%{opacity:1}}
+
+.chat-footer{border-top:1px solid var(--border);padding:16px 24px;background:var(--bg3)}
+.chat-row{display:flex;gap:10px;align-items:flex-end}
+.chat-row textarea{border-radius:var(--r-sm);min-height:48px;max-height:140px;resize:none;font-size:13.5px;padding:12px 16px}
+.btn-send{
+  background:var(--indigo);border:none;border-radius:var(--r-sm);
+  padding:12px 20px;color:#fff;
+  font-family:'Outfit',sans-serif;font-weight:700;
+  font-size:11px;letter-spacing:0.8px;text-transform:uppercase;
+  cursor:pointer;transition:all .2s;flex-shrink:0;
+}
+.btn-send:hover{filter:brightness(1.08)}
+.btn-send:disabled{opacity:0.4;cursor:not-allowed}
+.chat-note{
+  font-size:10px;color:var(--dim);text-align:center;
+  padding:8px;border-top:1px solid var(--border);
+  text-transform:uppercase;letter-spacing:0.8px;
+  font-family:'Outfit',sans-serif;
+}
+
+/* ── ABOUT ── */
+#page-about{display:none;padding:48px 0}
+.about-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:32px}
+.about-card{
+  background:var(--bg2);
+  border:1px solid var(--border);
+  border-radius:var(--r);padding:24px;
+}
+.about-card h3{font-size:12px;font-weight:700;margin-bottom:10px;letter-spacing:0.8px;text-transform:uppercase;color:var(--fg);font-family:'Outfit',sans-serif}
+.about-card p{font-size:13px;color:var(--dim);line-height:1.8;font-family:'DM Sans',sans-serif}
+.team-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.tcard{
+  background:var(--bg2);
+  border:1px solid var(--border);
+  border-radius:var(--r);padding:22px;text-align:center;
+}
+.tcard-link{text-decoration:none;color:inherit;display:block;cursor:pointer;transition:all .2s}
+.tcard-link:hover .tcard{border-color:rgba(110,106,244,0.35) !important;transform:translateY(-3px)}
+.tcard-link:hover{transform:translateY(-3px)}
+.tav-photo{
+  width:58px;height:58px;border-radius:var(--r);
+  margin:0 auto 14px;position:relative;overflow:hidden;
+  background:var(--indigo-dim);border:1px solid rgba(110,106,244,0.25);
+}
+.tav-photo img{width:100%;height:100%;object-fit:cover;filter:grayscale(100%);transition:all .3s}
+.tcard-link:hover .tav-photo img{filter:grayscale(0%)}
+.tav-overlay{
+  position:absolute;inset:0;background:rgba(14,15,26,0.85);
+  display:flex;align-items:center;justify-content:center;
+  opacity:0;transition:opacity .2s;
+}
+.tcard-link:hover .tav-overlay{opacity:1}
+.tlinkedin{font-size:10px;color:var(--indigo);margin-top:10px;font-weight:600;letter-spacing:0.8px;text-transform:uppercase;font-family:'Outfit',sans-serif}
+.tname{font-size:12px;font-weight:700;margin-bottom:4px;letter-spacing:0.3px;text-transform:uppercase;font-family:'Outfit',sans-serif}
+.trole{font-size:10px;color:var(--dim);font-weight:600;letter-spacing:0.8px;text-transform:uppercase;font-family:'Outfit',sans-serif}
+.tdesc{font-size:11.5px;color:var(--dim);margin-top:6px;line-height:1.65;font-family:'DM Sans',sans-serif}
+.tag{font-size:10px;font-weight:600;padding:3px 10px;border-radius:20px;display:inline-block;margin:3px 3px 0 0;letter-spacing:0.3px;font-family:'Outfit',sans-serif}
+.tb{background:transparent;border:1px solid var(--border-strong);color:var(--dim)}
+.tc{background:var(--indigo-dim);border:1px solid rgba(110,106,244,0.3);color:var(--indigo)}
+.tg{background:var(--green-dim);border:1px solid rgba(80,216,144,0.3);color:var(--green)}
+
+/* ── TECH FLOW ── */
+.tech-flow{display:grid;grid-template-columns:repeat(4,1fr);gap:0;margin:32px 0;position:relative}
+.tech-flow::before{content:'';position:absolute;top:40px;left:12.5%;right:12.5%;height:1px;background:var(--border);z-index:0}
+.tech-step{text-align:center;padding:20px 12px;position:relative;z-index:1;cursor:pointer;transition:transform .2s}
+.tech-step:hover{transform:translateY(-4px)}
+.tech-step-icon{
+  width:80px;height:80px;border-radius:var(--r);
+  background:var(--bg2);border:1px solid var(--border);
+  margin:0 auto 14px;display:flex;align-items:center;justify-content:center;
+  font-size:16px;font-weight:700;color:var(--dim);transition:all .25s;
+  font-family:'Outfit',sans-serif;
+}
+.tech-step:hover .tech-step-icon{border-color:rgba(110,106,244,0.4);color:var(--indigo);background:var(--indigo-dim)}
+.tech-step.active .tech-step-icon{border-color:rgba(110,106,244,0.4);background:var(--indigo-dim);color:var(--indigo)}
+.tech-step-title{font-size:12px;font-weight:700;margin-bottom:4px;letter-spacing:0.5px;font-family:'Outfit',sans-serif}
+.tech-step-sub{font-size:11px;color:var(--dim);line-height:1.55;font-family:'DM Sans',sans-serif}
+
+.tech-detail{
+  background:var(--bg2);border:1px solid var(--border);
+  border-radius:var(--r);padding:24px;margin-bottom:32px;
+  display:none;animation:fadeUp .3s ease both;
+}
+.tech-detail.show{display:block}
+.tech-detail-title{font-size:14px;font-weight:800;margin-bottom:8px;letter-spacing:0.5px;text-transform:uppercase;color:var(--indigo);font-family:'Outfit',sans-serif}
+.tech-detail-desc{font-size:13px;color:var(--dim);line-height:1.8;margin-bottom:16px;font-family:'DM Sans',sans-serif}
+.tech-tags{display:flex;flex-wrap:wrap;gap:8px}
+.tech-tag{
+  font-size:10px;font-weight:600;padding:4px 11px;border-radius:20px;
+  background:transparent;border:1px solid var(--border-strong);
+  color:var(--dim);letter-spacing:0.3px;
+  font-family:'Outfit',sans-serif;
+}
+.tech-tag.highlight{border-color:rgba(110,106,244,0.4);color:var(--indigo);background:var(--indigo-dim)}
+
+.about-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border);border-radius:var(--r);overflow:hidden;margin:32px 0}
+.about-stat{background:var(--bg2);padding:24px;text-align:center}
+.about-stat-n{font-size:28px;font-weight:800;letter-spacing:-1px;color:var(--indigo);font-family:'Outfit',sans-serif}
+.about-stat-l{font-size:11px;color:var(--dim);margin-top:6px;letter-spacing:0.5px;font-family:'DM Sans',sans-serif}
+
+footer{border-top:1px solid var(--border);padding:24px 0;margin-top:40px}
+.foot-i{max-width:1140px;margin:0 auto;padding:0 28px;display:flex;align-items:center;justify-content:space-between}
+.foot-l{font-size:16px;font-weight:800;text-transform:uppercase;letter-spacing:-0.3px;color:var(--dim);font-family:'Outfit',sans-serif}
+.foot-l span{color:var(--indigo)}
+.foot-r{font-size:10px;color:var(--dim);text-transform:uppercase;letter-spacing:0.8px;font-family:'Outfit',sans-serif}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+
+/* ── SKILL CONFIRM MODAL ── */
+.modal-overlay {
+  position: fixed; inset: 0; background: rgba(14,15,26,0.85);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 9999; opacity: 0; pointer-events: none; transition: opacity 0.2s;
+  backdrop-filter: blur(4px);
+}
+.modal-overlay.show { opacity: 1; pointer-events: auto; }
+.modal-box {
+  background: var(--bg2); border: 1px solid var(--border-strong);
+  border-radius: var(--r); padding: 32px; width: 100%; max-width: 440px;
+  transform: translateY(20px); transition: transform 0.2s;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+}
+.modal-overlay.show .modal-box { transform: translateY(0); }
+.modal-title {
+  font-family: 'Outfit', sans-serif; font-size: 16px; font-weight: 800;
+  text-transform: uppercase; letter-spacing: 0.5px; color: var(--fg);
+  margin-bottom: 12px;
+}
+.modal-desc {
+  font-family: 'DM Sans', sans-serif; font-size: 13.5px; color: var(--dim);
+  line-height: 1.6; margin-bottom: 20px;
+}
+.modal-skills-box {
+  background: var(--bg3); border: 1px solid var(--border);
+  border-radius: var(--r-sm); padding: 14px; margin-bottom: 24px;
+  display: flex; flex-wrap: wrap; gap: 6px; max-height: 120px; overflow-y: auto;
+}
+.modal-skills-box:empty::after {
+  content: 'Belum ada skill yang ditambahkan.';
+  color: var(--red); font-size: 12px; font-family: 'DM Sans', sans-serif;
+}
+.modal-skill-chip {
+  background: var(--border); color: var(--fg); font-size: 11px;
+  padding: 4px 10px; border-radius: 20px; font-weight: 600;
+  font-family: 'Outfit', sans-serif; letter-spacing: 0.5px;
+}
+.modal-actions {
+  display: flex; gap: 10px;
+}
+.btn-m-cancel {
+  flex: 1; background: transparent; border: 1px solid var(--border-strong);
+  color: var(--dim); border-radius: var(--r-sm); padding: 12px;
+  font-family: 'Outfit', sans-serif; font-size: 11px; font-weight: 700;
+  text-transform: uppercase; cursor: pointer; transition: all 0.2s;
+}
+.btn-m-cancel:hover { background: var(--bg3); color: var(--fg); }
+.btn-m-proceed {
+  flex: 1; background: var(--indigo); border: none;
+  color: #000; border-radius: var(--r-sm); padding: 12px;
+  font-family: 'Outfit', sans-serif; font-size: 11px; font-weight: 700;
+  text-transform: uppercase; cursor: pointer; transition: all 0.2s;
+}
+.btn-m-proceed:hover { filter: brightness(1.1); }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-i">
+    <div class="nav-logo" onclick="go('home')">
+      <div class="nav-logo-text">SI<span>GAP</span></div>
+    </div>
+    <div class="nav-links">
+      <a class="active" onclick="go('home')">Beranda</a>
+      <a onclick="go('analyzer')">Cek Gap</a>
+      <a onclick="go('chat')">Chat AI</a>
+      <a onclick="go('about')">Tentang</a>
+    </div>
+    <div class="nav-badge">PIDI DIGDAYA 2026</div>
+  </div>
+</nav>
+
+<!-- HOME -->
+<div id="page-home">
+<div class="wrap">
+  <div class="hero">
+    <div class="kicker hero-kicker">Sistem Identifikasi GAP Skill untuk Karir</div>
+    <h1>Tau Persis Apa yang<br/><span class="it">Harus Kamu Pelajari</span></h1>
+    <p class="hero-p">Masukkan skill kamu, SIGAP menganalisis gap vs kebutuhan pasar dan memberikan roadmap belajar konkret — lengkap dengan kursus gratis.</p>
+    <div class="cta-row">
+      <button class="btn-hero" onclick="go('analyzer')">Cek Gap Skill Sekarang</button>
+      <button class="btn-g" onclick="go('chat')">Konsultasi AI</button>
+    </div>
+  </div>
+
+  <div class="stats-row">
+    <div class="stat">
+      <div class="stat-n">7.47<span class="u"> Juta</span></div>
+      <div class="stat-l">Pengangguran Terbuka</div>
+      <div class="stat-src">BPS Agustus 2024</div>
+    </div>
+    <div class="stat">
+      <div class="stat-n">16.89<span class="u"> %</span></div>
+      <div class="stat-l">Usia 15-24 Tahun</div>
+      <div class="stat-src">BPS Agustus 2025</div>
+    </div>
+    <div class="stat">
+      <div class="stat-n">6-12<span class="u"> Bln</span></div>
+      <div class="stat-l">Rata-rata Cari Kerja</div>
+      <div class="stat-src">Jobstreet 2024</div>
+    </div>
+    <div class="stat">
+      <div class="stat-n">25<span class="u">+</span></div>
+      <div class="stat-l">Jalur Karir Dianalisis</div>
+      <div class="stat-src">Data Pasar Indonesia</div>
+    </div>
+  </div>
+
+  <div style="margin-bottom:24px">
+    <div class="kicker" style="margin-bottom:10px">Cara Kerja</div>
+    <div style="font-size:clamp(24px,3vw,36px);font-weight:800;letter-spacing:-1.2px">Empat Langkah ke <span class="it">Karir Impian</span></div>
+  </div>
+  <div class="how-grid">
+    <div class="how-cell">
+      <div class="how-num">01 — Input</div>
+      <div class="how-t">Profil & Skill</div>
+      <div class="how-d">Isi pendidikan, skill yang dimiliki, dan target pekerjaan.</div>
+    </div>
+    <div class="how-cell">
+      <div class="how-num">02 — Analisis</div>
+      <div class="how-t">Gap Score</div>
+      <div class="how-d">SIGAP bandingkan skill vs kebutuhan pasar dan hitung kesiapan.</div>
+    </div>
+    <div class="how-cell">
+      <div class="how-num">03 — Roadmap</div>
+      <div class="how-t">Kursus Gratis</div>
+      <div class="how-d">Roadmap belajar per fase + kursus gratis Dicoding, Coursera, Kemnaker.</div>
+    </div>
+    <div class="how-cell">
+      <div class="how-num">04 — Chat</div>
+      <div class="how-t">Konsultasi AI</div>
+      <div class="how-d">Tanya soal skill, kursus, CV, interview ke SIGAP AI.</div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ANALYZER -->
+<div id="page-analyzer">
+<div class="wrap">
+  <div style="padding:36px 0 20px">
+    <div class="kicker" style="margin-bottom:8px">Skill Gap Analyzer</div>
+    <div style="font-size:clamp(22px,3vw,32px);font-weight:800;letter-spacing:-1px">Cek <span class="it">Kesiapan Karir</span> Kamu</div>
+    <p style="font-size:13px;color:var(--dim);margin-top:6px">Isi dengan jujur — semakin lengkap datanya, semakin akurat hasilnya.</p>
+  </div>
+  <div class="analyzer-layout">
+
+    <!-- FORM (sticky left) -->
+    <div class="analyzer-left">
+    <div class="card">
+      <div class="card-head">Profil Pengguna</div>
+
+      <div class="fg">
+        <label>Pendidikan Terakhir</label>
+        <select id="f-pendidikan">
+          <option value="">-- Pilih --</option>
+          <option>SMA/SMK (Sederajat)</option>
+          <option>D3/D4 (Vokasi)</option>
+          <option>S1 — Ilmu Komputer / Teknik Informatika</option>
+          <option>S1 — Sains / Matematika / Statistika</option>
+          <option>S1 — Teknik (Selain IT) / Rekayasa</option>
+          <option>S1 — Ekonomi / Bisnis / Akuntansi</option>
+          <option>S1 — Ilmu Komunikasi / Hubungan Internasional</option>
+          <option>S1 — Desain / Seni / Arsitektur</option>
+          <option>S1 — Psikologi / Ilmu Sosial / Hukum</option>
+          <option>S1 — Sastra / Pendidikan / Jurusan Lainnya</option>
+          <option>S2 / S3</option>
+          <option>Self-Taught / Bootcamp</option>
+        </select>
+      </div>
+
+      <div class="fg">
+        <label>Pengalaman Kerja</label>
+        <select id="f-exp">
+          <option value="Fresh grad / belum ada">Fresh grad / belum ada pengalaman</option>
+          <option value="Magang 1-3 bulan">Magang 1-3 bulan</option>
+          <option value="Magang 3-6 bulan">Magang 3-6 bulan</option>
+          <option value="Project freelance / kontrak">Project freelance / kontrak</option>
+          <option value="Kerja penuh waktu < 1 tahun">Kerja penuh waktu &lt; 1 tahun</option>
+          <option value="Kerja 1-2 tahun">Kerja 1-2 tahun</option>
+          <option value="Kerja 2-5 tahun">Kerja 2-5 tahun (mid-level)</option>
+          <option value="Kerja > 5 tahun">Kerja lebih dari 5 tahun</option>
+          <option value="Career switch / ganti bidang">Career switch / ganti bidang</option>
+        </select>
+      </div>
+
+      <div class="fg">
+        <label>Target Pekerjaan</label>
+        <input type="text" id="f-target" placeholder="Kosongkan = AI merekomendasikan" list="job-suggestions" autocomplete="off"/>
+        <datalist id="job-suggestions">
+          <option>Data Analyst</option><option>Data Scientist</option>
+          <option>Data Engineer</option><option>Machine Learning Engineer</option>
+          <option>Backend Developer</option><option>Frontend Developer</option>
+          <option>Full Stack Developer</option><option>Mobile Developer</option>
+          <option>UI/UX Designer</option><option>Product Manager</option>
+          <option>Digital Marketing</option><option>SEO Specialist</option>
+          <option>Content Creator</option><option>Business Analyst</option>
+          <option>System Analyst</option><option>Financial Analyst</option>
+          <option>Cloud Engineer</option><option>DevOps Engineer</option>
+          <option>Cybersecurity Analyst</option><option>QA Engineer</option>
+          <option>IT Support</option><option>HR Recruiter</option>
+          <option>Graphic Designer</option><option>Copywriter</option>
+          <option>Social Media Specialist</option><option>Public Relations</option>
+        </datalist>
+        <div style="font-size:10px;margin-top:6px;color:var(--dim)">
+          Kosongkan = AI rekomendasikan karir terbaik dari skill kamu
+        </div>
+      </div>
+
+      <div class="fg">
+        <label>Lokasi</label>
+        <select id="f-lokasi">
+          <option>Jakarta</option><option>Bandung</option><option>Surabaya</option>
+          <option>Yogyakarta</option><option>Semarang</option>
+          <option>Remote (dari mana saja)</option><option>Lainnya</option>
+        </select>
+      </div>
+
+      <div class="fg">
+        <label>Upload CV (Opsional)</label>
+        <div class="cv-upload-zone" id="cv-zone" onclick="document.getElementById('cv-file').click()">
+          <input type="file" id="cv-file" accept=".pdf,.txt" style="display:none" onchange="handleCV(this)"/>
+          <div class="cv-text">Klik atau Drag CV ke sini</div>
+          <div class="cv-sub">PDF, TXT — skill terdeteksi otomatis</div>
+        </div>
+        <div class="cv-status" id="cv-status" style="display:none">
+          <div class="cv-status-inner">
+            <span id="cv-filename"></span>
+            <button onclick="clearCV()" style="background:none;border:none;color:var(--red);cursor:pointer;font-size:14px;font-weight:bold">x</button>
+          </div>
+          <div id="cv-skills-found" style="font-size:10px;color:var(--dim);margin-top:4px;text-transform:uppercase;letter-spacing:1px"></div>
+        </div>
+      </div>
+
+      <div class="fg">
+        <label>Skill yang Dikuasai</label>
+        <div style="font-size:10px;color:var(--dim);margin-bottom:6px">Upload CV atau tambah manual:</div>
+        <div class="skill-wrap" id="skill-wrap" onclick="document.getElementById('skill-input').focus()">
+          <input type="text" id="skill-input" class="skill-input" placeholder="Ketik skill lalu Enter..."/>
+        </div>
+        <div style="font-size:10px;color:var(--dim);margin-top:5px;line-height:1.5">
+          💡 <strong>Skill tidak terdeteksi dari CV?</strong> Tambahkan manual di atas — kamu yang paling tahu skill kamu.
+        </div>
+
+        <div class="skill-suggestions" id="skill-suggestions">
+          <span class="skill-suggest" onclick="addSkill('Python')">Python</span>
+          <span class="skill-suggest" onclick="addSkill('SQL')">SQL</span>
+          <span class="skill-suggest" onclick="addSkill('Excel')">Excel</span>
+          <span class="skill-suggest" onclick="addSkill('JavaScript')">JS</span>
+          <span class="skill-suggest" onclick="addSkill('React')">React</span>
+          <span class="skill-suggest" onclick="addSkill('Figma')">Figma</span>
+          <span class="skill-suggest" onclick="addSkill('Git')">Git</span>
+          <span class="skill-suggest" onclick="addSkill('Komunikasi')">Komunikasi</span>
+          <span class="skill-suggest" onclick="addSkill('Machine Learning')">ML</span>
+          <span class="skill-suggest" onclick="addSkill('Analisis Data')">Analisis Data</span>
+        </div>
+        <div id="dynamic-suggests" style="display:none;margin-top:10px">
+          <div style="font-size:10px;color:var(--cyan);margin-bottom:5px;text-transform:uppercase;letter-spacing:1px">Skill relevan untuk target kamu:</div>
+          <div class="skill-suggestions" id="dynamic-suggests-inner"></div>
+        </div>
+      </div>
+
+      <button class="btn-p" id="analyze-btn" onclick="promptConfirmAnalyze()">
+        <span class="lbl">Analisis Gap Skill</span>
+        <div class="spin"></div>
+      </button>
+    </div>
+    </div>
+
+    <!-- RESULT (sticky right) -->
+    <div class="analyzer-right">
+    <div id="result-panel">
+      <div class="card">
+        <div class="card-head">Hasil Analisis</div>
+
+        <!-- Reco banner (full width, only when AI recommend) -->
+        <div class="reco-banner" id="reco-banner">
+          <div class="reco-banner-title">Rekomendasi SIGAP</div>
+          <div class="reco-banner-body">Karir terbaik berdasarkan profil kamu:</div>
+          <div class="reco-banner-job" id="reco-banner-job">—</div>
+          <div style="font-size:10px;color:var(--dim);margin-top:4px;text-transform:uppercase;letter-spacing:1px">Analisis gap dan roadmap tersedia di bawah.</div>
+        </div>
+
+        <!-- Inner 2-col: kiri=gauge+skills, kanan=detail -->
+        <div class="result-inner">
+
+          <!-- COL KIRI: Readiness + Skill Comparison -->
+          <div class="result-col-a">
+            <div class="readiness-wrap" id="rw">
+              <div class="readiness-num" id="r-num">—</div>
+              <div class="readiness-label">Kesiapan</div>
+              <div class="readiness-level" id="r-level">—</div>
+            </div>
+
+            <!-- CTA setelah readiness score -->
+            <div id="result-cta" style="display:none;margin-top:14px;display:flex;flex-direction:column;gap:8px">
+              <button onclick="document.getElementById('roadmap-section').scrollIntoView({behavior:'smooth'})" style="width:100%;padding:9px 12px;background:rgba(16,185,129,0.12);border:1px solid var(--green);border-radius:4px;color:var(--green);font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;cursor:pointer;font-family:'Outfit',sans-serif;transition:background 0.2s" onmouseover="this.style.background='rgba(16,185,129,0.25)'" onmouseout="this.style.background='rgba(16,185,129,0.12)'">
+                Lihat Roadmap Belajar &darr;
+              </button>
+              <button onclick="go('chat')" style="width:100%;padding:9px 12px;background:rgba(34,211,238,0.08);border:1px solid rgba(34,211,238,0.3);border-radius:4px;color:var(--cyan);font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;cursor:pointer;font-family:'Outfit',sans-serif;transition:background 0.2s" onmouseover="this.style.background='rgba(34,211,238,0.18)'" onmouseout="this.style.background='rgba(34,211,238,0.08)'">
+                Tanya SIGAP AI &rarr;
+              </button>
+            </div>
+
+            <!-- Skill vs Pasar -->
+            <div style="font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--green);margin-bottom:6px;padding-top:4px">Terpenuhi</div>
+            <div class="skill-status-grid" id="skill-have"></div>
+
+            <div style="font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--red);margin:12px 0 6px">Gap / Kurang</div>
+            <div class="skill-status-grid" id="skill-missing"></div>
+
+            <div id="soft-skill-wrap" style="display:none">
+              <div style="font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--amber);margin:12px 0 6px">Soft Skill</div>
+              <div class="skill-status-grid" id="soft-skill-list"></div>
+            </div>
+          </div>
+
+          <!-- COL KANAN: AI summary + Job info + Kursus + Roadmap -->
+          <div class="result-col-b">
+
+            <div class="ai-summary" id="ai-wrap" style="display:none">
+              <span class="ai-label">Analisis SIGAP AI</span>
+              <div id="ai-text"></div>
+            </div>
+
+            <div class="rtitle" style="margin-top:0">Info Pekerjaan</div>
+            <div class="job-info-grid" id="job-info"></div>
+
+            <div class="rtitle">Kursus Rekomendasi</div>
+            <div class="kursus-grid" id="kursus-list"></div>
+
+            <div class="rtitle" id="roadmap-section">Roadmap Belajar</div>
+            <div class="roadmap-wrap" id="roadmap-list"></div>
+
+            <div style="margin-top:20px;padding:14px 16px;background:rgba(34,211,238,0.06);border:1px solid rgba(34,211,238,0.25);border-radius:6px">
+              <div style="font-size:12px;color:var(--dim);margin-bottom:10px">Masih ada pertanyaan soal skill gap, kursus, atau strategi karir kamu?</div>
+              <button onclick="go('chat')" style="width:100%;padding:10px;background:var(--cyan);color:var(--bg);border:none;border-radius:4px;font-size:12px;font-weight:700;letter-spacing:1px;text-transform:uppercase;cursor:pointer;font-family:'Outfit',sans-serif">Tanya SIGAP AI Sekarang &rarr;</button>
+            </div>
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+    </div>
+
+  </div>
+</div>
+</div>
+
+<!-- CHAT -->
+<div id="page-chat">
+<div class="wrap">
+  <div class="chat-wrap">
+    <div style="padding:28px 0 20px">
+      <div class="kicker" style="margin-bottom:8px">AI Career Advisor</div>
+      <div style="font-size:clamp(24px,3vw,36px);font-weight:800;letter-spacing:-1.2px">Tanya <span class="it">SIGAP</span></div>
+      <p style="font-size:14px;color:var(--dim);margin-top:8px">Skill, kursus, CV, interview — tanya apa saja.</p>
+    </div>
+    <div class="chat-box">
+      <div class="chat-header">
+        <div class="chat-av">AI</div>
+        <div>
+          <div class="chat-title">SIGAP Assistant</div>
+          <div class="chat-sub">Groq Llama 3.3 70B</div>
+        </div>
+        <div class="online"></div>
+      </div>
+      <div class="messages" id="messages">
+        <div class="msg assistant">
+          <div class="msg-bubble">Halo! Saya SIGAP — advisor karir untuk fresh grad Indonesia.
+
+Bisa bantu kamu dengan:
+- Skill apa yang harus dipelajari
+- Kursus gratis yang worth it
+- Cara bikin portofolio yang menarik
+- Tips CV dan interview
+- Strategi job hunting
+
+Mau tanya apa?</div>
+          <div class="msg-time">SIGAP AI</div>
+        </div>
+        <div class="typing" id="typing">
+          <div class="typing-bubble">
+            <div class="tdot"></div><div class="tdot"></div><div class="tdot"></div>
+          </div>
+        </div>
+      </div>
+      <div class="chat-footer">
+        <div class="chat-row">
+          <textarea id="chat-input" placeholder="Tanya soal karir, skill, kursus..." rows="1"
+            onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendChat()}"></textarea>
+          <button class="btn-send" id="send-btn" onclick="sendChat()">Kirim</button>
+        </div>
+      </div>
+      <div class="chat-note">Groq API · Llama 3.3 70B · Advisor Karir Indonesia</div>
+    </div>
+    <div style="margin-top:20px">
+      <div style="font-size:10px;color:var(--dim);text-transform:uppercase;letter-spacing:2px;font-weight:700;margin-bottom:10px">Pertanyaan Cepat</div>
+      <div style="display:flex;flex-wrap:wrap;gap:8px">
+        <button class="btn-g" style="font-size:11px;padding:8px 14px" onclick="quickQ('Saya fresh grad statistika, mau jadi Data Scientist. Harus mulai dari mana?')">Fresh grad → Data Scientist</button>
+        <button class="btn-g" style="font-size:11px;padding:8px 14px" onclick="quickQ('Kursus gratis terbaik untuk backend developer?')">Kursus Backend Gratis</button>
+        <button class="btn-g" style="font-size:11px;padding:8px 14px" onclick="quickQ('Bagaimana cara membuat portofolio frontend yang menarik recruiter?')">Tips Portofolio Frontend</button>
+        <button class="btn-g" style="font-size:11px;padding:8px 14px" onclick="quickQ('Apakah Skillhub Kemnaker worth it untuk belajar skill baru?')">Skillhub Kemnaker?</button>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ABOUT -->
+<div id="page-about">
+<div class="wrap">
+  <div style="padding:48px 0 24px">
+    <div class="kicker" style="margin-bottom:8px">Tentang</div>
+    <div style="font-size:clamp(24px,3vw,36px);font-weight:800;letter-spacing:-1.2px">Tim <span class="it">NusaData</span></div>
+    <p style="font-size:14px;color:var(--dim);margin-top:10px;font-weight:300;max-width:520px">Fresh graduate dari UMS yang membangun SIGAP karena kami sendiri merasakan sulitnya mengetahui skill apa yang harus dipelajari saat mencari kerja.</p>
+  </div>
+  <div class="about-grid">
+    <div class="about-card">
+      <h3>Latar Belakang</h3>
+      <p>TPT nasional 4,91% (BPS 2024), dengan usia muda 15-24 tahun lebih tinggi. Bukan karena tidak mau belajar, tapi karena tidak tahu persis skill apa yang dibutuhkan pasar dan harus mulai dari mana. SIGAP hadir untuk menjawab itu.</p>
+    </div>
+    <div class="about-card">
+      <h3>Arsitektur Sistem</h3>
+      <p>Pendekatan Neuro-Symbolic: knowledge base lokal untuk akurasi bebas halusinasi, dan Groq API (Llama 3.3 70B) untuk parsing semantik CV dan evaluasi karir yang berempati. Kursus diprioritaskan gratis: Dicoding, Skillhub Kemnaker, Coursera audit.</p>
+    </div>
+  </div>
+  <div class="about-stats">
+    <div class="about-stat"><div class="about-stat-n">25+</div><div class="about-stat-l">Jalur Karir</div></div>
+    <div class="about-stat"><div class="about-stat-n">15+</div><div class="about-stat-l">Kursus Gratis</div></div>
+    <div class="about-stat"><div class="about-stat-n">3</div><div class="about-stat-l">Layer AI</div></div>
+    <div class="about-stat"><div class="about-stat-n">100%</div><div class="about-stat-l">Gratis Diakses</div></div>
+  </div>
+
+  <div style="margin-bottom:16px;margin-top:48px">
+    <div class="kicker" style="margin-bottom:8px">Teknologi</div>
+    <div style="font-size:26px;font-weight:800">Cara Kerja <span class="it">SIGAP</span></div>
+    <p style="font-size:12px;color:var(--dim);margin-top:8px">Klik setiap tahap untuk detail teknis.</p>
+  </div>
+
+  <div class="tech-flow">
+    <div class="tech-step active" onclick="showTech(0)">
+      <div class="tech-step-icon">01</div>
+      <div class="tech-step-title">Input & Ekstraksi</div>
+      <div class="tech-step-sub">Client-side PDF Parsing</div>
+    </div>
+    <div class="tech-step" onclick="showTech(1)">
+      <div class="tech-step-icon">02</div>
+      <div class="tech-step-title">Semantic Matching</div>
+      <div class="tech-step-sub">Llama 3.3 via Groq</div>
+    </div>
+    <div class="tech-step" onclick="showTech(2)">
+      <div class="tech-step-icon">03</div>
+      <div class="tech-step-title">Gap Analysis</div>
+      <div class="tech-step-sub">Weighted Scoring</div>
+    </div>
+    <div class="tech-step" onclick="showTech(3)">
+      <div class="tech-step-icon">04</div>
+      <div class="tech-step-title">Rekomendasi</div>
+      <div class="tech-step-sub">Context-Aware Advisory</div>
+    </div>
+  </div>
+  <div id="tech-detail" class="tech-detail show"></div>
+
+  <div class="kicker" style="margin-bottom:16px;margin-top:48px">Tim</div>
+  <div class="team-grid">
+
+    <a class="tcard tcard-link" href="https://www.linkedin.com/in/dzaky-rayssa-buntoro-b13694318/" target="_blank">
+      <div class="tav-photo">
+        <img src="data:image/jpeg;base64,data:image/jpeg;base64,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" alt="Dzaky"/>
+        <div class="tav-overlay">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="white"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+        </div>
+      </div>
+      <div class="tname">Dzaky Rayssa Buntoro</div>
+      <div class="trole">AI Engineer · Data Analyst</div>
+      <div class="tdesc">Skill gap algorithm, knowledge base, Groq API integration</div>
+      <div class="tlinkedin">linkedin.com/in/dzaky-rayssa-buntoro ></div>
+    </a>
+
+    <a class="tcard tcard-link" href="https://www.linkedin.com/in/muhammad-yusuf-tri-daryanto-815337247/" target="_blank">
+      <div class="tav-photo">
+        <img src="data:image/jpeg;base64,data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAgGBgcGBQgHBwcJCQgKDBQNDAsLDBkSEw8UHRofHh0aHBwgJC4nICIsIxwcKDcpLDAxNDQ0Hyc5PTgyPC4zNDL/2wBDAQkJCQwLDBgNDRgyIRwhMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjL/wAARCADIAMgDASIAAhEBAxEB/8QAHAABAAEFAQEAAAAAAAAAAAAAAAIBAwQFBgcI/8QAOxAAAQMCAwQHBgYBBAMAAAAAAQACAwQRBRIhBjFBUQcTImFxgbEUMjNykaEVI0JSYtHBNJLh8CQl8f/EABsBAAICAwEAAAAAAAAAAAAAAAABBQYCAwQH/8QALxEAAgIBAwIEBAYDAQAAAAAAAAECAxEEITEFEkFRYaEGIjKRExSBscHRI+Hwcf/aAAwDAQACEQMRAD8A0MfwmfKPRSUY/hM+UeikvTY8FBfIRETEEREAEREAERWKmrhpGZpXgE7m8SsJ2Rri5TeEZQhKcu2Kyy+i0FRjz3XELBGOZNyte7EZ5ATnlce8n/Ch7uu0QeIJy9iUq6PdNZm0vc69Fxgr6xvuyzNPiVfhx2uhNnuEo5Pb/kLGvr1LeJxa9zKfRrl9Mk/Y6xFq6THaWpIbIepeeDjofNbTepenUVXx7q3kjLabKn22LAREW41BERABERABERABERAEY/hM+Ueikox/CZ8o9FJKPA3yERExBERABEWnxbFBA408Z7VryEcO7xXPqdTDT1uyZu09Er7FCJfrsTZT3jjIMnF3Bv8Aa5+pqGPDnCV0kp3lwWDJKZn3O7kNwWRBTB+pdbu3ql6zW26mWZvbwXgWzS6SvTxxBb+ZKCOWYF2Rrg3fyV5tnNc0Wa8fpBtfwVwxtDAA51hvyj11VqZkRF2sJv8AtP8AgrhbO1IsPGhOYHuvYqy4uF7X8FkNilfe0bnjvGoUZIpmtF43WHAiyXch9rMUyC1nNA7wFs8NxWWiIaX9bT8W31b4LXSx5mh3PmFjuaW6hb6L50zU63hnPdTCyLjNZR6JDKyeJssbg5jhcEKa4bDMVloJbg5oz7zCdD/yu1p546mBk0TszHC4Kumg6hHVRxxJcr+iqa3RS00vOL8S4iIpA4giIgAiIgAiIgCMfwmfKPRSUY/hM+UeiklHgb5CIiYgiIgCEsjYYnyPNmtBJXCyyOlfI9+rnuLvNdZjb8mGPF7ZiG/5XIOPbKq/Xbm7I1+Sz9yw9HqShKfmVY0A3Oq2mFYVXYxVinpG8dXW0b4lW8DwqoxnE46WAG7jdzuDG8Svc8FwOkwqhjgpYw0AAOdbVx5kqrai/s2XJZ9LpvxN3wc5hnRzSQQB9TM6WUjW+76LLj2IpGvLnRg2N9Qu2ia3S2nMKbmMXA7JPdslI1wjskcs3Z6jjblELfosKq2ZpnNJDAe5wuuumYL6LHkaMhuFh3M2dqZ5lW7JQyZwNLE7hZcdi+zs9CC8dpncvZqmIFztN65faCnaaTKBpqt9V0kzluohJcHkRaQV0mzFSWmWlduPbb48VpquPq53DvV/CpeoxCF97dsNd4HRT+gvdV8J+vsyt62j8SmUDtkRFfSmhERABERABERAEY/hM+Ueikox/CZ8o9FJKPA3yERExBERAGuxuMyYY+w1aQ77rkmxullLQLczyXdTx9dBJH+5pC5nDKbrsTZSuFi+QMd9dVVevwcbY2eDX7Fk6JLug6/FP9z0jYXBGUWFtmLfzJu0TzHBd1FYMDSRfktXFC+CjaylABDbMB3BY7KLF4W9c0skfe9i+1/EqlS+eTk2XeP+OKikdRDA9xuGkiyPa6M6tOi5hm2WL4e9rKjCvywbFwdcj/hbuHaBlY3M4AE2uEnBJDjNyfBmhheASsWeN1jZpPgrkmJRww5nkABcviO28cLzFSxdY86drcse3PBm5dvJm1LMjXE/dcpjYMgIFiwjQg8VcNRjuL53sg6uM63IygrR1NJilNPmc/sk9ppOhWyMEvE0ysb8DicUp3RzyA7w77K1SMdLXRRtvdzm2XQbQU4FL1+WxDgD4LX7NwGWufM4XETdD3n/AKVM9Pg77IQ82QPUJfgQlP0OqREXopRAiIgAiIgAiIgCMfwmfKPRSUY/hM+UeiklHgb5CIiYgiIgDb4Jh8dXIZJqd87A9sbY2vy3J4k9wCpi2x4wfa3DKumv7PUVBa5h/Q4C/wB1u9iHh/WQ3sWSh/jdpA9FucaM1TX07iGGGCVri7jexAC8967qbnrp1yey4Xhwj0Doulp/Iwsil3Pdvx5M6KItgJHAaLm5I8VxCvq4qeRsZijc6NkhBL320AbuAvxNyutoxmjtwUpcMp3vL3RjPzsoGLw8k5JJrGTzTBm7RVrquaqhmijgsB7TEIy53FoA38fsuwwygLssj2ZQ7ULZDC+sqQ95cQOBddZz48rxbcOSdku55SwKuPYsN5Od2hpXRwljb6rVUOzzpKungysDpGda58m4Dh4k8l1GMi7m5t11VjC6ANbe1rCx1AWEZYe5m45R5cKraZ+KVNK+mlhZA05g+nDGtcNwBbvub27tVcpKmrq2ujqc3WsNjfUHzC9AfhDKgEShzgeZKsjBKelitHGAN40WyVifCwaoVOPLyeYbR05/DJW8bj1U6bCzh9FT+zAWc4CQkavW32mgBbJEBq7d4qxG54oOrfcPjc0H/vkt8JzXb2c5NLhB9znxgxEQm5ui9XR5YEREAEREAEREARj+Ez5R6KSjH8Jnyj0Uko8DfIRETEEREAbvZSsFJjsQcbMm7Bvz3j7j7r0CuAdhszWxuIzZ2uA1BHMcPFeSglpBBIINwRwXfU+2dC7Cs1SHe2CPK5gb7xtvvyVR+Ium222xvpi3nZ49mWz4f6jVXXKi6SS5Wfc6DDJQ5jSOK3Tg17RcLkcDqs9LG8brXXTRy3YFT3Fwk4stmVOKnEq8tjBNrLFY58jxYaE6K7L+YctxpvWjqTi8ldFFDNFT0rD+Zmjz5/DUELB7s2wWxkYzFLlFhfKVYwyYipdSTaOtmZ3ha/GpMbEYFI2FhaQesd2x/t0WPEzEqrE6apeMoitmdoMx46X0SwZo7JrA3QrCxB4ZEfBZDqgGO54LQY7iDGQu11togx3W7OJxqUy1zQAHHONL2urE5LY3kkEvddxG6/IKzPK41YkB1BzC6rPUOntcAAcArF0fp1t91duPki93/wCb4/Yr3V+o1U02VZ+eS2Xo9s/uWURF6AUIIiIAIiIAIiIAjH8Jnyj0UlGP4TPlHopJR4G+QiImIIiIAIiIA7LZapz0eS/ajOXy4LsIJuwNV5jgVb7HXgE2ZJ2T48F6DT1TS0arzbr+len1kmuJbr+fc9G6DqlfpIxfMdn/AB7GcZ2tLjdrL+84rBbiVK97xE8vsdX3sPqVGsoIcRZllaXMGobmI18lhf8Ag0HYmomtaNMwbf7qHjhk0orO5SuxVsQLA/NfXUi4WBFjELjYSdXKD7pO9Tq6/Z7Lm6ljnjhl19FpIKWkxPEo3ewtbG034tCywhzxjZnUiucW9rfZc7jc5eSL3W3nfFETbWw05ALmcUqAXE3usYLL2NU5YW5qDrK48tFVUaCBrvOpVV6j0rTPT6SEJc8v9TzLqeoWo1U5rjhfoERFIHAEREAEREAEREARj+Ez5R6KSjH8Jnyj0Uko8DfIRETEEREAEREANy7HBMRMlJE+Qh1yW5u8bx4rgMTrRSU7g1w61w0HEd69MwjZlmC7O4ZBIesdV0/tExJ/W7Ww8AQPJVD4nvrnGNSWWt8+XoWv4aqsjN2N4T2x5+pv4XB8dx9VfFMyUdqy55lRLhTskuZ8H6XcR4q8doKdo0lb9VS8F07tjZ1FLA0EhjL+C001OA4mOzedgrdRtBTOB/Oae660+JbRQxRFsbg95GgBTw2Dkki3jGJMp29W1wuuYe+WrfaNwDnGzS7dfhfuUXNlrJjLKSbncsumpHzVMMETS573hrQOZK3QfY9uTnmu9NPgwKSqklkmp6mIw1lO8smiPAjl3LKVzpOhGD7ZU2IwN0miDZrbnFuh87W+ixKesp6tuaCZj+4HUeS9F6V1Bamvtsfzr39Tzvqeh/LWZgvlfsX0RFLkYEREAEREAEREARj+Ez5R6KSjH8Jnyj0UklwN8hFhz4nSU9w6UOd+1mpWtn2gebiCINH7nm5+i47+o6an6pb+S3OqnQ6i36Y7euxvljTV9LB78zb8gbn7Ll566pqT+ZM4jlew+isaneoe7r74qh9/6/2SlXRfGyX2/wC/g30+0DBpBCXfyebD6LWS4vWVDsvWljTwZosMjRSjbxUVd1LU3fVPb02JOrQaer6Y/fckCXl1ySbcV9SYdT/jOxGD1MfambSRub39kAj7L5bi+I5fTvRhWtq+j7CiDrCx0DvFriPSyjrEprDJCuTg014GungbKwtcO63Jc3imzUNS0uaC138V6hieCtqnOnpyGTnUg+6/+j3rmp4HRuMcrCx43tOhUXOEq36ExVbC5ep5XU7KzROJE77crpBgbo7aEnmdV6BUUubcAVSkwuSsnbTwx3kdryAHNJTlLYycIx3OOZhr2Wa1pc4mwAGpXc7M7KOw22I1zAKkg9VGder/AJHv9F1WF7N0uFtErgJaq3xCNG/KOHirle/LGWt8yuqunG8uTis1Hd8seDwbpckDqyijvreR9u7QLzMlzXh7CWuHEGxXY9IOItxLamoMZvFBaJvlqfuVx7RcldcdkcE92bWkx2ugADniZvKTf9d63NNtDSy2EzXQu5nVv1XKxixsruVSen6rqadlLK9d/wDZHXdN09u7jh+mx3McrJWB8b2vaeLTcKa4SKaelfnglcw/xO9bSm2lmj7NTE2Qfub2T/SnNP12me1q7X90Q9/R7Yb1vK9zp0WBS4zRVVg2UMef0yaH+lnqYqurtXdW8oi7Kp1vE1hhERbDAwayvZQUjHEZpHNAY3npv8FzlTiFTVn82Q5f2t0ChU1ElW8ySb7AADcArTe0AVStf1GzUS7YvEfL+y26PQQoinJZl/3A1VLKY3oRdRmSQwRAUtyWFkskPBEq4BYW5KgGqkEDDNHle09COL3pcUwh7tWObUxC/A9l3o36rxYb+8rtuizEDQbe0DLkMqg6ndr+4afcBIyR9LOe1kZe9wa1ouSdwC8A296TcSxDGJaHCXeyUUDrNla0dZL/ACudzTwA816ptzVVQ2fbR0d+tqnhjrb8nG32C5bbno2p59jm1OHQf+0oY+sc4b5m2u9vjxHh3rHCxuZJYWTyaTbPaMst+LTjyb/SwKXajGKLGafFY66eSrgfmY57ib82kcjuIWuc7NFdeg9FWxL8WrhjlcwGigktExwuJHjefAeqSjFcIHKUtmz3fCcXjxjBaXEGsLBPEHmM72O4t8itJtTiDcPwmqmc6xaxznHk0C/9DzW66vqIXPiaAMwNgNOR0+i8y6XsVNBhNPhjCTPXG8ruUbTe3mbeQTMltueJVcrpZHyu955Lj4lYrAr0upKtN3JmorezgeG5XRrorThdpHCyrG67QeO4piLncrbmghXCooyBYLSFl0mJ1dER1UpLB+h2rVZtqokWK2V2zrl3QeGa7KoWLtmso6ygx2nrLMk/Jl5OOh8Ci5Mdlniim6uvWxjicU358ERb0auUswlhfcvsPZF+SNOV5HA6hUZoB4JJoA7kVBMmS4N10voog6BHHslIyKsN2qp1CtxG7VcvokBRrxmsbglSva6iQHDVVZcb9RwQMkDbXis7Cq92F4xRV7N9NOyX/a4FYR97yUHHsIGfV85jxPG8LfEc8AhNQDwINrf4W/cuY6P3xVWxmEVgF5PZWxFxOtgdy3ONYlHhGDVuJSkZKWF8pvxsLgfVYGTfgfLm2sVHSbaY1Bh/+nZVPDQBYNP6gO4OuF9B7EeyP2Hwc0TQyA0rSAOf6r997r5emnkqZJZ5XEyyvMjyeJJufuV7p0I4ua3Zeqwx57VDPdvyP1H3DkxI9NPYYc2rLahfPvS5iLqnbEUrj/o6djHW/e7tH1aPJfQ5Ac3uOi+UNq8Q/FNqcWrr3E1U8t+UGw+wCaB8GlJ0JPFWy3KSFO99EfqAeKDEtu0VuN4MhANwddOapkdNrIdAfdCmA1gsBZAi6DoqFBuVDuTAHfdRdq+yPdZt1Qb3O8kARe6xRWpHXNkRkxMxl8ovyVw2LSCoN91vgqpsaIxu7IB4aKb/AHSrF8stuB1V2Q9hIYi91TJ1Ctx6BJDaxCBlwcTwUxqFC4NiNxU/BAwPRUOrXKo0d4qn7vBID6L6Ga72rYGKEm7qeZ8fle4Vjprxf2DYcUTHWfiE7Yrc2t7TvQDzWi6BK8GmxbDz+mRsrfMf8LSdO2KCo2nw/DGOu2kpuseL7nPP9AfVYjZ5aT2CvROhDFPZNsqige6za2lcAP5sOYfbMvOidLLP2XxU4JtdheI3s2CpY5/yk2d9iUxH1lidUKDCKypJsIYHyXPc0lfIb3lwzH3nanxK+mek/EPw/o+xN7HC8zBA0/OQPS6+Y5DdyBsoN6Xu/uCog3+KYij2neN/HvVoOzPssglYjnl1SA3hvQIydyi82CqrFS+zAOJKAIvfc271dIswDjxViMZpyOAV9ztdUCLeUXuUVHmwRMRlj3R4Kt9ERAyxOcuVw4G6uuILAiIAN3I87giIGVYdMpV0HREQAv2gpN3oiQzu+hjETR7d+yF1m1cRb4kf/Vy+2mL/AI5tri+INdmjkqHNjP8ABvZb9giJAaIqxIL+aIkI9g252l/F+ijZbt3lqiOu1/VEC133XlDjqiJjKKveiJgUe7KwuO4BY9O03LzvKIgRkbgsGpfd4HeiIAuQaMc88SpsFzcoiBFJdyIiAP/Z" alt="Yusuf"/>
+        <div class="tav-overlay">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="white"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+        </div>
+      </div>
+      <div class="tname">Muhammad Yusuf Tri Daryanto</div>
+      <div class="trole">Backend Developer</div>
+      <div class="tdesc">FastAPI, REST API, chat endpoint, deployment cloud</div>
+      <div class="tlinkedin">linkedin.com/in/muhammad-yusuf-tri-daryanto ></div>
+    </a>
+
+    <a class="tcard tcard-link" href="https://www.linkedin.com/in/muhammad-syahid-cahya-kusuma-51ab471b7/" target="_blank">
+      <div class="tav-photo">
+        <img src="data:image/jpeg;base64,data:image/jpeg;base64,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" alt="Syahid"/>
+        <div class="tav-overlay">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="white"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+        </div>
+      </div>
+      <div class="tname">Muhammad Syahid Cahya Kusuma</div>
+      <div class="trole">Frontend Developer</div>
+      <div class="tdesc">Dashboard analyzer, UI/UX interaction, antarmuka</div>
+      <div class="tlinkedin">linkedin.com/in/muhammad-syahid-cahya-kusuma ></div>
+    </a>
+
+  </div>
+  <div style="margin-top:36px;background:rgba(255,255,255,0.02);border:1px solid var(--border);border-radius:6px;padding:24px">
+    <div class="kicker" style="margin-bottom:14px">Sumber Data</div>
+    <p style="font-size:13px;color:var(--dim);margin-bottom:16px;font-weight:300">Skill requirements dari agregasi data lowongan kerja Indonesia 2024-2025.</p>
+    <div style="display:flex;flex-wrap:wrap;gap:6px">
+      <span class="tag tb">Jobstreet ID 2024</span>
+      <span class="tag tb">LinkedIn Indonesia</span>
+      <span class="tag tc">BPS Sakernas 2025</span>
+      <span class="tag tc">Dicoding.com</span>
+      <span class="tag tc">Kemnaker.go.id</span>
+      <span class="tag tg">Groq API</span>
+      <span class="tag tg">Llama 3.3 70B</span>
+    </div>
+  </div>
+</div>
+</div>
+
+<footer>
+  <div class="foot-i">
+    <div class="foot-l">SI<span>GAP</span></div>
+    <div class="foot-r">Tim NusaData · PIDI DIGDAYA · Bank Indonesia 2026</div>
+  </div>
+</footer>
+
+<script>
+const API = 'http://localhost:8000';
+let chatHistory = [];
+let userSkills = [];
+let lastProfil = null;
+
+// ── SKILL SIMILARITY ────────────────────────────
+const SKILL_ALIASES = {
+  // ── Data & Analytics ──
+  "data wrangling":       ["Pandas", "SQL", "Python"],
+  "data cleaning":        ["Pandas", "Python"],
+  "data viz":             ["Tableau", "Power BI", "Visualisasi Data"],
+  "data visualization":   ["Tableau", "Power BI"],
+  "data analysis":        ["SQL", "Excel", "Python", "Statistik"],
+  "analisis data":        ["SQL", "Excel", "Statistik"],
+  "pengolahan data":      ["Excel", "Python", "Statistik"],
+  "pivot table":          ["Excel", "Analisis Data"],
+  "excel advanced":       ["Excel"],
+  "microsoft excel":      ["Excel"],
+  "ms excel":             ["Excel"],
+  "spreadsheet":          ["Excel"],
+  "power bi":             ["Power BI"],
+  "powerbi":              ["Power BI"],
+  "power bi desktop":     ["Power BI"],
+  "tableau desktop":      ["Tableau"],
+  "looker studio":        ["Tableau", "Power BI"],
+  "google data studio":   ["Power BI", "Google Analytics"],
+  "statistik":            ["Statistik"],
+  "spss":                 ["Statistik", "SPSS"],
+  "ibm spss":             ["Statistik", "SPSS"],
+
+  // ── AI & ML ──
+  "ml":                   ["Machine Learning"],
+  "machine learning":     ["Machine Learning"],
+  "ai":                   ["Machine Learning", "Deep Learning"],
+  "artificial intelligence": ["Machine Learning", "Deep Learning"],
+  "nlp":                  ["Machine Learning", "Python"],
+  "natural language":     ["Machine Learning", "Python"],
+  "computer vision":      ["Deep Learning", "Python"],
+  "deep learning":        ["Deep Learning", "TensorFlow"],
+  "tensorflow":           ["TensorFlow", "Machine Learning"],
+  "pytorch":              ["PyTorch", "Machine Learning"],
+  "scikit":               ["Machine Learning", "Python"],
+  "scikit-learn":         ["Machine Learning", "Python"],
+
+  // ── Programming ──
+  "python":               ["Python"],
+  "js":                   ["JavaScript"],
+  "javascript":           ["JavaScript"],
+  "typescript":           ["TypeScript"],
+  "ts":                   ["TypeScript"],
+  "golang":               ["Go"],
+  "php":                  ["PHP"],
+  "laravel":              ["Laravel", "PHP"],
+  "react.js":             ["React"],
+  "reactjs":              ["React"],
+  "react native":         ["React Native", "Mobile Developer"],
+  "vue.js":               ["Vue"],
+  "vuejs":                ["Vue"],
+  "angular":              ["Angular"],
+  "next.js":              ["Next.js", "React"],
+  "nextjs":               ["Next.js", "React"],
+  "node":                 ["Node.js"],
+  "nodejs":               ["Node.js"],
+  "express":              ["Node.js"],
+  "fastapi":              ["FastAPI", "Python"],
+  "django":               ["Django", "Python"],
+  "flask":                ["Python"],
+  "spring boot":          ["Java"],
+
+  // ── Frontend ──
+  "html css":             ["HTML", "CSS"],
+  "html5":                ["HTML"],
+  "css3":                 ["CSS"],
+  "tailwind":             ["CSS", "Frontend Developer"],
+  "bootstrap":            ["CSS", "Frontend Developer"],
+  "web development":      ["HTML", "CSS", "JavaScript"],
+  "web developer":        ["HTML", "CSS", "JavaScript"],
+
+  // ── Mobile ──
+  "flutter":              ["Flutter", "Dart"],
+  "dart":                 ["Dart", "Flutter"],
+  "android":              ["Mobile Developer", "Kotlin"],
+  "ios":                  ["Mobile Developer"],
+  "kotlin":               ["Kotlin", "Android"],
+
+  // ── Database ──
+  "sql":                  ["SQL"],
+  "mysql":                ["SQL", "MySQL"],
+  "postgres":             ["PostgreSQL", "SQL"],
+  "postgresql":           ["PostgreSQL", "SQL"],
+  "mongodb":              ["MongoDB"],
+  "mongo":                ["MongoDB"],
+  "nosql":                ["MongoDB"],
+  "redis":                ["Redis"],
+  "elasticsearch":        ["Elasticsearch"],
+  "bigquery":             ["BigQuery", "SQL"],
+
+  // ── Cloud & DevOps ──
+  "aws":                  ["AWS", "Cloud"],
+  "amazon web services":  ["AWS", "Cloud"],
+  "gcp":                  ["GCP", "Cloud"],
+  "google cloud":         ["GCP", "Cloud"],
+  "azure":                ["Azure", "Cloud"],
+  "docker":               ["Docker"],
+  "kubernetes":           ["Kubernetes"],
+  "k8s":                  ["Kubernetes"],
+  "terraform":            ["Terraform", "Cloud"],
+  "ci/cd":                ["CI/CD"],
+  "github actions":       ["CI/CD", "Git"],
+  "jenkins":              ["CI/CD"],
+  "linux":                ["Linux"],
+  "bash":                 ["Linux", "Bash"],
+  "shell":                ["Linux"],
+
+  // ── Design ──
+  "figma":                ["Figma"],
+  "figma design":         ["Figma"],
+  "ui/ux":                ["Figma", "User Research"],
+  "ux designer":          ["Figma", "User Research"],
+  "ui designer":          ["Figma"],
+  "ux":                   ["User Research", "Figma"],
+  "ui":                   ["Figma"],
+  "adobe xd":             ["Figma"],
+  "wireframe":            ["Wireframing", "Figma"],
+  "prototype":            ["Prototyping", "Figma"],
+  "canva":                ["Canva"],
+  "illustrator":          ["Adobe Illustrator"],
+  "photoshop":            ["Adobe Photoshop"],
+  "adobe illustrator":    ["Adobe Illustrator"],
+  "adobe photoshop":      ["Adobe Photoshop"],
+  "premiere":             ["Adobe Premiere", "Video Editing"],
+  "after effects":        ["After Effects"],
+  "capcut":               ["CapCut", "Video Editing"],
+  "video editing":        ["Video Editing"],
+
+  // ── Marketing ──
+  "seo":                  ["SEO"],
+  "sem":                  ["Google Ads"],
+  "google ads":           ["Google Ads"],
+  "meta ads":             ["Meta Ads"],
+  "facebook ads":         ["Meta Ads"],
+  "ig ads":               ["Meta Ads", "Social Media"],
+  "google analytics":     ["Google Analytics"],
+  "ga4":                  ["Google Analytics"],
+  "hootsuite":            ["Hootsuite", "Social Media"],
+  "hubspot":              ["HubSpot"],
+  "mailchimp":            ["Email Marketing"],
+  "email marketing":      ["Email Marketing", "Copywriting"],
+  "content planning":     ["Content Planning", "Social Media"],
+  "copywriting":          ["Copywriting"],
+  "copy writing":         ["Copywriting"],
+  "content writer":       ["Copywriting", "Content Planning"],
+
+  // ── Soft Skills (Indonesia) ──
+  "komunikasi":           ["Komunikasi"],
+  "komunikasi publik":    ["Komunikasi", "Public Speaking"],
+  "komunikasi bisnis":    ["Komunikasi"],
+  "public speaking":      ["Komunikasi", "Presentasi"],
+  "presentasi":           ["Presentasi", "Komunikasi"],
+  "negosiasi":            ["Negosiasi"],
+  "kepemimpinan":         ["Kepemimpinan"],
+  "leadership":           ["Kepemimpinan"],
+  "teamwork":             ["Teamwork"],
+  "kerja tim":            ["Teamwork"],
+  "problem solving":      ["Problem Solving"],
+  "pemecahan masalah":    ["Problem Solving"],
+  "analitis":             ["Berpikir Kritis", "Problem Solving"],
+  "teliti":               ["Detail-oriented"],
+  "manajemen waktu":      ["Manajemen Waktu"],
+  "time management":      ["Manajemen Waktu"],
+
+  // ── Office & Tools ──
+  "microsoft office":     ["Microsoft Office", "Excel"],
+  "ms office":            ["Microsoft Office", "Excel"],
+  "google workspace":     ["Google Workspace"],
+  "google docs":          ["Google Workspace"],
+  "english":              ["Bahasa Inggris"],
+  "bahasa inggris":       ["Bahasa Inggris"],
+  "bilingual":            ["Bahasa Inggris"],
+
+  // ── Metodologi ──
+  "agile":                ["Agile/Scrum"],
+  "scrum":                ["Agile/Scrum"],
+  "kanban":               ["Agile/Scrum"],
+  "jira":                 ["Agile/Scrum"],
+  "git":                  ["Git"],
+  "github":               ["Git"],
+  "gitlab":               ["Git", "CI/CD"],
+  "rest api":             ["REST API"],
+  "restful":              ["REST API"],
+  "graphql":              ["GraphQL", "REST API"],
+  "microservices":        ["Microservices", "Backend Developer"],
+  "backend" :             ["Python",'Node Js'],
+
+  // ── Business ──
+  "market research":      ["Market Research", "Analisis Data"],
+  "riset pasar":          ["Market Research"],
+  "akuntansi":            ["Akuntansi"],
+  "laporan keuangan":     ["Akuntansi", "Financial Analyst"],
+  "public relations":     ["Public Relations"],
+  "humas":                ["Public Relations"],
+  "press release":        ["Public Relations", "Copywriting"],
+  "event":                ["Event Organizing"],
+  "kepanitiaan":          ["Kepemimpinan", "Event Organizing"],
+};
+
+function expandSkills(rawSkills) {
+  // Hanya expand skill yang merupakan singkatan/alias pendek
+  // JANGAN partial match — ini yang bikin skill meledak jadi 80+
+  const expanded = new Set(rawSkills.map(s => s.trim()));
+  rawSkills.forEach(skill => {
+    const lower = skill.toLowerCase().trim();
+    // Hanya exact match — tidak ada partial match
+    if (SKILL_ALIASES[lower]) {
+      SKILL_ALIASES[lower].forEach(s => expanded.add(s));
+    }
+  });
+  // Batasi maksimal 30 skill agar tidak meledak
+  const result = [...expanded];
+  if (result.length > 30) {
+    console.warn(`expandSkills: ${result.length} skills, truncating to 30`);
+    return result.slice(0, 30);
+  }
+  return result;
+}
+
+
+const AMBIGUOUS_TECH_SKILLS = new Set([
+  "r", "c", "go", "c++", "c#", "f#", "d", "j",
+]);
+
+function filterFalsePositiveSkills(skills, cvText) {
+  const cvLower = (cvText || '').toLowerCase();
+  return skills.filter(skill => {
+    const sl = skill.toLowerCase().trim();
+    
+    // Skill 1-2 karakter yang ambigu — hanya terima kalau ada konteks kuat
+    if (AMBIGUOUS_TECH_SKILLS.has(sl)) {
+      // "R" diterima kalau ada "bahasa r", "r programming", "rstudio"
+      if (sl === 'r') {
+        return /r programming|rstudio|bahasa r|r language/i.test(cvLower);
+      }
+      // "Go" diterima kalau ada "golang", "go programming", "go language"
+      if (sl === 'go') {
+        return /golang|go programming|go language/i.test(cvLower);
+      }
+      // "C" diterima kalau ada "bahasa c", "c programming"
+      if (sl === 'c') {
+        return /c programming|bahasa c/i.test(cvLower);
+      }
+      return false;
+    }
+    
+    
+    if (sl === 'git') {
+      return /git|github|gitlab|version control|source control/i.test(cvLower);
+    }
+    
+    return true;
+  });
+}
+
+
+const PDFJS_URL = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js';
+let pdfjsLib = null;
+
+async function loadPDFJS() {
+  if (pdfjsLib) return pdfjsLib;
+  return new Promise((resolve, reject) => {
+    const script = document.createElement('script');
+    script.src = PDFJS_URL;
+    script.onload = () => {
+      window.pdfjsLib.GlobalWorkerOptions.workerSrc =
+        'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+      pdfjsLib = window.pdfjsLib;
+      resolve(pdfjsLib);
+    };
+    script.onerror = reject;
+    document.head.appendChild(script);
+  });
+}
+
+async function extractTextFromPDF(file) {
+  try {
+    const lib = await loadPDFJS();
+    const arrayBuffer = await file.arrayBuffer();
+    const pdf = await lib.getDocument({ data: arrayBuffer }).promise;
+    let fullText = '';
+    for (let i = 1; i <= pdf.numPages; i++) {
+      const page = await pdf.getPage(i);
+      const content = await page.getTextContent();
+      fullText += content.items.map(item => item.str).join(' ') + '\n';
+    }
+    return fullText;
+  } catch(e) {
+    console.error('PDF.js error:', e);
+    return '';
+  }
+}
+
+async function handleCV(input) {
+  const file = input.files[0];
+  if (!file) return;
+
+  const zone   = document.getElementById('cv-zone');
+  const status = document.getElementById('cv-status');
+  const fname  = document.getElementById('cv-filename');
+  const sfound = document.getElementById('cv-skills-found');
+
+  fname.textContent = 'Menganalisis ' + file.name + '...';
+  status.style.display = 'block';
+  zone.style.display   = 'none';
+
+  try {
+  
+    let extractedText = '';
+
+    if (file.name.endsWith('.pdf')) {
+      fname.textContent = 'Membaca PDF...';
+      extractedText = await extractTextFromPDF(file);
+    } else if (file.name.endsWith('.txt')) {
+      extractedText = await file.text();
+    } else {
+      // DOC/DOCX — kirim langsung ke backend untuk parsing
+      extractedText = '';
+    }
+
+   
+    let skills = [];
+
+    if (extractedText && extractedText.trim().length > 50) {
+      // Kirim teks hasil ekstraksi ke backend untuk diproses Groq
+      fname.textContent = 'Mengidentifikasi skill...';
+      const r = await fetch(API + '/parse-cv-text', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({ text: extractedText }),
+        signal: AbortSignal.timeout(20000),
+      });
+      if (r.ok) {
+        const data = await r.json();
+        const rawSkills = data.skills || [];
+        skills = filterFalsePositiveSkills(rawSkills, extractedText);
+        // Simpan cv_summary supaya analyze bisa pakai konteks CV
+        if (data.cv_summary) window._cvSummary = data.cv_summary;
+      }
+    } else {
+      // Fallback: kirim file binary ke backend
+      fname.textContent = 'Mengunggah ke backend...';
+      const formData = new FormData();
+      formData.append('file', file);
+      const r = await fetch(API + '/parse-cv', {
+        method: 'POST',
+        body: formData,
+        signal: AbortSignal.timeout(25000),
+      });
+      if (r.ok) {
+        const data = await r.json();
+        skills = data.skills || [];
+        if (data.cv_summary) window._cvSummary = data.cv_summary;
+      }
+    }
+
+    // Step 3: Tampilkan hasil
+    if (skills.length > 0) {
+      skills.forEach(s => addSkill(s));
+      fname.textContent  = file.name;
+      sfound.textContent = skills.length + ' skill terdeteksi';
+    } else {
+      fname.textContent  = file.name + ' — tidak ada skill';
+      sfound.textContent = 'Tidak ada skill terdeteksi — coba format TXT atau tambah manual.';
+    }
+
+  } catch(e) {
+    console.error('CV error:', e);
+    fname.textContent  = 'Gagal: ' + file.name;
+    sfound.textContent = 'Pastikan backend menyala dan API key valid.';
+  }
+}
+
+function clearCV() {
+  document.getElementById('cv-file').value = '';
+  document.getElementById('cv-status').style.display = 'none';
+  document.getElementById('cv-zone').style.display = 'block';
+  window._cvSummary = "";  // reset cv summary
+}
+
+// Drag & drop support
+document.addEventListener('DOMContentLoaded', () => {
+  const zone = document.getElementById('cv-zone');
+  if (!zone) return;
+  zone.addEventListener('dragover', e => { e.preventDefault(); zone.classList.add('dragover'); });
+  zone.addEventListener('dragleave', () => zone.classList.remove('dragover'));
+  zone.addEventListener('drop', e => {
+    e.preventDefault();
+    zone.classList.remove('dragover');
+    const file = e.dataTransfer.files[0];
+    if (file) {
+      const input = document.getElementById('cv-file');
+      const dt = new DataTransfer();
+      dt.items.add(file);
+      input.files = dt.files;
+      handleCV(input);
+    }
+  });
+});
+
+// ── TECH STEPS DATA ─────────────────────────────────────────────────────
+const TECH_STEPS = [
+  {
+    title: '01 — Input & Ekstraksi',
+    desc: 'Pengguna upload CV dalam format PDF, DOCX, atau TXT. File PDF diekstrak langsung di browser menggunakan PDF.js — tidak perlu upload file besar ke server, lebih cepat dan lebih aman untuk privasi.',
+    tags: [{label:'PDF.js Client-Side',color:'highlight'},{label:'Privacy First',color:''},{label:'Zero Server Storage',color:'highlight'}],
+    code: `// PDF diekstrak di browser
+const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+const text = await extractAllPages(pdf);
+// Teks bersih dikirim ke /parse-cv-text`
+  },
+  {
+    title: '02 — Semantic Matching',
+    desc: 'Teks CV diproses oleh Llama 3.3 70B via Groq API. AI memahami konteks semantik, bukan hanya keyword — "kepanitiaan" → Kepemimpinan, "press release" → Public Relations. Diperkuat Regex Hybrid untuk skill teknis.',
+    tags: [{label:'Llama 3.3 70B',color:'highlight'},{label:'Groq API',color:'highlight'},{label:'Regex Hybrid',color:''}],
+    code: `# Hybrid Extraction
+regex_skills = [s for s in SKILL_PATTERNS if re.search(r"\b" + s + r"\b", text)]
+skills = list(dict.fromkeys(ai_skills + regex_skills))`
+  },
+  {
+    title: '03 — Gap Analysis',
+    desc: 'Readiness Score dihitung dengan Weighted Scoring: skill wajib (bobot 3) dan skill plus (bobot 1). Sistem mendeteksi Career Pivot otomatis. Fuzzy matching memastikan typo tetap diarahkan ke role yang tepat.',
+    tags: [{label:'Weighted Scoring',color:'highlight'},{label:'Pivot Detection',color:'highlight'},{label:'Fuzzy Match',color:''}],
+    code: `# Readiness = (wajib_match/total × 70) + (plus_match/total × 30)
+readiness = int((len(matched_wajib)/len(skill_wajib))*70 +
+                (len(matched_plus)/len(skill_plus))*30)`
+  },
+  {
+    title: '04 — Rekomendasi',
+    desc: 'Roadmap personal per fase dan kursus gratis terkurasi (Dicoding, HubSpot, Kemnaker). Jika readiness ≥ 80%, langsung ke Kaggle/GitHub. Chat AI menyimpan konteks gap analisis — tidak amnesia saat ditanya lanjutan.',
+    tags: [{label:'Dynamic Roadmap',color:'highlight'},{label:'Context-Aware Chat',color:'highlight'},{label:'Gratis',color:''}],
+    code: `# Chat AI menyimpan konteks
+profil["skill_kurang"] = result["skill_kurang"]
+profil["readiness"]    = result["readiness"]
+reply = await call_groq(messages_with_context)`
+  },
+];
+
+let activeTech = 0;
+
+function showTech(idx) {
+  activeTech = idx;
+  // Update active step
+  document.querySelectorAll('.tech-step').forEach((s, i) => {
+    s.classList.toggle('active', i === idx);
+  });
+  // Update detail panel
+  const d = TECH_STEPS[idx];
+  const tagsHtml = d.tags.map(t =>
+    `<span class="tech-tag ${t.color === 'highlight' ? 'highlight' : ''}">${t.label}</span>`
+  ).join('');
+  document.getElementById('tech-detail').innerHTML = `
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:start">
+      <div>
+        <div class="tech-detail-title">${d.title}</div>
+        <div class="tech-detail-desc">${d.desc}</div>
+        <div class="tech-tags">${tagsHtml}</div>
+      </div>
+      <div style="background:rgba(0,0,0,0.3);border:1px solid rgba(255,255,255,0.07);border-radius:12px;padding:16px;font-family:monospace;font-size:12px;color:rgba(255,255,255,0.7);line-height:1.7;overflow-x:auto;white-space:pre">${d.code.replace(/</g,'&lt;').replace(/>/g,'&gt;')}</div>
+    </div>
+  `;
+  document.getElementById('tech-detail').classList.add('show');
+}
+
+// Init
+document.addEventListener('DOMContentLoaded', () => {
+  if (document.getElementById('tech-detail')) showTech(0);
+});
+
+// ── NAV ──────────────────────────────────────────────────────────────────
+function go(p) {
+  ['home','analyzer','chat','about'].forEach(x => {
+    document.getElementById('page-'+x).style.display = x===p?'block':'none';
+  });
+  document.querySelectorAll('.nav-links a').forEach((a,i) => {
+    a.classList.toggle('active', ['home','analyzer','chat','about'][i] === p);
+  });
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+// ── SKILL INPUT ───────────────────────────────────────────────────────────
+const skillInput = document.getElementById('skill-input');
+skillInput.addEventListener('keydown', e => {
+  if (e.key === 'Enter' || e.key === ',') {
+    e.preventDefault();
+    const val = skillInput.value.trim().replace(/,$/, '');
+    if (val) addSkill(val);
+  }
+  if (e.key === 'Backspace' && skillInput.value === '' && userSkills.length > 0) {
+    removeSkill(userSkills[userSkills.length - 1]);
+  }
+});
+
+function addSkill(skill) {
+  skill = skill.trim();
+  if (!skill || userSkills.includes(skill)) return;
+  userSkills.push(skill);
+  renderSkillTags();
+  skillInput.value = '';
+  skillInput.focus();
+}
+
+function removeSkill(skill) {
+  userSkills = userSkills.filter(s => s !== skill);
+  renderSkillTags();
+}
+
+function renderSkillTags() {
+  const wrap = document.getElementById('skill-wrap');
+  // Remove existing tags
+  wrap.querySelectorAll('.skill-tag').forEach(t => t.remove());
+  userSkills.forEach(skill => {
+    const tag = document.createElement('div');
+    tag.className = 'skill-tag';
+    tag.innerHTML = `${skill}<button onclick="removeSkill('${skill}')" type="button">×</button>`;
+    wrap.insertBefore(tag, skillInput);
+  });
+}
+
+// ── ANALYZE & MODAL CONFIRMATION ──────────────────────────────────────────
+function promptConfirmAnalyze() {
+  const modal = document.getElementById('skill-confirm-modal');
+  const box = document.getElementById('modal-skill-list');
+  
+  // Validasi awal pendidikan
+  const pendidikan = document.getElementById('f-pendidikan').value;
+  if (!pendidikan) {
+    alert('Mohon isi Pendidikan Terakhir dulu ya!');
+    return;
+  }
+  
+  box.innerHTML = '';
+  userSkills.forEach(s => {
+    const chip = document.createElement('div');
+    chip.className = 'modal-skill-chip';
+    chip.textContent = s;
+    box.appendChild(chip);
+  });
+  
+  modal.classList.add('show');
+}
+
+function closeModal() {
+  document.getElementById('skill-confirm-modal').classList.remove('show');
+}
+
+function confirmAndAnalyze() {
+  closeModal();
+  doAnalyze();
+}
+
+async function doAnalyze() {
+  const pendidikan = document.getElementById('f-pendidikan').value;
+  const target     = document.getElementById('f-target').value.trim();
+  const exp        = document.getElementById('f-exp').value;
+  const lokasi     = document.getElementById('f-lokasi').value;
+
+  // Validasi 1: Pendidikan wajib
+  if (!pendidikan) {
+    alert('Mohon isi Pendidikan Terakhir dulu ya!');
+    return;
+  }
+
+  // Validasi 2: Hybrid — kalau target kosong, harus ada skill
+  if (!target && userSkills.length === 0) {
+    alert('Karena Target Pekerjaan dikosongin, tolong upload CV atau masukkan minimal 3 skill manual biar SIGAP bisa kasih rekomendasi karir yang tepat!');
+    return;
+  }
+
+  const btn = document.getElementById('analyze-btn');
+  btn.classList.add('loading'); btn.disabled = true;
+
+  const expandedSkills = expandSkills(userSkills);
+  lastProfil = {
+    pendidikan, jurusan: pendidikan,
+    skill: expandedSkills,
+    target_job: target,
+    pengalaman: exp, lokasi,
+    cv_summary: window._cvSummary || "",  // konteks pengalaman dari CV
+  };
+
+  try {
+    const r = await fetch(`${API}/analyze`, {
+      method: 'POST', headers: {'Content-Type':'application/json'},
+      body: JSON.stringify(lastProfil),
+      signal: AbortSignal.timeout(30000), // dipanjangin karena AI butuh rekomendasikan job
+    });
+    if (!r.ok) throw new Error(await r.text());
+
+    const data = await r.json();
+
+    // Simpan hasil analisis ke lastProfil biar Chat AI bisa baca konteksnya
+    lastProfil.readiness    = data.readiness;
+    lastProfil.skill_kurang = data.skill_kurang || [];
+    lastProfil.job_target   = data.job_target || target;
+    lastProfil.is_recommended = data.is_recommended || false;
+
+    // Kalau AI yang rekomendasikan job, update target di profil
+    if (!target && data.job_target) {
+      lastProfil.target_job = data.job_target;
+    }
+
+    renderResult(data);
+  } catch(e) {
+    console.error('Analyze error:', e);
+    // Demo mode fallback
+    const demo = demoAnalyze(lastProfil);
+    lastProfil.readiness    = demo.readiness;
+    lastProfil.skill_kurang = demo.skill_kurang || [];
+    lastProfil.job_target   = demo.job_target || target;
+    renderResult(demo);
+  }
+
+  btn.classList.remove('loading'); btn.disabled = false;
+}
+
+// ── DEMO ANALYZE ─────────────────────────────────────────────────────────
+function demoAnalyze(p) {
+  const jobMap = {
+    'Data Analyst': {wajib:['SQL','Excel','Python','Statistik Dasar','Visualisasi Data'], gaji:'Rp 6–12 juta', demand:'Sangat Tinggi', lokasi:['Jakarta','Remote'], growth:'Tumbuh 25%/tahun'},
+    'Data Scientist': {wajib:['Python','Machine Learning','Statistik','SQL'], gaji:'Rp 10–25 juta', demand:'Tinggi', lokasi:['Jakarta','Remote'], growth:'Tumbuh 35%/tahun'},
+    'Backend Developer': {wajib:['Python/Node.js','REST API','SQL','Git'], gaji:'Rp 7–20 juta', demand:'Sangat Tinggi', lokasi:['Jakarta','Remote'], growth:'Stabil tinggi'},
+    'Frontend Developer': {wajib:['HTML','CSS','JavaScript','React','Git'], gaji:'Rp 6–18 juta', demand:'Tinggi', lokasi:['Jakarta','Remote'], growth:'Kompetitif'},
+    'UI/UX Designer': {wajib:['Figma','User Research','Wireframing','Prototyping'], gaji:'Rp 6–18 juta', demand:'Tinggi', lokasi:['Jakarta','Remote'], growth:'Tumbuh terus'},
+    'Full Stack Developer': {wajib:['JavaScript','React','Node.js','Database','Git'], gaji:'Rp 8–22 juta', demand:'Sangat Tinggi', lokasi:['Jakarta','Remote'], growth:'Paling dicari startup'},
+  };
+
+  const job = p.target_job;
+  const data = jobMap[job] || jobMap['Data Analyst'];
+  const userSkillLower = p.skill.map(s => s.toLowerCase().trim());
+  const have = data.wajib.filter(wajibSkill => {
+    const ws = wajibSkill.toLowerCase();
+    return userSkillLower.some(us => us === ws || us === `belajar ${ws}`); // Hanya exact match atau variasi tipis
+  });
+  const missing = data.wajib.filter(wajibSkill => {
+    const ws = wajibSkill.toLowerCase();
+    return !userSkillLower.some(us => us === ws || us === `belajar ${ws}`);
+  });
+  const readiness = Math.round((have.length / data.wajib.length) * 100);
+
+  const roadmapMap = {
+    'Data Analyst': [
+      {fase:'Bulan 1-2', nama:'Fondasi', skill:['Excel','SQL Dasar','Statistik'], kursus:'SQL untuk Pemula (Dicoding — Gratis)', milestone:'Bisa query database dan buat laporan'},
+      {fase:'Bulan 3-4', nama:'Core Skills', skill:['Python Pandas','Visualisasi'], kursus:'Google Data Analytics (Coursera/Skillhub Kemnaker)', milestone:'Bisa analisis dataset dan buat dashboard'},
+      {fase:'Bulan 5-6', nama:'Portofolio', skill:['Tableau/Power BI','Kaggle'], kursus:'Power BI (Microsoft Learn — Gratis)', milestone:'3 project portofolio di GitHub'},
+    ],
+    'Backend Developer': [
+      {fase:'Bulan 1-2', nama:'Fondasi', skill:['Python/Node.js','Git','SQL'], kursus:'Belajar Python (Dicoding — Gratis)', milestone:'Bisa buat REST API sederhana'},
+      {fase:'Bulan 3-4', nama:'Framework', skill:['FastAPI/Express','PostgreSQL','JWT'], kursus:'Backend Developer (Dicoding — Gratis)', milestone:'CRUD API lengkap dengan auth'},
+      {fase:'Bulan 5-6', nama:'Production', skill:['Docker','Cloud','CI/CD'], kursus:'AWS Cloud Practitioner (Gratis)', milestone:'Deploy ke production'},
+    ],
+    'Frontend Developer': [
+      {fase:'Bulan 1-2', nama:'Web Dasar', skill:['HTML','CSS','JavaScript'], kursus:'Frontend Developer (Dicoding — Gratis)', milestone:'Rebuild halaman website dari nol'},
+      {fase:'Bulan 3-4', nama:'React', skill:['React','State Management','API'], kursus:'React Developer (Dicoding — Gratis)', milestone:'Single Page App yang connect ke API'},
+      {fase:'Bulan 5-6', nama:'Modern Stack', skill:['TypeScript','Next.js','Testing'], kursus:'TypeScript (Microsoft Learn — Gratis)', milestone:'3 project di GitHub, deploy ke Vercel'},
+    ],
+  };
+
+  const kursusMap = {
+    'SQL': {nama:'SQL untuk Pemula', platform:'Dicoding', url:'dicoding.com/academies/248', biaya:'GRATIS'},
+    'Python': {nama:'Belajar Python', platform:'Dicoding', url:'dicoding.com/academies/86', biaya:'GRATIS'},
+    'Machine Learning': {nama:'Machine Learning Terapan', platform:'Dicoding', url:'dicoding.com/academies/319', biaya:'GRATIS'},
+    'React': {nama:'React Developer', platform:'Dicoding', url:'dicoding.com/academies/403', biaya:'GRATIS'},
+    'HTML': {nama:'Frontend Developer', platform:'Dicoding', url:'dicoding.com/academies/163', biaya:'GRATIS'},
+    'Figma': {nama:'Google UX Design', platform:'Coursera', url:'coursera.org', biaya:'Gratis (Audit)'},
+  };
+
+  const kursus = missing.slice(0,3).map(s => kursusMap[s] || {nama:`Belajar ${s}`, platform:'Dicoding / Coursera', url:'dicoding.com', biaya:'Gratis/Murah'});
+
+  return {
+    readiness,
+    level: readiness>=70?'Siap Apply!':readiness>=45?'Hampir Siap':'Perlu Persiapan',
+    warna: readiness>=70?'green':readiness>=45?'amber':'red',
+    job_target: job,
+    job_data: {rata_gaji:data.gaji, demand:data.demand, lokasi:data.lokasi, growth:data.growth},
+    skill_dimiliki: have,
+    skill_kurang: missing,
+    skill_bonus: [],
+    kursus_rekomendasi: kursus,
+    roadmap: roadmapMap[job] || roadmapMap['Data Analyst'],
+    ai_summary: readiness >= 70
+      ? `Bagus! Lo sudah punya ${have.length} dari ${data.wajib.length} skill wajib. Fokus sekarang ke portofolio yang kuat — recruiter butuh bukti, bukan cuma klaim di CV.`
+      : readiness >= 45
+      ? `Lo hampir siap! Skill yang paling urgent untuk dipelajari adalah ${missing.slice(0,2).join(' dan ')}. Mulai dari kursus gratis di Dicoding dulu, konsisten 2 jam sehari sudah cukup.`
+      : `Gap-nya lumayan, tapi bisa diatasi dalam 6 bulan kalau konsisten. Prioritas pertama: ${missing[0] || 'skill wajib yang kurang'}. Daftar Kartu Skillhub Kemnaker sekarang untuk dapat kursus gratis + insentif Rp 600.000.`,
+  };
+}
+
+// ── RENDER RESULT ─────────────────────────────────────────────────────────
+function renderResult(data) {
+  const panel = document.getElementById('result-panel');
+  panel.classList.add('show');
+
+  // Tampilkan banner rekomendasi
+  const banner = document.getElementById('reco-banner');
+  if (data.is_recommended) {
+    banner.classList.add('show');
+    document.getElementById('reco-banner-job').textContent = data.job_target || '-';
+  } else {
+    banner.classList.remove('show');
+  }
+
+  // Readiness
+  document.getElementById('r-num').textContent = data.readiness + '%';
+  document.getElementById('r-level').textContent = data.level;
+  const rw = document.getElementById('rw');
+  let rwClass = 'low';
+  if(data.readiness >= 70) rwClass = 'high';
+  else if(data.readiness >= 45) rwClass = 'mid';
+  rw.className = 'readiness-wrap ' + rwClass;
+
+  // Tampilkan CTA buttons setelah analisis selesai
+  const ctaEl = document.getElementById('result-cta');
+  if (ctaEl) ctaEl.style.display = 'flex';
+
+  // AI Summary
+  if (data.ai_summary) {
+    document.getElementById('ai-wrap').style.display = 'block';
+    document.getElementById('ai-text').textContent = data.ai_summary;
+  }
+
+  // Job info
+  const jd = data.job_data || {};
+  document.getElementById('job-info').innerHTML = `
+    <div class="job-info-item">
+      <div class="job-info-label">Estimasi Gaji Fresh Grad</div>
+      <div class="job-info-val" style="color:var(--white)">${data.gaji_range||'-'}</div>
+    </div>
+    <div class="job-info-item"><div class="job-info-label">Demand Pasar</div><div class="job-info-val">${jd.demand||'-'}</div></div>
+    <div class="job-info-item"><div class="job-info-label">Outlook</div><div class="job-info-val" style="font-size:12px">${jd.growth||'-'}</div></div>
+    <div class="job-info-item"><div class="job-info-label">Lokasi Tersedia</div><div class="job-info-val" style="font-size:12px">${(jd.lokasi||[]).join(', ')||'-'}</div></div>
+  `;
+
+  // Skills
+  const have = data.skill_dimiliki || [];
+  const miss = data.skill_kurang || [];
+  document.getElementById('skill-have').innerHTML = have.length
+    ? have.map(s => `<span class="skill-pill have"> ${s}</span>`).join('')
+    : '<span style="font-size:13px;color:var(--dim)">Belum ada skill yang match</span>';
+  document.getElementById('skill-missing').innerHTML = miss.length
+    ? miss.map(s => `<span class="skill-pill missing"> ${s}</span>`).join('')
+    : '<span style="font-size:13px;color:var(--green)">Semua skill wajib sudah terpenuhi!</span>';
+
+  // Soft skill
+  const softSkills = data.soft_skill || [];
+  const softWrap = document.getElementById('soft-skill-wrap');
+  const softList = document.getElementById('soft-skill-list');
+  if (softSkills.length > 0 && softWrap) {
+    softWrap.style.display = 'block';
+    softList.innerHTML = softSkills.map(s =>
+      `<span class="skill-pill bonus"> ${s}</span>`
+    ).join('');
+  }
+
+  // Kursus
+  const kursus = data.kursus_rekomendasi || [];
+  document.getElementById('kursus-list').innerHTML = kursus.length
+    ? kursus.map(k => `
+      <div class="kursus-item">
+        <span class="kursus-badge ${k.biaya?.includes('GRATIS')||k.biaya?.includes('Gratis')?'free':'paid'}">${k.biaya?.includes('GRATIS')||k.biaya?.includes('Gratis')?'GRATIS':'Berbayar'}</span>
+        <div><div class="kursus-name">${k.nama}</div><div class="kursus-platform">${k.platform}</div></div>
+      </div>`).join('')
+    : '<div style="font-size:13px;color:var(--dim)">-</div>';
+
+  // Roadmap
+  const roadmap = data.roadmap || [];
+  document.getElementById('roadmap-list').innerHTML = roadmap.map((step, i) => `
+    <div class="roadmap-step">
+      <div class="step-dot">${i+1}</div>
+      <div class="step-body">
+        <div class="step-fase">${step.fase}</div>
+        <div class="step-nama">${step.nama}</div>
+        <div class="step-skills">${(step.skill||[]).map(s=>`<span class="step-skill">${s}</span>`).join('')}</div>
+        <div class="step-kursus">${step.kursus}</div>
+        <div class="step-milestone">${step.milestone}</div>
+      </div>
+    </div>`).join('');
+
+  panel.scrollIntoView({behavior:'smooth', block:'start'});
+}
+
+// ── CHAT ──────────────────────────────────────────────────────────────────
+async function sendChat() {
+  const input = document.getElementById('chat-input');
+  const msg = input.value.trim();
+  if (!msg) return;
+
+  addMsg('user', msg);
+  input.value = '';
+
+  document.getElementById('typing').classList.add('show');
+  document.getElementById('send-btn').disabled = true;
+
+  chatHistory.push({role:'user', content:msg});
+
+  try {
+    // Kirim profil lengkap termasuk hasil analisis ke AI
+    const chatPayload = lastProfil ? {
+      ...lastProfil,
+      skill: lastProfil.skill || [],
+      skill_kurang: lastProfil.skill_kurang || [],
+      readiness: lastProfil.readiness || null,
+      job_target: lastProfil.job_target || lastProfil.target_job || '',
+    } : null;
+
+    const r = await fetch(`${API}/chat`, {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({message:msg, history:chatHistory.slice(-10), profil:chatPayload}),
+      signal: AbortSignal.timeout(30000),
+    });
+    if (!r.ok) throw new Error();
+    const data = await r.json();
+    document.getElementById('typing').classList.remove('show');
+    addMsg('assistant', data.reply);
+    chatHistory.push({role:'assistant', content:data.reply});
+  } catch {
+    document.getElementById('typing').classList.remove('show');
+    addMsg('assistant', 'Maaf, SIGAP AI belum tersedia. Pastikan backend sudah jalan (python api.py) dan GROQ_API_KEY sudah diset di file .env — API key gratis di console.groq.com');
+  }
+
+  document.getElementById('send-btn').disabled = false;
+}
+
+function addMsg(role, content) {
+  const msgs = document.getElementById('messages');
+  const typing = document.getElementById('typing');
+  const div = document.createElement('div');
+  div.className = `msg ${role}`;
+  div.innerHTML = `<div class="msg-bubble">${content.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}</div>
+    <div class="msg-time">${role==='user'?'Anda':'SIGAP AI'} · ${new Date().toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit'})}</div>`;
+  msgs.insertBefore(div, typing);
+  msgs.scrollTop = msgs.scrollHeight;
+}
+
+
+const JOB_SKILL_HINTS = {
+  'data analyst':      ['SQL','Python','Excel','Tableau','Power BI','Statistik'],
+  'data scientist':    ['Python','Machine Learning','SQL','TensorFlow','Statistik'],
+  'backend':           ['Python','Node.js','SQL','Docker','Git','REST API'],
+  'frontend':          ['React','JavaScript','CSS','HTML','TypeScript','Git'],
+  'ui/ux':             ['Figma','User Research','Wireframing','Prototyping'],
+  'product manager':   ['Figma','SQL','Agile/Scrum','Analisis Data','Komunikasi'],
+  'digital marketing': ['SEO','Google Ads','Meta Ads','Copywriting','Google Analytics'],
+  'mobile':            ['Flutter','Dart','React Native','Git'],
+  'devops':            ['Docker','Kubernetes','Linux','CI/CD','AWS'],
+  'cloud':             ['AWS','GCP','Azure','Docker','Linux','Terraform'],
+  'cybersecurity':     ['Linux','Networking','Python','Ethical Hacking','Kriptografi'],
+  'hukum':             ['Hukum Perdata','Hukum Pidana','Analisis Hukum','Riset','Microsoft Office'],
+  'jaksa':             ['Hukum Pidana','Hukum Acara Pidana','Investigasi','Komunikasi','Analisis Hukum'],
+  'pengacara':         ['Hukum Perdata','Negosiasi','Komunikasi','Riset Hukum','Microsoft Office'],
+  'dokter':            ['Anatomi','Fisiologi','Diagnosa Klinis','Komunikasi Pasien'],
+  'akuntan':           ['Excel','Akuntansi','Pajak','SAP','Power BI'],
+  'finance':           ['Excel','Financial Modeling','Akuntansi','SQL','Power BI'],
+  'guru':              ['Kurikulum','Komunikasi','Microsoft Office','Pedagogik'],
+  'hr':                ['Rekrutmen','Komunikasi','Excel','HRIS','Psikologi Industri'],
+};
+
+document.getElementById('f-target').addEventListener('input', function() {
+  const val = this.value.toLowerCase();
+  const inner = document.getElementById('dynamic-suggests-inner');
+  const wrap  = document.getElementById('dynamic-suggests');
+
+  // Cari hints yang cocok
+  let hints = [];
+  for (const [key, skills] of Object.entries(JOB_SKILL_HINTS)) {
+    if (val.includes(key) || key.includes(val)) {
+      hints = skills;
+      break;
+    }
+  }
+
+  if (hints.length > 0) {
+    inner.innerHTML = hints.map(s =>
+      `<span class="skill-suggest" onclick="addSkill('${s}')">${s}</span>`
+    ).join('');
+    wrap.style.display = 'block';
+  } else {
+    wrap.style.display = 'none';
+  }
+});
+
+function quickQ(q) {
+  document.getElementById('chat-input').value = q;
+  sendChat();
+}
+</script>
+<div class="modal-overlay" id="skill-confirm-modal">
+  <div class="modal-box">
+    <div class="modal-title">Cek Ulang Skill Kamu! 🔍</div>
+    <div class="modal-desc">
+      Ini daftar skill yang kami tangkap (dari CV dan input manual). Udah lengkap belum? Kalau ada <strong>Framework/Tools spesifik</strong> (misal: React, Node.js, Tableau) yang kamu bisa tapi belum masuk sini, tambahin dulu ya biar hasil AI nggak ngawur!
+    </div>
+    <div class="modal-skills-box" id="modal-skill-list">
+      <!-- Injected via JS -->
+    </div>
+    <div class="modal-actions">
+      <button class="btn-m-cancel" onclick="closeModal()">Oh iya, mau tambah lagi</button>
+      <button class="btn-m-proceed" onclick="confirmAndAnalyze()">Udah pas, Lanjut!</button>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
