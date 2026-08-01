@@ -989,10 +989,17 @@ async def parse_cv(file: UploadFile = File(...)):
 app.include_router(api_router)
 app.include_router(api_router_index)
 
+# Explicitly serve investor.html to bypass Vercel routing quirks
+@app.get("/investor.html")
+async def serve_investor():
+    file_path = pathlib.Path(__file__).parent.parent / "investor.html"
+    if file_path.exists():
+        return FileResponse(file_path)
+    return {"detail": "investor.html not found on disk"}
+
 # Catch-all route to debug Vercel path issues
 @app.api_route("/{path_name:path}", methods=["GET", "POST", "PUT", "DELETE", "OPTIONS", "HEAD", "PATCH", "TRACE"])
 async def catch_all(path_name: str):
-    from fastapi import Request
     return {"detail": f"Not Found in catch_all. Path received: {path_name}"}
 
 if __name__ == "__main__":

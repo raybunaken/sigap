@@ -541,6 +541,12 @@ h1{
 /* ── ABOUT ── */
 #page-about{display:none;padding:48px 0}
 .about-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:32px}
+.bento-grid{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:auto auto;gap:16px;margin-bottom:32px}
+.bento-span-2{grid-column: span 2;}
+@media(max-width:800px){
+  .bento-grid{grid-template-columns: 1fr;}
+  .bento-span-2{grid-column: span 1;}
+}
 .about-card{
   background:var(--bg2);
   border:1px solid var(--border);
@@ -1148,18 +1154,18 @@ Mau tanya apa?</div>
 
   <div class="kicker" style="margin-bottom:16px;margin-top:48px">Roadmap</div>
   <div style="font-size:26px;font-weight:800;margin-bottom:24px">Future <span class="it">Development</span></div>
-  <div class="about-grid">
-    <div class="about-card">
-      <h3>Auto-Apply AI Agent</h3>
+  <div class="bento-grid">
+    <div class="about-card bento-span-2" style="background:linear-gradient(135deg, rgba(110,106,244,0.1) 0%, var(--bg2) 100%); border:1px solid rgba(110,106,244,0.3);">
+      <h3 style="color:#A5A3FF;">Auto-Apply AI Agent</h3>
       <p>Mengembangkan agen AI otonom yang tidak hanya memberikan saran, tetapi secara proaktif menyusun <i>cover letter</i> spesifik dan melakukan automasi pelamaran pada loker yang memiliki tingkat kecocokan di atas 90%.</p>
     </div>
     <div class="about-card">
       <h3>Live Interview Simulator</h3>
-      <p>Mengintegrasikan <i>Voice AI</i> untuk memberikan simulasi wawancara teknis dan HR secara real-time. Simulator ini akan menanyakan studi kasus spesifik berdasarkan kelemahan (skill gap) dari CV pengguna.</p>
+      <p>Mengintegrasikan <i>Voice AI</i> untuk simulasi wawancara teknis dan HR secara real-time. Simulator ini akan menanyakan studi kasus spesifik berdasarkan kelemahan (skill gap) dari CV pengguna.</p>
     </div>
     <div class="about-card">
       <h3>Real-Time Market Sync</h3>
-      <p>Membangun integrasi API dua arah dengan portal loker nasional untuk memperbarui <i>Knowledge Base</i> secara harian. Memastikan rekomendasi skill selalu relevan dengan tren permintaan industri terkini.</p>
+      <p>Integrasi API dua arah dengan portal loker nasional untuk memperbarui <i>Knowledge Base</i> secara harian. Memastikan rekomendasi skill selalu relevan dengan tren permintaan industri terkini.</p>
     </div>
   </div>
 
