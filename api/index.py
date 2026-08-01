@@ -5,7 +5,7 @@ Jalankan: python api.py
 """
 
 import os, json, logging, asyncio, re, pathlib
-from fastapi import FastAPI, HTTPException, UploadFile, File, APIRouter
+from fastapi import FastAPI, HTTPException, UploadFile, File, APIRouter, Request
 from fastapi.responses import FileResponse
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
