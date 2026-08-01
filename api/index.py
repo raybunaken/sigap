@@ -37,7 +37,7 @@ def load_scraped_data() -> dict:
 
 SCRAPED_JOBS = load_scraped_data()
 
-from knowledge_base import (
+from api.knowledge_base import (
     PEKERJAAN_DATABASE, KURSUS_GRATIS, ROADMAP,
     STATISTIK, get_system_prompt,
     get_kursus_for_skill, get_gaji_by_experience,
