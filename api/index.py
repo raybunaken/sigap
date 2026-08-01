@@ -949,20 +949,21 @@ async def parse_cv(file: UploadFile = File(...)):
     content_bytes = await file.read()
 
     text = ""
-    for enc in ["utf-8", "latin-1", "cp1252"]:
-        try:
-            text = content_bytes.decode(enc)
-            break
-        except:
-            continue
-
-    if file.filename.endswith(".pdf") and not text.strip():
+    
+    if file.filename.endswith(".pdf"):
         try:
             from io import BytesIO
             from pdfminer.high_level import extract_text as pdf_extract
             text = pdf_extract(BytesIO(content_bytes))
         except ImportError:
             pass
+    else:
+        for enc in ["utf-8", "latin-1", "cp1252"]:
+            try:
+                text = content_bytes.decode(enc)
+                break
+            except:
+                continue
 
     if not text.strip():
         return {"skills": [], "text": "", "message": "Format tidak terbaca. Coba convert ke TXT dulu."}
