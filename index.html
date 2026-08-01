@@ -545,9 +545,18 @@ h1{
   background:var(--bg2);
   border:1px solid var(--border);
   border-radius:var(--r);padding:24px;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+.about-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(110,106,244,0.5);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+  background: var(--bg3);
 }
 .about-card h3{font-size:12px;font-weight:700;margin-bottom:10px;letter-spacing:0.8px;text-transform:uppercase;color:var(--fg);font-family:'Outfit',sans-serif}
-.about-card p{font-size:13px;color:var(--dim);line-height:1.8;font-family:'DM Sans',sans-serif}
+.about-card p{font-size:13px;color:var(--fg-dim);line-height:1.8;font-family:'DM Sans',sans-serif}
 .team-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
 .tcard{
   background:var(--bg2);
@@ -1152,6 +1161,12 @@ Mau tanya apa?</div>
       <h3>Real-Time Market Sync</h3>
       <p>Membangun integrasi API dua arah dengan portal loker nasional untuk memperbarui <i>Knowledge Base</i> secara harian. Memastikan rekomendasi skill selalu relevan dengan tren permintaan industri terkini.</p>
     </div>
+  </div>
+
+  <div style="margin-top:24px; margin-bottom:48px; text-align:center; padding:36px 24px; background:linear-gradient(180deg, var(--bg3) 0%, var(--bg2) 100%); border:1px solid rgba(110,106,244,0.25); border-radius:12px; box-shadow: 0 8px 32px rgba(0,0,0,0.2);">
+    <div style="font-size:20px; font-weight:700; margin-bottom:12px; color:var(--fg);">Tertarik dengan Potensi SIGAP?</div>
+    <p style="color:var(--fg-dim); font-size:14px; margin-bottom:24px; font-weight:300;">Pelajari model bisnis, traksi, dan strategi pertumbuhan kami secara komprehensif.</p>
+    <a href="/investor.html" class="btn" style="padding:14px 28px; text-decoration:none; display:inline-block; font-size:14px; background:linear-gradient(135deg, #6E6AF4 0%, #4A46D6 100%); box-shadow: 0 4px 15px rgba(110,106,244,0.4); border:1px solid rgba(255,255,255,0.1);">Akses Investor Relations &rarr;</a>
   </div>
   <div style="margin-top:36px;background:rgba(255,255,255,0.02);border:1px solid var(--border);border-radius:6px;padding:24px">
     <div class="kicker" style="margin-bottom:14px">Sumber Data</div>
