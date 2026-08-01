@@ -1490,6 +1490,8 @@ async function handleCV(input) {
    
     let skills = [];
 
+    let apiMessage = '';
+
     if (extractedText && extractedText.trim().length > 50) {
       // Kirim teks hasil ekstraksi ke backend untuk diproses Groq
       fname.textContent = 'Mengidentifikasi skill...';
@@ -1503,6 +1505,7 @@ async function handleCV(input) {
         const data = await r.json();
         const rawSkills = data.skills || [];
         skills = filterFalsePositiveSkills(rawSkills, extractedText);
+        if (data.message) apiMessage = data.message;
         // Simpan cv_summary supaya analyze bisa pakai konteks CV
         if (data.cv_summary) window._cvSummary = data.cv_summary;
       }
@@ -1519,6 +1522,7 @@ async function handleCV(input) {
       if (r.ok) {
         const data = await r.json();
         skills = data.skills || [];
+        if (data.message) apiMessage = data.message;
         if (data.cv_summary) window._cvSummary = data.cv_summary;
       }
     }
@@ -1530,7 +1534,7 @@ async function handleCV(input) {
       sfound.textContent = skills.length + ' skill terdeteksi';
     } else {
       fname.textContent  = file.name + ' — tidak ada skill';
-      sfound.textContent = 'Tidak ada skill terdeteksi — coba format TXT atau tambah manual.';
+      sfound.textContent = apiMessage ? apiMessage : 'Tidak ada skill terdeteksi — coba format TXT atau tambah manual.';
     }
 
   } catch(e) {
