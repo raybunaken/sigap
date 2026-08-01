@@ -547,6 +547,105 @@ h1{
   .bento-grid{grid-template-columns: 1fr;}
   .bento-span-2{grid-column: span 1;}
 }
+
+/* TIMELINE ROADMAP */
+.timeline {
+  position: relative;
+  max-width: 900px;
+  margin: 48px auto;
+}
+.timeline::after {
+  content: '';
+  position: absolute;
+  width: 2px;
+  background: linear-gradient(180deg, rgba(110,106,244,0) 0%, rgba(110,106,244,0.5) 15%, rgba(110,106,244,0.5) 85%, rgba(110,106,244,0) 100%);
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  margin-left: -1px;
+}
+.timeline-item {
+  padding: 10px 40px;
+  position: relative;
+  width: 50%;
+  box-sizing: border-box;
+  margin-bottom: 40px;
+}
+.timeline-item:nth-child(odd) {
+  left: 0;
+  text-align: left;
+}
+.timeline-item:nth-child(even) {
+  left: 50%;
+  text-align: left;
+}
+.timeline-badge {
+  position: absolute;
+  top: 50%;
+  background: var(--bg2);
+  border: 1px solid rgba(110,106,244,0.8);
+  color: #fff;
+  border-radius: 20px;
+  padding: 6px 16px;
+  font-size: 13px;
+  font-weight: 700;
+  font-family: 'Outfit', sans-serif;
+  z-index: 2;
+  box-shadow: 0 0 15px rgba(110,106,244,0.4);
+  white-space: nowrap;
+}
+.timeline-item:nth-child(odd) .timeline-badge {
+  right: 0;
+  transform: translate(50%, -50%);
+}
+.timeline-item:nth-child(even) .timeline-badge {
+  left: 0;
+  transform: translate(-50%, -50%);
+}
+.timeline-content {
+  background:var(--bg2);
+  border:1px solid var(--border);
+  border-radius:var(--r);
+  padding:24px;
+  transition: all 0.3s ease;
+}
+.timeline-content:hover {
+  transform: translateY(-4px);
+  border-color: rgba(110,106,244,0.5);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+  background: var(--bg3);
+}
+.timeline-content h3 {
+  font-size: 15px;
+  font-weight: 700;
+  margin-bottom: 12px;
+  color: var(--fg);
+  font-family: 'Outfit', sans-serif;
+}
+.timeline-content ul {
+  padding-left: 20px;
+  margin-top: 10px;
+  margin-bottom: 0;
+}
+.timeline-content li {
+  font-size: 13px;
+  color: var(--fg-dim);
+  line-height: 1.7;
+  margin-bottom: 6px;
+  font-family: 'DM Sans', sans-serif;
+}
+
+@media screen and (max-width: 768px) {
+  .timeline::after { left: 24px; }
+  .timeline-item { width: 100%; padding-left: 70px; padding-right: 0; }
+  .timeline-item:nth-child(even) { left: 0%; }
+  .timeline-item:nth-child(odd) .timeline-badge,
+  .timeline-item:nth-child(even) .timeline-badge {
+    left: 24px;
+    right: auto;
+    transform: translate(-50%, -50%);
+  }
+}
 .about-card{
   background:var(--bg2);
   border:1px solid var(--border);
@@ -1154,19 +1253,60 @@ Mau tanya apa?</div>
 
   <div class="kicker" style="margin-bottom:16px;margin-top:48px">Roadmap</div>
   <div style="font-size:26px;font-weight:800;margin-bottom:24px">Future <span class="it">Development</span></div>
-  <div class="bento-grid">
-    <div class="about-card bento-span-2" style="background:linear-gradient(135deg, rgba(110,106,244,0.1) 0%, var(--bg2) 100%); border:1px solid rgba(110,106,244,0.3);">
-      <h3 style="color:#A5A3FF;">Auto-Apply AI Agent</h3>
-      <p>Mengembangkan agen AI otonom yang tidak hanya memberikan saran, tetapi secara proaktif menyusun <i>cover letter</i> spesifik dan melakukan automasi pelamaran pada loker yang memiliki tingkat kecocokan di atas 90%.</p>
+  <div class="timeline">
+    
+    <!-- Item 1: MVP -->
+    <div class="timeline-item">
+      <div class="timeline-badge" style="border-color:#10b981; color:#10b981;">Q4 - 2026</div>
+      <div class="timeline-content">
+        <h3>Knowledge Base Expansion</h3>
+        <ul>
+          <li>Memperluas pemetaan dari 25 jalur karir awal menjadi 100+ profesi lintas sektor.</li>
+          <li>Fokus pada industri manufaktur, kreatif, logistik, dan jasa.</li>
+          <li>Peningkatan akurasi pencocokan skill dengan data industri nyata.</li>
+        </ul>
+      </div>
     </div>
-    <div class="about-card">
-      <h3>Live Interview Simulator</h3>
-      <p>Mengintegrasikan <i>Voice AI</i> untuk simulasi wawancara teknis dan HR secara real-time. Simulator ini akan menanyakan studi kasus spesifik berdasarkan kelemahan (skill gap) dari CV pengguna.</p>
+
+    <!-- Item 2 -->
+    <div class="timeline-item">
+      <div class="timeline-badge" style="border-color:#a855f7; color:#a855f7;">Q1 - 2027</div>
+      <div class="timeline-content">
+        <h3>AI Market Insights</h3>
+        <ul>
+          <li>AI Agent otonom yang merangkum tren lowongan kerja tiap minggu.</li>
+          <li>Pembuatan <i>newsletter</i> / mini blog otomatis tentang skill paling dicari.</li>
+          <li>Meningkatkan <i>user retention</i> dengan informasi karir yang dinamis.</li>
+        </ul>
+      </div>
     </div>
-    <div class="about-card">
-      <h3>Real-Time Market Sync</h3>
-      <p>Integrasi API dua arah dengan portal loker nasional untuk memperbarui <i>Knowledge Base</i> secara harian. Memastikan rekomendasi skill selalu relevan dengan tren permintaan industri terkini.</p>
+
+    <!-- Item 3 -->
+    <div class="timeline-item">
+      <div class="timeline-badge" style="border-color:#3b82f6; color:#3b82f6;">Q2 - 2027</div>
+      <div class="timeline-content">
+        <h3>Automated Portal Sync</h3>
+        <ul>
+          <li>Integrasi <i>pipeline</i> data 2 arah dengan Jobstreet dan LinkedIn.</li>
+          <li>Pembaruan graf kompetensi di Knowledge Base secara berkala.</li>
+          <li>Eliminasi intervensi manual untuk riset kebutuhan pasar.</li>
+        </ul>
+      </div>
     </div>
+
+    <!-- Item 4 -->
+    <div class="timeline-item">
+      <div class="timeline-badge" style="border-color:#f59e0b; color:#f59e0b;">Q3 - 2027</div>
+      <div class="timeline-content">
+        <h3>Interactive Skill Validation</h3>
+        <ul>
+          <li>Asesmen ringan berbasis teks (*scenario-based*) bagi kandidat.</li>
+          <li>Memvalidasi keaslian <i>skill</i> yang ditulis pada CV.</li>
+          <li>Membuat akurasi rekomendasi kursus SIGAP mencapai &gt;95%.</li>
+        </ul>
+      </div>
+    </div>
+
   </div>
 
   <div style="margin-top:24px; margin-bottom:48px; text-align:center; padding:36px 24px; background:linear-gradient(180deg, var(--bg3) 0%, var(--bg2) 100%); border:1px solid rgba(110,106,244,0.25); border-radius:12px; box-shadow: 0 8px 32px rgba(0,0,0,0.2);">
