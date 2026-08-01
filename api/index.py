@@ -119,6 +119,7 @@ async def groq_request(
     max_tokens: int = 1024,
     temperature: float = 0.7,
     timeout: int = 20,
+    response_format: Optional[dict] = None
 ) -> Optional[str]:
     """
     Satu-satunya fungsi yang panggil Groq API.
@@ -134,6 +135,9 @@ async def groq_request(
         "max_tokens": max_tokens,
         "temperature": temperature,
     }
+    if response_format:
+        payload["response_format"] = response_format
+
     for attempt in range(3):
         try:
             async with httpx.AsyncClient(timeout=timeout) as client:
@@ -633,13 +637,26 @@ async def hitung_gap(profil: ProfilUser, job_data_override: dict = None) -> dict
              {"fase": "Bulan 3-4", "nama": "Praktek Langsung", "skill": ["Praktek Lapangan"], "kursus": "Cari referensi di YouTube/LinkedIn", "milestone": "Mulai apply magang atau project kecil"}
         ]
 
-    if readiness >= 80 and len(roadmap_full) > 1:
-        roadmap = roadmap_full[1:]
-        logger.info(f"Readiness {readiness}% — skip fase fondasi, mulai dari fase {roadmap[0].get('nama','')}")
-    elif readiness >= 50 and len(roadmap_full) > 2:
-        roadmap = roadmap_full[1:]
+    import copy
+    roadmap = [copy.deepcopy(r) for r in roadmap_full]
+
+    if readiness >= 100:
+        roadmap = [
+            {"fase": "Bulan 1-2", "nama": "Fokus Apply & Interview", "skill": ["CV Review", "Mock Interview", "Networking"], "kursus": "Maksimalkan platform seperti LinkedIn & Jobstreet", "milestone": "Apply ke 5-10 lowongan yang relevan per minggu"}
+        ]
     else:
-        roadmap = roadmap_full
+        if readiness >= 80 and len(roadmap) > 1:
+            roadmap = roadmap[-2:] # Sisakan 2 fase terakhir (atau 1 jika arraynya cuma 2)
+            if len(roadmap) > 1:
+                 roadmap = roadmap[-1:] # Kalau udah 80% ke atas, sisakan 1 fase terakhir aja (Portofolio/Launch)
+        elif readiness >= 50 and len(roadmap) > 2:
+            roadmap = roadmap[1:] # Sisakan 2 fase terakhir (skip fase Fondasi)
+        
+        # Rapikan ulang penomoran bulannya biar nggak bolong/lompat
+        label_bulan = ["Bulan 1-2", "Bulan 3-4", "Bulan 5-6"]
+        for i, step in enumerate(roadmap):
+            if i < len(label_bulan):
+                step["fase"] = label_bulan[i]
 
     gaji = get_gaji_by_experience(target_data, profil.pengalaman)
 
@@ -798,23 +815,45 @@ Skill wajib yang MASIH KURANG: {', '.join(result['skill_kurang']) or 'tidak ada 
 Pengalaman: {profil.pengalaman}
 {pivot_note}
 
-TUGASMU: Berikan evaluasi JUJUR dan REALISTIS. Maksimal 3 kalimat.
+TUGASMU: Berikan evaluasi JUJUR dan REALISTIS maksimal 3 kalimat.
+LALU, berikan 1 kalimat deskripsi ringkas (maksimal 10 kata) untuk tiap "Skill wajib yang MASIH KURANG" di atas (mengapa skill tersebut penting untuk posisi ini).
 
 ATURAN KETAT:
-1. Readiness < 40% (career pivot berat): DILARANG toxic positivity atau bilang "bisa dalam beberapa bulan". 
-   Jujur bahwa ini perjalanan panjang, butuh dedikasi tinggi dan kurva belajar curam.
-   Sebutkan 1 skill fundamental yang harus dikuasai pertama kali.
-2. Readiness 40-70%: Akui gap yang ada, berikan estimasi waktu yang realistis, sarankan langkah konkret.
-3. Readiness > 70%: Apresiasi skill yang sudah ada, dorong segera buat portofolio dan mulai apply.
-4. Jangan sebut skill di luar yang ada di daftar skill kurang di atas.
-5. Gunakan bahasa santai seperti teman senior, bukan motivator MLM."""
+1. Readiness < 40%: Jujur bahwa ini perjalanan panjang, sebutkan 1 skill fundamental.
+2. Readiness 40-70%: Akui gap yang ada, berikan estimasi waktu realistis.
+3. Readiness > 70%: Apresiasi skill yang sudah ada, dorong segera mulai apply.
+4. Jangan sebut skill di luar daftar skill kurang.
+5. WAJIB return format JSON murni:
+{{
+  "summary": "evaluasi 3 kalimat kamu...",
+  "gap_context": {{
+    "Nama Skill 1": "Deskripsi singkat pentingnya skill ini...",
+    "Nama Skill 2": "..."
+  }}
+}}"""
 
     messages = [
-        {"role": "system", "content": get_system_prompt(profil_dict)},
+        {"role": "system", "content": get_system_prompt(profil_dict) + " Return strict JSON."},
         {"role": "user", "content": prompt}
     ]
 
-    ai_summary = await groq_request(messages)
+    ai_resp = await groq_request(messages, response_format={"type": "json_object"})
+    ai_summary = ""
+    skill_kurang_detail = []
+
+    if ai_resp:
+        try:
+            parsed = json.loads(ai_resp)
+            ai_summary = parsed.get("summary", "")
+            gap_context = parsed.get("gap_context", {})
+            for sk in result.get("skill_kurang", []):
+                skill_kurang_detail.append({
+                    "skill": sk,
+                    "desc": gap_context.get(sk, "Krusial untuk kompetensi inti di posisi ini.")
+                })
+        except Exception as e:
+            logger.error(f"Failed to parse JSON ai_summary: {e}")
+            ai_summary = ""
 
     if not ai_summary:
         r = result["readiness"]
@@ -829,6 +868,13 @@ ATURAN KETAT:
         else:
             gap_str = sk[0] if sk else "skill fundamental"
             ai_summary = f"Gap-nya cukup besar untuk {job}, tapi bisa diatasi. Mulai dari {gap_str} sebagai fondasi utama — itu kunci untuk membuka akses ke skill berikutnya. Konsisten 2 jam per hari selama 6-12 bulan sudah cukup untuk berubah."
+            
+    if not skill_kurang_detail:
+        for sk in result.get("skill_kurang", []):
+            skill_kurang_detail.append({"skill": sk, "desc": "Diperlukan untuk peran ini."})
+
+    result["ai_summary"] = ai_summary
+    result["skill_kurang_detail"] = skill_kurang_detail
 
     result["ai_summary"] = ai_summary
     return result
