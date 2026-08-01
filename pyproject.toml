@@ -1,2 +1,16 @@
+[project]
+name = "sigap-api"
+version = "0.1.0"
+description = "SIGAP API"
+dependencies = [
+    "fastapi",
+    "uvicorn",
+    "pydantic",
+    "httpx",
+    "python-dotenv",
+    "python-multipart",
+    "pdfminer.six"
+]
+
 [tool.vercel]
 entrypoint = "api.[...path]:app"
