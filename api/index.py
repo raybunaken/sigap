@@ -83,6 +83,16 @@ app = FastAPI(
     lifespan=lifespan,
 )
 
+# ── VERCEL PATH REWRITE FIX ──
+@app.middleware("http")
+async def fix_vercel_path(request: Request, call_next):
+    vpath = request.query_params.get("vpath")
+    if vpath:
+        # Override path in ASGI scope
+        request.scope["path"] = f"/api/{vpath}"
+    response = await call_next(request)
+    return response
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"], allow_methods=["*"], allow_headers=["*"],
