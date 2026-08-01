@@ -704,16 +704,21 @@ RELEVANCE_KEYWORDS = {
 
 # ── ENDPOINTS ─────────────────────────────────────────────────────────────
 api_router = APIRouter(prefix="/api")
+api_router_index = APIRouter(prefix="/api/index.py")
 
 @app.get("/")
 def serve_index():
     return FileResponse(pathlib.Path(__file__).parent.parent / "index.html")
 
+@app.get("/health")
 @api_router.get("/health")
+@api_router_index.get("/health")
 def health():
     return {"status": "ok", "groq": bool(GROQ_API_KEY), "jobs": len(PEKERJAAN_DATABASE)}
 
+@app.get("/jobs")
 @api_router.get("/jobs")
+@api_router_index.get("/jobs")
 def list_jobs():
     result = []
     for k, v in PEKERJAAN_DATABASE.items():
@@ -726,7 +731,9 @@ def list_jobs():
         })
     return result
 
+@app.post("/analyze")
 @api_router.post("/analyze")
+@api_router_index.post("/analyze")
 async def analyze(profil: ProfilUser):
     is_recommended = False
 
@@ -886,7 +893,9 @@ ATURAN KETAT:
     result["ai_summary"] = ai_summary
     return result
 
+@app.post("/chat")
 @api_router.post("/chat")
+@api_router_index.post("/chat")
 async def chat(req: ChatRequest):
     profil_dict = None
     if req.profil:
@@ -921,7 +930,9 @@ async def chat(req: ChatRequest):
 
     return {"reply": reply}
 
+@app.post("/parse-cv-text", tags=["CV"])
 @api_router.post("/parse-cv-text", tags=["CV"])
+@api_router_index.post("/parse-cv-text", tags=["CV"])
 async def parse_cv_text(req: CVTextRequest):
     result = await extract_skills_from_text(req.text, include_summary=True)
     return {
@@ -931,7 +942,9 @@ async def parse_cv_text(req: CVTextRequest):
         "char_count": len(req.text),
     }
 
+@app.post("/parse-cv", tags=["CV"])
 @api_router.post("/parse-cv", tags=["CV"])
+@api_router_index.post("/parse-cv", tags=["CV"])
 async def parse_cv(file: UploadFile = File(...)):
     content_bytes = await file.read()
 
@@ -963,6 +976,13 @@ async def parse_cv(file: UploadFile = File(...)):
 
 # ── MAIN ──────────────────────────────────────────────────────────────────
 app.include_router(api_router)
+app.include_router(api_router_index)
+
+# Catch-all route to debug Vercel path issues
+@app.api_route("/{path_name:path}", methods=["GET", "POST", "PUT", "DELETE", "OPTIONS", "HEAD", "PATCH", "TRACE"])
+async def catch_all(path_name: str):
+    from fastapi import Request
+    return {"detail": f"Not Found in catch_all. Path received: {path_name}"}
 
 if __name__ == "__main__":
     import uvicorn
