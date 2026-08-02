@@ -84,7 +84,7 @@ nav{
   text-transform:uppercase;letter-spacing:0.8px;
 }
 
-.wrap{max-width:1140px;margin:0 auto;padding:0 28px;position:relative;z-index:1}
+.wrap{max-width:1340px;margin:0 auto;padding:0 28px;position:relative;z-index:1}
 .kicker{
   font-family:'Outfit',sans-serif;
   font-size:11px;font-weight:700;letter-spacing:2px;
@@ -178,7 +178,25 @@ select option{background:var(--bg3)}
 .cv-status{background:var(--green-dim);border:1px solid rgba(80,216,144,0.25);border-radius:var(--r-sm);padding:10px 12px;margin-top:8px}
 .cv-status-inner{display:flex;align-items:center;justify-content:space-between;font-size:12px;font-weight:600;color:var(--green)}
 
-/* ── BUTTONS ── */
+/* ── MODAL ── */
+.modal-overlay {
+  position:fixed; top:0; left:0; right:0; bottom:0;
+  background:rgba(10, 11, 16, 0.85);
+  backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px);
+  z-index:9999;
+  display:flex; align-items:center; justify-content:center;
+  opacity:0; pointer-events:none; transition:all 0.3s ease;
+}
+.modal-overlay.show { opacity:1; pointer-events:auto; }
+.modal-box {
+  background:var(--bg2); border:1px solid var(--border-strong);
+  border-radius:var(--r); padding:32px; width:100%; max-width:480px;
+  transform:translateY(20px); transition:all 0.3s ease;
+  box-shadow:0 24px 48px rgba(0,0,0,0.4);
+}
+.modal-overlay.show .modal-box { transform:translateY(0); }
+
+/* ── ANIMATIONS ── */
 .btn-p{
   background:var(--indigo);color:#fff;
   font-family:'Outfit',sans-serif;font-weight:700;
@@ -197,7 +215,7 @@ select option{background:var(--bg3)}
 
 /* ── ANALYZER LAYOUT ── */
 #page-analyzer{display:none}
-.analyzer-layout{display:grid;grid-template-columns:400px minmax(0,680px);gap:20px;padding:32px 0 48px;align-items:start}
+.analyzer-layout{display:grid;grid-template-columns:400px 1fr;gap:32px;padding:32px 0 48px;align-items:start}
 @media(max-width:1100px){.analyzer-layout{grid-template-columns:380px minmax(0,1fr)}}
 @media(max-width:900px){.analyzer-layout{grid-template-columns:1fr}}
 
@@ -2126,21 +2144,163 @@ function renderResult(data) {
       </div>`).join('')
     : '<div style="font-size:13px;color:var(--dim)">-</div>';
 
-  // Roadmap
-  const roadmap = data.roadmap || [];
-  document.getElementById('roadmap-list').innerHTML = roadmap.map((step, i) => `
-    <div class="roadmap-step">
-      <div class="step-dot">${i+1}</div>
-      <div class="step-body">
-        <div class="step-fase">${step.fase}</div>
-        <div class="step-nama">${step.nama}</div>
-        <div class="step-skills">${(step.skill||[]).map(s=>`<span class="step-skill">${s}</span>`).join('')}</div>
-        <div class="step-kursus">${step.kursus}</div>
-        <div class="step-milestone">${step.milestone}</div>
-      </div>
-    </div>`).join('');
+  // Tampilkan Modal
+  const advisoryModal = document.getElementById('advisory-modal');
+  const advisoryModalMsgs = document.getElementById('advisory-modal-messages');
+  document.getElementById('roadmap-list').innerHTML = ''; // bersihkan dulu
+  
+  let advisoryText = '';
+  if (data.readiness >= 100 || (data.skill_kurang && data.skill_kurang.length === 0)) {
+    advisoryText = `
+      <p>Halo! Berdasarkan analisa, kamu punya <strong style="color:var(--green)">Readiness ${data.readiness}%</strong>. Keren banget!</p>
+      <p style="margin-top:12px">Karena semua skill wajib sudah terpenuhi, kamu bisa mulai fokus bangun portofolio atau belajar skill lanjutan (advanced).</p>
+      <p style="margin-top:16px">Ada area spesifik yang mau difokuskan untuk portofolio? Atau mau rekomendasi project?</p>
+    `;
+  } else {
+    advisoryText = `
+      <p>Halo! Berdasarkan analisa, kamu punya <strong style="color:var(--fg)">Readiness ${data.readiness}%</strong>.</p>
+      <p style="margin-top:12px">Untuk menutup gap yang ada, kamu disarankan belajar: <strong style="color:var(--indigo)">${(data.skill_kurang||[]).join(', ')}</strong>.</p>
+      <p style="margin-top:16px">Ada area spesifik yang mau difokuskan dulu? Atau mau aku buatkan roadmap urut dari awal?</p>
+    `;
+  }
 
+  advisoryModalMsgs.innerHTML = advisoryText;
+  advisoryModal.classList.add('show');
   panel.scrollIntoView({behavior:'smooth', block:'start'});
+}
+
+// ── INTERACTIVE ADVISORY (MODAL & SIDE CHAT) ──────────────────────────────
+async function generateRoadmapFromModal() {
+  const input = document.getElementById('advisory-modal-input');
+  const btn = document.getElementById('advisory-modal-btn');
+  const modal = document.getElementById('advisory-modal');
+  const roadmapList = document.getElementById('roadmap-list');
+  
+  const msg = input.value.trim() || 'Buatkan rekomendasi';
+  
+  btn.classList.add('loading');
+  input.disabled = true;
+  btn.disabled = true;
+  
+  try {
+    const payload = {
+      readiness_score: lastProfil.readiness || 0,
+      skill_gap: lastProfil.skill_kurang || [],
+      target_job: lastProfil.job_target || lastProfil.target_job || '',
+      user_reply: msg
+    };
+    
+    const r = await fetch(API + '/chat-advisory', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(payload)
+    });
+    if(!r.ok) throw new Error('API error');
+    const data = await r.json();
+    
+    modal.classList.remove('show');
+    
+    // Inject side-by-side layout
+    roadmapList.innerHTML = `
+      <div style="display:grid; grid-template-columns:1fr 340px; gap:24px; align-items:start;">
+        <div id="advisory-flashcards"></div>
+        <div id="advisory-chat-side" style="background:var(--bg3); border:1px solid var(--border); border-radius:var(--r); padding:24px; position:sticky; top:90px;">
+          <div style="display:flex; align-items:center; gap:12px; margin-bottom:20px; border-bottom:1px solid var(--border-strong); padding-bottom:16px;">
+             <div class="chat-av" style="background:var(--indigo); color:#fff; border:none; width:32px; height:32px; font-size:10px;">AI</div>
+             <div style="font-size:14px; font-weight:700; color:var(--fg); font-family:'Outfit',sans-serif;">SIGAP Advisor</div>
+          </div>
+          <div id="side-chat-history" style="max-height:300px; overflow-y:auto; margin-bottom:16px; font-size:13.5px; line-height:1.6; display:flex; flex-direction:column; gap:16px; scrollbar-width:none;">
+             <div style="display:flex; gap:12px; align-items:flex-start;">
+               <div style="background:rgba(255,255,255,0.03); border:1px solid var(--border); padding:10px 14px; border-radius:0 12px 12px 12px; color:var(--fg-dim);">${data.ai_response.replace(/</g,'&lt;')}</div>
+             </div>
+          </div>
+          <div style="display:flex; gap:8px;">
+            <input type="text" id="side-chat-input" placeholder="Tanya sesuatu..." style="flex:1; background:var(--bg2); font-size:12px; padding:10px 12px; border:1px solid var(--border-strong); border-radius:var(--r-sm); color:var(--fg);" onkeydown="if(event.key==='Enter') sendSideChat()">
+            <button id="side-chat-btn" onclick="sendSideChat()" style="background:var(--indigo); color:#fff; border:none; padding:0 16px; border-radius:var(--r-sm); font-weight:700; font-family:'Outfit',sans-serif; cursor:pointer; font-size:11px;">KIRIM</button>
+          </div>
+        </div>
+      </div>
+    `;
+    
+    // Render Flashcards
+    const flashcardsDiv = document.getElementById('advisory-flashcards');
+    if(data.flashcards && data.flashcards.length > 0) {
+      flashcardsDiv.style.display = 'grid';
+      flashcardsDiv.style.gridTemplateColumns = 'repeat(auto-fit, minmax(260px, 1fr))';
+      flashcardsDiv.style.gap = '16px';
+      flashcardsDiv.innerHTML = data.flashcards.map((step, i) => `
+        <div style="background:rgba(255,255,255,0.02); border:1px solid var(--border); border-radius:12px; padding:20px; animation:fadeUp 0.4s ease forwards; animation-delay:${i*0.1}s; opacity:0; transform:translateY(10px); display:flex; flex-direction:column; height:100%;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+            <div style="background:var(--indigo); color:var(--bg); font-weight:800; font-size:11px; padding:4px 10px; border-radius:6px; letter-spacing:0.5px;">LANGKAH ${i+1}</div>
+            <div style="font-size:11px; color:var(--dim); font-weight:700; letter-spacing:1px; text-transform:uppercase;">${step.fase}</div>
+          </div>
+          <div style="font-size:16px; font-weight:700; color:var(--fg); margin-bottom:12px; line-height:1.3;">${step.nama}</div>
+          <div style="display:flex; flex-wrap:wrap; gap:6px; margin-bottom:16px;">
+            ${(step.skill||[]).map(s=>`<span style="background:var(--bg3); border:1px solid var(--border-strong); font-size:11px; color:var(--dim); padding:4px 10px; border-radius:20px;">${s}</span>`).join('')}
+          </div>
+          <div style="font-size:13px; color:var(--fg-dim); line-height:1.5; margin-bottom:12px; flex:1;">
+            <strong style="color:var(--fg); font-size:12px; text-transform:uppercase; letter-spacing:1px;">Kursus</strong><br>${step.kursus}
+          </div>
+          <div style="font-size:13px; color:var(--dim); line-height:1.5; border-top:1px dashed var(--border-strong); padding-top:16px; margin-top:auto;">
+            <strong style="color:var(--fg); font-size:12px; text-transform:uppercase; letter-spacing:1px;">Target</strong><br>${step.milestone}
+          </div>
+        </div>
+      `).join('');
+    }
+  } catch(e) {
+    console.error(e);
+    alert('Gagal generate roadmap');
+  } finally {
+    btn.classList.remove('loading');
+    input.disabled = false;
+    btn.disabled = false;
+    input.value = '';
+  }
+}
+
+async function sendSideChat() {
+  const input = document.getElementById('side-chat-input');
+  const btn = document.getElementById('side-chat-btn');
+  const history = document.getElementById('side-chat-history');
+  const msg = input.value.trim();
+  if(!msg) return;
+
+  history.innerHTML += `
+    <div style="display:flex; justify-content:flex-end;">
+      <div style="background:var(--indigo); color:#fff; padding:10px 14px; border-radius:12px 12px 0 12px; font-size:13.5px; line-height:1.5;">${msg.replace(/</g,'&lt;')}</div>
+    </div>
+  `;
+  input.value = '';
+  input.disabled = true;
+  btn.disabled = true;
+  btn.textContent = '...';
+  
+  try {
+    const payload = {
+      readiness_score: lastProfil.readiness || 0,
+      skill_gap: lastProfil.skill_kurang || [],
+      target_job: lastProfil.job_target || lastProfil.target_job || '',
+      user_reply: msg
+    };
+    const r = await fetch(API + '/chat-advisory', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(payload)
+    });
+    const data = await r.json();
+    history.innerHTML += `
+      <div style="display:flex; gap:12px; align-items:flex-start;">
+         <div style="background:rgba(255,255,255,0.03); border:1px solid var(--border); padding:10px 14px; border-radius:0 12px 12px 12px; color:var(--fg-dim); font-size:13.5px; line-height:1.5;">${data.ai_response.replace(/</g,'&lt;')}</div>
+      </div>
+    `;
+    history.scrollTop = history.scrollHeight;
+  } catch(e) {
+    console.error(e);
+  } finally {
+    input.disabled = false;
+    btn.disabled = false;
+    btn.textContent = 'KIRIM';
+  }
 }
 
 // ── CHAT ──────────────────────────────────────────────────────────────────
@@ -2264,5 +2424,25 @@ function quickQ(q) {
   </div>
 </div>
 
+  <!-- MODAL ADVISORY -->
+  <div id="advisory-modal" class="modal-overlay">
+    <div class="modal-box">
+      <div style="display:flex; align-items:center; gap:16px; margin-bottom:24px;">
+        <div class="chat-av" style="background:var(--indigo); color:#fff; border:none; width:40px; height:40px; font-size:12px;">AI</div>
+        <div>
+          <div style="font-size:16px; font-weight:700; color:var(--fg); font-family:'Outfit',sans-serif;">SIGAP Advisor</div>
+          <div style="font-size:12px; color:var(--cyan); font-weight:700; text-transform:uppercase; letter-spacing:1px;">Tentukan Arah Belajarmu</div>
+        </div>
+      </div>
+      <div id="advisory-modal-messages" style="font-size:14px; color:var(--fg-dim); line-height:1.7; margin-bottom:24px; font-family:'DM Sans',sans-serif;">
+      </div>
+      <div style="display:flex; gap:12px; margin-top:28px;">
+        <input type="text" id="advisory-modal-input" placeholder="Ketik area fokus, atau kosongkan..." style="flex:1; background:var(--bg3); font-size:14px; padding:14px 16px; border:1px solid var(--border-strong); border-radius:var(--r-sm); color:var(--fg);" onkeydown="if(event.key==='Enter') generateRoadmapFromModal()">
+        <button id="advisory-modal-btn" onclick="generateRoadmapFromModal()" class="btn-p" style="padding:0 24px; border-radius:var(--r-sm); font-size:12px;">
+          <span class="lbl">KIRIM</span><div class="spin"></div>
+        </button>
+      </div>
+    </div>
+  </div>
 </body>
 </html>
