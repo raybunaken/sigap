@@ -2200,34 +2200,23 @@ async function generateRoadmapFromModal() {
     
     modal.classList.remove('show');
     
-    // Inject side-by-side layout
+    // Inject Full-Width Bento Grid Layout & Button
     roadmapList.innerHTML = `
-      <div style="display:grid; grid-template-columns:1fr 340px; gap:24px; align-items:start;">
-        <div id="advisory-flashcards"></div>
-        <div id="advisory-chat-side" style="background:var(--bg3); border:1px solid var(--border); border-radius:var(--r); padding:24px; position:sticky; top:90px;">
-          <div style="display:flex; align-items:center; gap:12px; margin-bottom:20px; border-bottom:1px solid var(--border-strong); padding-bottom:16px;">
-             <div class="chat-av" style="background:var(--indigo); color:#fff; border:none; width:32px; height:32px; font-size:10px;">AI</div>
-             <div style="font-size:14px; font-weight:700; color:var(--fg); font-family:'Outfit',sans-serif;">SIGAP Advisor</div>
-          </div>
-          <div id="side-chat-history" style="max-height:300px; overflow-y:auto; margin-bottom:16px; font-size:13.5px; line-height:1.6; display:flex; flex-direction:column; gap:16px; scrollbar-width:none;">
-             <div style="display:flex; gap:12px; align-items:flex-start;">
-               <div style="background:rgba(255,255,255,0.03); border:1px solid var(--border); padding:10px 14px; border-radius:0 12px 12px 12px; color:var(--fg-dim);">${data.ai_response.replace(/</g,'&lt;')}</div>
-             </div>
-          </div>
-          <div style="display:flex; gap:8px;">
-            <input type="text" id="side-chat-input" placeholder="Tanya sesuatu..." style="flex:1; background:var(--bg2); font-size:12px; padding:10px 12px; border:1px solid var(--border-strong); border-radius:var(--r-sm); color:var(--fg);" onkeydown="if(event.key==='Enter') sendSideChat()">
-            <button id="side-chat-btn" onclick="sendSideChat()" style="background:var(--indigo); color:#fff; border:none; padding:0 16px; border-radius:var(--r-sm); font-weight:700; font-family:'Outfit',sans-serif; cursor:pointer; font-size:11px;">KIRIM</button>
-          </div>
+      <div style="display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:24px; border-bottom:1px solid var(--border); padding-bottom:16px;">
+        <div>
+          <div style="font-size:24px; font-weight:800; color:var(--fg); margin-bottom:8px; font-family:'Outfit',sans-serif;">Roadmap Belajar Personal</div>
+          <div style="font-size:14px; color:var(--fg-dim);">Fokus: <strong style="color:var(--cyan);">${msg}</strong></div>
         </div>
+        <button onclick="discussRoadmap('${msg.replace(/'/g, "\\'")}')" style="background:var(--indigo); color:#fff; border:none; padding:12px 24px; border-radius:var(--r-sm); font-weight:700; font-family:'Outfit',sans-serif; cursor:pointer; font-size:13px; display:flex; align-items:center; gap:8px;">
+          Diskusikan Roadmap ini di Chat AI <span style="font-size:16px;">&rarr;</span>
+        </button>
       </div>
+      <div id="advisory-flashcards" style="display:grid; gap:20px; grid-template-columns:repeat(auto-fit, minmax(320px, 1fr));"></div>
     `;
     
     // Render Flashcards
     const flashcardsDiv = document.getElementById('advisory-flashcards');
     if(data.flashcards && data.flashcards.length > 0) {
-      flashcardsDiv.style.display = 'grid';
-      flashcardsDiv.style.gridTemplateColumns = 'repeat(auto-fit, minmax(260px, 1fr))';
-      flashcardsDiv.style.gap = '16px';
       flashcardsDiv.innerHTML = data.flashcards.map((step, i) => `
         <div style="background:rgba(255,255,255,0.02); border:1px solid var(--border); border-radius:12px; padding:20px; animation:fadeUp 0.4s ease forwards; animation-delay:${i*0.1}s; opacity:0; transform:translateY(10px); display:flex; flex-direction:column; height:100%;">
           <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
@@ -2258,48 +2247,12 @@ async function generateRoadmapFromModal() {
   }
 }
 
-async function sendSideChat() {
-  const input = document.getElementById('side-chat-input');
-  const btn = document.getElementById('side-chat-btn');
-  const history = document.getElementById('side-chat-history');
-  const msg = input.value.trim();
-  if(!msg) return;
-
-  history.innerHTML += `
-    <div style="display:flex; justify-content:flex-end;">
-      <div style="background:var(--indigo); color:#fff; padding:10px 14px; border-radius:12px 12px 0 12px; font-size:13.5px; line-height:1.5;">${msg.replace(/</g,'&lt;')}</div>
-    </div>
-  `;
-  input.value = '';
-  input.disabled = true;
-  btn.disabled = true;
-  btn.textContent = '...';
-  
-  try {
-    const payload = {
-      readiness_score: lastProfil.readiness || 0,
-      skill_gap: lastProfil.skill_kurang || [],
-      target_job: lastProfil.job_target || lastProfil.target_job || '',
-      user_reply: msg
-    };
-    const r = await fetch(API + '/chat-advisory', {
-      method: 'POST',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify(payload)
-    });
-    const data = await r.json();
-    history.innerHTML += `
-      <div style="display:flex; gap:12px; align-items:flex-start;">
-         <div style="background:rgba(255,255,255,0.03); border:1px solid var(--border); padding:10px 14px; border-radius:0 12px 12px 12px; color:var(--fg-dim); font-size:13.5px; line-height:1.5;">${data.ai_response.replace(/</g,'&lt;')}</div>
-      </div>
-    `;
-    history.scrollTop = history.scrollHeight;
-  } catch(e) {
-    console.error(e);
-  } finally {
-    input.disabled = false;
-    btn.disabled = false;
-    btn.textContent = 'KIRIM';
+function discussRoadmap(focusMsg) {
+  go('chat');
+  const chatInput = document.getElementById('chat-input');
+  if (chatInput) {
+    chatInput.value = \`Tolong pandu saya lebih lanjut mengenai Roadmap Belajar saya dengan fokus: "\${focusMsg}". Apa langkah pertama yang sebaiknya saya lakukan hari ini?\`;
+    // setTimeout(() => sendChat(), 500); // Opsional: langsung kirim otomatis
   }
 }
 
