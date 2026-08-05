@@ -197,7 +197,7 @@ select option{background:var(--bg3)}
 .modal-overlay.show .modal-box { transform:translateY(0); }
 
 /* ── TIMELINE ROADMAP (HORIZONTAL) ── */
-.roadmap-timeline {
+.h-roadmap {
   position: relative;
   display: flex;
   overflow-x: auto;
@@ -206,9 +206,9 @@ select option{background:var(--bg3)}
   scrollbar-width: thin;
   scrollbar-color: var(--border) transparent;
 }
-.roadmap-timeline::-webkit-scrollbar { height: 6px; }
-.roadmap-timeline::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
-.roadmap-timeline::before {
+.h-roadmap::-webkit-scrollbar { height: 6px; }
+.h-roadmap::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+.h-roadmap::before {
   content: '';
   position: absolute;
   top: 15px; left: 0;
@@ -216,13 +216,13 @@ select option{background:var(--bg3)}
   height: 2px;
   background: linear-gradient(to right, var(--indigo), var(--cyan));
 }
-.timeline-item {
+.h-item {
   position: relative;
   min-width: 320px;
   flex-shrink: 0;
   padding-top: 20px; /* space from dot to card */
 }
-.timeline-dot {
+.h-dot {
   position: absolute;
   left: 20px; top: -30px; /* align with the horizontal line */
   width: 14px; height: 14px;
@@ -233,7 +233,7 @@ select option{background:var(--bg3)}
   z-index: 2;
 }
 @media(max-width:600px){
-  .timeline-item { min-width: 280px; }
+  .h-item { min-width: 280px; }
 }
 
 /* ── ANIMATIONS ── */
@@ -2251,16 +2251,16 @@ async function generateRoadmapFromModal() {
           Diskusikan Roadmap ini di Chat AI <span style="font-size:16px;">&rarr;</span>
         </button>
       </div>
-      <div id="advisory-flashcards" class="roadmap-timeline"></div>
+      <div id="advisory-flashcards" class="h-roadmap"></div>
     `;
     
     // Render Flashcards as Timeline
     const flashcardsDiv = document.getElementById('advisory-flashcards');
     if(data.flashcards && data.flashcards.length > 0) {
       flashcardsDiv.innerHTML = data.flashcards.map((step, i) => `
-        <div class="timeline-item" style="animation:fadeUp 0.5s ease forwards; animation-delay:${i*0.2}s; opacity:0; transform:translateY(15px);">
-          <div class="timeline-dot"></div>
-          <div class="timeline-content" style="background:rgba(255,255,255,0.02); border:1px solid var(--border); border-radius:12px; padding:24px; position:relative;">
+        <div class="h-item" style="animation:fadeUp 0.5s ease forwards; animation-delay:${i*0.2}s; opacity:0; transform:translateY(15px);">
+          <div class="h-dot"></div>
+          <div class="h-content" style="background:rgba(255,255,255,0.02); border:1px solid var(--border); border-radius:12px; padding:24px; position:relative;">
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
               <div style="background:var(--indigo); color:var(--bg); font-weight:800; font-size:11px; padding:4px 10px; border-radius:6px; letter-spacing:0.5px;">LANGKAH ${i+1}</div>
               <div style="font-size:11px; color:var(--cyan); font-weight:700; letter-spacing:1px; text-transform:uppercase;">${step.fase}</div>
