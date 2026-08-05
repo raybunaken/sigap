@@ -124,6 +124,12 @@ class ChatRequest(BaseModel):
 class CVTextRequest(BaseModel):
     text: str
 
+class AdvisoryRequest(BaseModel):
+    readiness_score: float
+    skill_gap: List[str] = []
+    user_reply: str
+    target_job: str
+
 # ── GROQ API (satu entry point untuk semua panggilan) ─────────────────────
 async def groq_request(
     messages: list,
@@ -951,6 +957,56 @@ async def parse_cv_text(req: CVTextRequest):
         "method": result["method"],
         "char_count": len(req.text),
     }
+
+@app.post("/chat-advisory", tags=["Advisory"])
+@api_router.post("/chat-advisory", tags=["Advisory"])
+@api_router_index.post("/chat-advisory", tags=["Advisory"])
+async def chat_advisory(req: AdvisoryRequest):
+    prompt = f"""Kamu adalah AI Career Advisor.
+User Readiness Score: {req.readiness_score}%
+Target Pekerjaan: {req.target_job}
+Skill yang kurang: {', '.join(req.skill_gap) if req.skill_gap else 'Tidak ada, sudah memenuhi kriteria dasar.'}
+
+Pesan dari user: "{req.user_reply}"
+
+TUGASMU:
+Berikan respons yang menyesuaikan dengan pesan user. 
+PENTING: Roadmap yang kamu buat harus mencakup **semua skill yang kurang (skill_gap)** secara berurutan, kecuali jika user secara eksplisit HANYA ingin fokus pada 1 skill saja.
+Jika user bilang "yang paling mudah dulu" atau sejenisnya, susun roadmap dari skill yang paling dasar/mudah hingga yang paling susah, tapi TETAP masukkan semua skill yang kurang ke dalam langkah-langkahnya.
+Jika pesan user di luar konteks karir, tegur dengan sopan dan kembalikan flashcards kosong.
+
+WAJIB return format JSON murni:
+{{
+  "ai_response": "Balasan hangat dan semangat dari kamu...",
+  "flashcards": [
+    {{"fase": "Langkah 1", "nama": "Judul Langkah", "skill": ["Skill Fokus"], "kursus": "Saran Kursus/Platform", "milestone": "Target hasil langkah ini"}},
+    {{"fase": "Langkah 2", "nama": "...", "skill": ["..."], "kursus": "...", "milestone": "..."}}
+  ]
+}}"""
+
+    messages = [
+        {"role": "system", "content": "Jawab HANYA JSON valid. Tidak ada teks markdown di luar blok JSON."},
+        {"role": "user", "content": prompt}
+    ]
+
+    ai_resp = await groq_request(messages, response_format={"type": "json_object"})
+    
+    if not ai_resp:
+        return {
+            "ai_response": "Maaf, sistem AI sedang sibuk. Coba beberapa saat lagi.",
+            "flashcards": []
+        }
+        
+    try:
+        parsed = json.loads(ai_resp)
+        return parsed
+    except Exception as e:
+        logger.error(f"Failed to parse JSON chat_advisory: {e}")
+        return {
+            "ai_response": "Maaf, terjadi kesalahan pada pemrosesan AI.",
+            "flashcards": []
+        }
+
 
 @app.post("/parse-cv", tags=["CV"])
 @api_router.post("/parse-cv", tags=["CV"])

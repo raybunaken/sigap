@@ -196,40 +196,44 @@ select option{background:var(--bg3)}
 }
 .modal-overlay.show .modal-box { transform:translateY(0); }
 
-/* ── TIMELINE ROADMAP ── */
+/* ── TIMELINE ROADMAP (HORIZONTAL) ── */
 .roadmap-timeline {
   position: relative;
-  max-width: 900px;
-  margin: 0 auto;
-  padding: 20px 0;
+  display: flex;
+  overflow-x: auto;
+  gap: 24px;
+  padding: 40px 0 20px 0; /* space for the line at top */
+  scrollbar-width: thin;
+  scrollbar-color: var(--border) transparent;
 }
+.roadmap-timeline::-webkit-scrollbar { height: 6px; }
+.roadmap-timeline::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
 .roadmap-timeline::before {
   content: '';
   position: absolute;
-  top: 0; left: 16px;
-  height: 100%; width: 2px;
-  background: linear-gradient(to bottom, var(--indigo), var(--cyan));
+  top: 15px; left: 0;
+  width: max(100%, 1000px); /* ensure it stretches */
+  height: 2px;
+  background: linear-gradient(to right, var(--indigo), var(--cyan));
 }
 .timeline-item {
   position: relative;
-  margin-bottom: 32px;
-  padding-left: 60px;
+  min-width: 320px;
+  flex-shrink: 0;
+  padding-top: 20px; /* space from dot to card */
 }
 .timeline-dot {
   position: absolute;
-  left: 11px; top: 20px;
-  width: 12px; height: 12px;
+  left: 20px; top: -30px; /* align with the horizontal line */
+  width: 14px; height: 14px;
   border-radius: 50%;
   background: var(--bg);
   border: 3px solid var(--cyan);
-  box-shadow: 0 0 16px var(--cyan);
+  box-shadow: 0 0 12px var(--cyan);
   z-index: 2;
 }
 @media(max-width:600px){
-  .roadmap-timeline { max-width: 100%; padding: 10px 0; }
-  .timeline-item { padding-left: 48px; }
-  .roadmap-timeline::before { left: 12px; }
-  .timeline-dot { left: 7px; }
+  .timeline-item { min-width: 280px; }
 }
 
 /* ── ANIMATIONS ── */
