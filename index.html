@@ -2238,6 +2238,7 @@ async function generateRoadmapFromModal() {
   
   try {
     const payload = {
+      language: currentLang,
       readiness_score: lastProfil.readiness || 0,
       skill_gap: lastProfil.skill_kurang || [],
       target_job: lastProfil.job_target || lastProfil.target_job || '',

@@ -965,7 +965,6 @@ async def parse_cv_text(req: CVTextRequest):
 @api_router.post("/chat-advisory", tags=["Advisory"])
 @api_router_index.post("/chat-advisory", tags=["Advisory"])
 async def chat_advisory(req: AdvisoryRequest):
-    lang_instruction = "CRITICAL: TRANSLATE YOUR ENTIRE RESPONSE TO ENGLISH. Keep the JSON keys exactly the same, but translate all the values to English." if lang == "en" else ""
     lang_instruction = "CRITICAL: TRANSLATE YOUR ENTIRE RESPONSE TO ENGLISH. Keep the JSON keys exactly the same, but translate all the values to English." if req.language == "en" else ""
     prompt = f"""Kamu adalah AI Career Advisor...
 {lang_instruction}
