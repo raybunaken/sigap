@@ -2221,6 +2221,10 @@ function renderResult(data) {
   advisoryModalMsgs.innerHTML = advisoryText;
   advisoryModal.classList.add('show');
   panel.scrollIntoView({behavior:'smooth', block:'start'});
+
+  if (currentLang === 'en') {
+    translateNode(panel);
+  }
 }
 
 // ── INTERACTIVE ADVISORY (MODAL & SIDE CHAT) ──────────────────────────────
@@ -2692,6 +2696,19 @@ I18N_DICT_LOWER[" kamu"] = "";
 I18N_DICT_LOWER["tentukan arah belajarmu"] = "SET YOUR LEARNING PATH";
 I18N_DICT_LOWER["ketik area fokus, atau kosongkan..."] = "Type a focus area, or leave blank...";
 I18N_DICT_LOWER["kirim"] = "SEND";
+I18N_DICT_LOWER["analisis skillsync ai"] = "SKILLSYNC AI ANALYSIS";
+I18N_DICT_LOWER["estimasi gaji fresh grad"] = "ESTIMATED FRESH GRAD SALARY";
+I18N_DICT_LOWER["demand pasar"] = "MARKET DEMAND";
+I18N_DICT_LOWER["outlook"] = "OUTLOOK";
+I18N_DICT_LOWER["lokasi tersedia"] = "AVAILABLE LOCATIONS";
+I18N_DICT_LOWER["belum ada skill yang match"] = "No matching skills yet";
+I18N_DICT_LOWER["semua skill wajib sudah terpenuhi!"] = "All mandatory skills fulfilled!";
+I18N_DICT_LOWER["hampir siap"] = "ALMOST READY";
+I18N_DICT_LOWER["siap apply!"] = "READY TO APPLY!";
+I18N_DICT_LOWER["perlu persiapan"] = "NEEDS PREP";
+I18N_DICT_LOWER["sangat tinggi"] = "Very High";
+I18N_DICT_LOWER["tinggi"] = "High";
+I18N_DICT_LOWER["kompetitif"] = "Competitive";
 
 // Trim all keys to ensure robust matching against trimmed node values
 const cleanedDict = {};

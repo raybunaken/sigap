@@ -866,7 +866,7 @@ ATURAN KETAT:
 }}"""
 
     messages = [
-        {"role": "system", "content": get_system_prompt(profil_dict, req.language) + " Return strict JSON."},
+        {"role": "system", "content": get_system_prompt(profil_dict, profil.language) + " Return strict JSON."},
         {"role": "user", "content": prompt}
     ]
 
