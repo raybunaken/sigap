@@ -2136,13 +2136,22 @@ function renderResult(data) {
 
   // Job info
   const jd = data.job_data || {};
+  let growthStr = jd.growth || '-';
+  if (currentLang === 'en') {
+    if (growthStr.includes('Volume data korporasi')) {
+        growthStr = 'Corporate data volume in Indonesia is growing rapidly — demand for visualization and tactical analysis is very high';
+    } else if (growthStr.includes('Tumbuh 25%/tahun')) {
+        growthStr = 'Grows 25%/year';
+    }
+  }
+
   document.getElementById('job-info').innerHTML = `
     <div class="job-info-item">
       <div class="job-info-label">Estimasi Gaji Fresh Grad</div>
       <div class="job-info-val" style="color:var(--white)">${data.gaji_range||'-'}</div>
     </div>
     <div class="job-info-item"><div class="job-info-label">Demand Pasar</div><div class="job-info-val">${jd.demand||'-'}</div></div>
-    <div class="job-info-item"><div class="job-info-label">Outlook</div><div class="job-info-val" style="font-size:12px">${jd.growth||'-'}</div></div>
+    <div class="job-info-item"><div class="job-info-label">Outlook</div><div class="job-info-val" style="font-size:12px">${growthStr}</div></div>
     <div class="job-info-item"><div class="job-info-label">Lokasi Tersedia</div><div class="job-info-val" style="font-size:12px">${(jd.lokasi||[]).join(', ')||'-'}</div></div>
   `;
 
@@ -2709,6 +2718,10 @@ I18N_DICT_LOWER["perlu persiapan"] = "NEEDS PREP";
 I18N_DICT_LOWER["sangat tinggi"] = "Very High";
 I18N_DICT_LOWER["tinggi"] = "High";
 I18N_DICT_LOWER["kompetitif"] = "Competitive";
+I18N_DICT_LOWER["analitis"] = "Analytical";
+I18N_DICT_LOWER["presentasi"] = "Presentation";
+I18N_DICT_LOWER["komunikasi"] = "Communication";
+I18N_DICT_LOWER["pemecahan masalah"] = "Problem Solving";
 
 // Trim all keys to ensure robust matching against trimmed node values
 const cleanedDict = {};

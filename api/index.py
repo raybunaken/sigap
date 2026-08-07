@@ -856,7 +856,8 @@ ATURAN KETAT:
 2. Readiness 40-70%: Akui gap yang ada, berikan estimasi waktu realistis.
 3. Readiness > 70%: Apresiasi skill yang sudah ada, dorong segera mulai apply.
 4. Jangan sebut skill di luar daftar skill kurang.
-5. WAJIB return format JSON murni:
+{"5. CRITICAL INSTRUCTION: TRANSLATE your 'summary' and the descriptions inside 'gap_context' into ENGLISH! The user wants the response in English." if profil.language == "en" else "5. WAJIB return format JSON murni:"}
+6. WAJIB return format JSON murni:
 {{
   "summary": "evaluasi 3 kalimat kamu...",
   "gap_context": {{
