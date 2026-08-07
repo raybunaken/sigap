@@ -2197,13 +2197,21 @@ function renderResult(data) {
   
   let advisoryText = '';
   if (data.readiness >= 100 || (data.skill_kurang && data.skill_kurang.length === 0)) {
-    advisoryText = `
+    advisoryText = currentLang === 'en' ? `
+      <p>Hello! Based on the analysis, you have a <strong style="color:var(--green)">Readiness of ${data.readiness}%</strong>. Awesome!</p>
+      <p style="margin-top:12px">Since all mandatory skills are met, you can start focusing on building a portfolio or learning advanced skills.</p>
+      <p style="margin-top:16px">Is there a specific area you want to focus on for your portfolio? Or would you like a project recommendation?</p>
+    ` : `
       <p>Halo! Berdasarkan analisa, kamu punya <strong style="color:var(--green)">Readiness ${data.readiness}%</strong>. Keren banget!</p>
       <p style="margin-top:12px">Karena semua skill wajib sudah terpenuhi, kamu bisa mulai fokus bangun portofolio atau belajar skill lanjutan (advanced).</p>
       <p style="margin-top:16px">Ada area spesifik yang mau difokuskan untuk portofolio? Atau mau rekomendasi project?</p>
     `;
   } else {
-    advisoryText = `
+    advisoryText = currentLang === 'en' ? `
+      <p>Hello! Based on the analysis, you have a <strong style="color:var(--fg)">Readiness of ${data.readiness}%</strong>.</p>
+      <p style="margin-top:12px">To close the gap, you are recommended to learn: <strong style="color:var(--indigo)">${(data.skill_kurang||[]).join(', ')}</strong>.</p>
+      <p style="margin-top:16px">Is there a specific area you'd like to focus on first? Or should I create a roadmap from scratch?</p>
+    ` : `
       <p>Halo! Berdasarkan analisa, kamu punya <strong style="color:var(--fg)">Readiness ${data.readiness}%</strong>.</p>
       <p style="margin-top:12px">Untuk menutup gap yang ada, kamu disarankan belajar: <strong style="color:var(--indigo)">${(data.skill_kurang||[]).join(', ')}</strong>.</p>
       <p style="margin-top:16px">Ada area spesifik yang mau difokuskan dulu? Atau mau aku buatkan roadmap urut dari awal?</p>
@@ -2643,14 +2651,14 @@ I18N_DICT_LOWER["roadmap personal per fase dan kursus gratis terkurasi (dicoding
 I18N_DICT_LOWER["# chat ai menyimpan konteks"] = "# AI Chat retains context";
 I18N_DICT_LOWER["sma/smk (sederajat)"] = "High School (Equivalent)";
 I18N_DICT_LOWER["d3/d4 (vokasi)"] = "Diploma / Vocational";
-I18N_DICT_LOWER["s1 - ilmu komputer / teknik informatika"] = "Bachelor - Computer Science / IT";
-I18N_DICT_LOWER["s1 - sains / matematika / statistika"] = "Bachelor - Science / Math / Statistics";
-I18N_DICT_LOWER["s1 - teknik (selain it) / rekayasa"] = "Bachelor - Engineering (Non-IT)";
-I18N_DICT_LOWER["s1 - ekonomi / bisnis / akuntansi"] = "Bachelor - Economics / Business / Accounting";
-I18N_DICT_LOWER["s1 - ilmu komunikasi / hubungan internasional"] = "Bachelor - Communications / International Relations";
-I18N_DICT_LOWER["s1 - desain / seni / arsitektur"] = "Bachelor - Design / Art / Architecture";
-I18N_DICT_LOWER["s1 - psikologi / ilmu sosial / hukum"] = "Bachelor - Psychology / Social Sciences / Law";
-I18N_DICT_LOWER["s1 - sastra / pendidikan / jurusan lainnya"] = "Bachelor - Literature / Education / Others";
+I18N_DICT_LOWER["s1 — ilmu komputer / teknik informatika"] = "Bachelor — Computer Science / IT";
+I18N_DICT_LOWER["s1 — sains / matematika / statistika"] = "Bachelor — Science / Math / Statistics";
+I18N_DICT_LOWER["s1 — teknik (selain it) / rekayasa"] = "Bachelor — Engineering (Non-IT)";
+I18N_DICT_LOWER["s1 — ekonomi / bisnis / akuntansi"] = "Bachelor — Economics / Business / Accounting";
+I18N_DICT_LOWER["s1 — ilmu komunikasi / hubungan internasional"] = "Bachelor — Communications / International Relations";
+I18N_DICT_LOWER["s1 — desain / seni / arsitektur"] = "Bachelor — Design / Art / Architecture";
+I18N_DICT_LOWER["s1 — psikologi / ilmu sosial / hukum"] = "Bachelor — Psychology / Social Sciences / Law";
+I18N_DICT_LOWER["s1 — sastra / pendidikan / jurusan lainnya"] = "Bachelor — Literature / Education / Others";
 I18N_DICT_LOWER["s2 / s3"] = "Master / PhD";
 I18N_DICT_LOWER["self-taught / bootcamp"] = "Self-Taught / Bootcamp";
 I18N_DICT_LOWER["fresh grad / belum ada pengalaman"] = "Fresh grad / no experience";
@@ -2672,6 +2680,9 @@ I18N_DICT_LOWER["udah pas, lanjut!"] = "LOOKS GOOD, CONTINUE!";
 I18N_DICT_LOWER["cek "] = "Check Your ";
 I18N_DICT_LOWER["kesiapan karir"] = "Career Readiness";
 I18N_DICT_LOWER[" kamu"] = "";
+I18N_DICT_LOWER["tentukan arah belajarmu"] = "SET YOUR LEARNING PATH";
+I18N_DICT_LOWER["ketik area fokus, atau kosongkan..."] = "Type a focus area, or leave blank...";
+I18N_DICT_LOWER["kirim"] = "SEND";
 
 // Trim all keys to ensure robust matching against trimmed node values
 const cleanedDict = {};
@@ -2698,16 +2709,25 @@ function translateNode(node) {
         node.nodeValue = orig;
       }
     }
-  } else if (node.nodeType === 1 && node.nodeName !== 'SCRIPT' && node.nodeName !== 'STYLE') {
-    if (node.placeholder) {
-      let lower = node.placeholder.trim().toLowerCase();
-      if (currentLang === 'en' && I18N_DICT_LOWER[lower]) {
-        if (!originalTexts.has(node)) originalTexts.set(node, node.placeholder);
-        node.placeholder = I18N_DICT_LOWER[lower];
-      } else if (currentLang === 'id' && originalTexts.has(node)) {
-        node.placeholder = originalTexts.get(node);
+  } else if (node.nodeType === 1) {
+    if (node.hasAttribute('placeholder')) {
+      let text = node.getAttribute('placeholder').trim();
+      if (text !== '') {
+        if (currentLang === 'en') {
+          let lower = text.toLowerCase();
+          if (I18N_DICT_LOWER[lower]) {
+            if (!originalTexts.has(node)) originalTexts.set(node, node.getAttribute('placeholder'));
+            node.setAttribute('placeholder', I18N_DICT_LOWER[lower]);
+          }
+        } else {
+          if (originalTexts.has(node)) {
+            node.setAttribute('placeholder', originalTexts.get(node));
+          }
+        }
       }
     }
+  }
+  if (node.childNodes) {
     for (let child of node.childNodes) {
       translateNode(child);
     }
