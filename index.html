@@ -2256,14 +2256,18 @@ async function generateRoadmapFromModal() {
     modal.classList.remove('show');
     
     // Inject Full-Width Bento Grid Layout & Button
+    const title = currentLang === 'en' ? 'Personal Learning Roadmap' : 'Roadmap Belajar Personal';
+    const focusLabel = currentLang === 'en' ? 'Focus:' : 'Fokus:';
+    const btnLabel = currentLang === 'en' ? 'Discuss this Roadmap in AI Chat' : 'Diskusikan Roadmap ini di Chat AI';
+
     roadmapList.innerHTML = `
       <div style="display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:24px; border-bottom:1px solid var(--border); padding-bottom:16px;">
         <div>
-          <div style="font-size:24px; font-weight:800; color:var(--fg); margin-bottom:8px; font-family:'Outfit',sans-serif;">Roadmap Belajar Personal</div>
-          <div style="font-size:14px; color:var(--fg-dim);">Fokus: <strong style="color:var(--cyan);">${msg}</strong></div>
+          <div style="font-size:24px; font-weight:800; color:var(--fg); margin-bottom:8px; font-family:'Outfit',sans-serif;">${title}</div>
+          <div style="font-size:14px; color:var(--fg-dim);">${focusLabel} <strong style="color:var(--cyan);">${msg}</strong></div>
         </div>
         <button onclick="discussRoadmap('${msg.replace(/'/g, "\\'")}')" style="background:var(--indigo); color:#fff; border:none; padding:12px 24px; border-radius:var(--r-sm); font-weight:700; font-family:'Outfit',sans-serif; cursor:pointer; font-size:13px; display:flex; align-items:center; gap:8px;">
-          Diskusikan Roadmap ini di Chat AI <span style="font-size:16px;">&rarr;</span>
+          ${btnLabel} <span style="font-size:16px;">&rarr;</span>
         </button>
       </div>
       <div id="advisory-flashcards" class="h-roadmap"></div>
@@ -2272,12 +2276,16 @@ async function generateRoadmapFromModal() {
     // Render Flashcards as Timeline
     const flashcardsDiv = document.getElementById('advisory-flashcards');
     if(data.flashcards && data.flashcards.length > 0) {
+      const stepLbl = currentLang === 'en' ? 'STEP' : 'LANGKAH';
+      const courseLbl = currentLang === 'en' ? 'RECOMMENDED COURSE' : 'Kursus Rekomendasi';
+      const targetLbl = currentLang === 'en' ? 'TARGET MILESTONE' : 'Target Kelulusan';
+
       flashcardsDiv.innerHTML = data.flashcards.map((step, i) => `
         <div class="h-item" style="animation:fadeUp 0.5s ease forwards; animation-delay:${i*0.2}s; opacity:0; transform:translateY(15px);">
           <div class="h-dot"></div>
           <div class="h-content" style="background:rgba(255,255,255,0.02); border:1px solid var(--border); border-radius:12px; padding:24px; position:relative;">
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
-              <div style="background:var(--indigo); color:var(--bg); font-weight:800; font-size:11px; padding:4px 10px; border-radius:6px; letter-spacing:0.5px;">LANGKAH ${i+1}</div>
+              <div style="background:var(--indigo); color:var(--bg); font-weight:800; font-size:11px; padding:4px 10px; border-radius:6px; letter-spacing:0.5px;">${stepLbl} ${i+1}</div>
               <div style="font-size:11px; color:var(--cyan); font-weight:700; letter-spacing:1px; text-transform:uppercase;">${step.fase}</div>
             </div>
             <div style="font-size:18px; font-weight:700; color:var(--fg); margin-bottom:12px; line-height:1.3;">${step.nama}</div>
@@ -2285,10 +2293,10 @@ async function generateRoadmapFromModal() {
               ${(step.skill||[]).map(s=>`<span style="background:var(--bg3); border:1px solid var(--border-strong); font-size:11px; color:var(--dim); padding:4px 10px; border-radius:20px;">${s}</span>`).join('')}
             </div>
             <div style="font-size:14px; color:var(--fg-dim); line-height:1.5; margin-bottom:16px;">
-              <strong style="color:var(--fg); font-size:12px; text-transform:uppercase; letter-spacing:1px;">Kursus Rekomendasi</strong><br>${step.kursus}
+              <strong style="color:var(--fg); font-size:12px; text-transform:uppercase; letter-spacing:1px;">${courseLbl}</strong><br>${step.kursus}
             </div>
             <div style="font-size:14px; color:var(--dim); line-height:1.5; border-top:1px dashed var(--border-strong); padding-top:16px;">
-              <strong style="color:var(--fg); font-size:12px; text-transform:uppercase; letter-spacing:1px;">Target Kelulusan</strong><br>${step.milestone}
+              <strong style="color:var(--fg); font-size:12px; text-transform:uppercase; letter-spacing:1px;">${targetLbl}</strong><br>${step.milestone}
             </div>
           </div>
         </div>
