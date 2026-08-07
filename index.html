@@ -1042,7 +1042,7 @@ footer{border-top:1px solid var(--border);padding:24px 0;margin-top:40px}
           <input type="text" id="skill-input" class="skill-input" placeholder="Ketik skill lalu Enter..."/>
         </div>
         <div style="font-size:10px;color:var(--dim);margin-top:5px;line-height:1.5">
-          💡 <strong>Skill tidak terdeteksi dari CV?</strong> Tambahkan manual di atas — kamu yang paling tahu skill kamu.
+          <strong>Skill tidak terdeteksi dari CV?</strong> Tambahkan manual di atas — kamu yang paling tahu skill kamu.
         </div>
 
         <div class="skill-suggestions" id="skill-suggestions">
@@ -1693,6 +1693,7 @@ async function extractTextFromPDF(file) {
     return fullText;
   } catch(e) {
     console.error('PDF.js error:', e);
+    fname.textContent = currentLang === 'en' ? 'Failed: ' + file.name : 'Gagal: ' + file.name;
     return '';
   }
 }
@@ -1731,7 +1732,7 @@ async function handleCV(input) {
 
     if (extractedText && extractedText.trim().length > 50) {
       // Kirim teks hasil ekstraksi ke backend untuk diproses Groq
-      fname.textContent = 'Mengidentifikasi skill...';
+      fname.textContent = currentLang === 'en' ? 'Identifying skills...' : 'Mengidentifikasi skill...';
       const r = await fetch(API + '/parse-cv-text', {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
@@ -1776,7 +1777,7 @@ async function handleCV(input) {
 
   } catch(e) {
     console.error('CV error:', e);
-    fname.textContent  = 'Gagal: ' + file.name;
+    fname.textContent = currentLang === 'en' ? 'Failed: ' + file.name : 'Gagal: ' + file.name;
     sfound.textContent = 'Pastikan backend menyala dan API key valid.';
   }
 }
@@ -2286,7 +2287,7 @@ async function generateRoadmapFromModal() {
     }
   } catch(e) {
     console.error(e);
-    alert('Gagal generate roadmap');
+    alert(currentLang === 'en' ? 'Failed to generate roadmap' : 'Gagal generate roadmap');
   } finally {
     btn.classList.remove('loading');
     input.disabled = false;
@@ -2299,7 +2300,7 @@ function discussRoadmap(focusMsg) {
   go('chat');
   const chatInput = document.getElementById('chat-input');
   if (chatInput) {
-    chatInput.value = `Tolong pandu saya lebih lanjut mengenai Roadmap Belajar saya dengan fokus: "${focusMsg}". Apa langkah pertama yang sebaiknya saya lakukan hari ini?`;
+    chatInput.value = currentLang === 'en' ? `Please guide me further on my Learning Roadmap focusing on: "${focusMsg}". What is the first step I should take today?` : `Tolong pandu saya lebih lanjut mengenai Roadmap Belajar saya dengan fokus: "${focusMsg}". Apa langkah pertama yang sebaiknya saya lakukan hari ini?`;
     // setTimeout(() => sendChat(), 500); // Opsional: langsung kirim otomatis
   }
 }
@@ -2411,7 +2412,7 @@ function quickQ(q) {
 </script>
 <div class="modal-overlay" id="skill-confirm-modal">
   <div class="modal-box">
-    <div class="modal-title">Cek Ulang Skill Kamu! 🔍</div>
+    <div class="modal-title">Cek Ulang Skill Kamu!</div>
     <div class="modal-desc">
       Ini daftar skill yang kami tangkap (dari CV dan input manual). Udah lengkap belum? Kalau ada <strong>Framework/Tools spesifik</strong> (misal: React, Node.js, Tableau) yang kamu bisa tapi belum masuk sini, tambahin dulu ya biar hasil AI nggak ngawur!
     </div>
@@ -2640,6 +2641,37 @@ I18N_DICT_LOWER["readiness score dihitung dengan weighted scoring: skill wajib (
 I18N_DICT_LOWER["# readiness = (wajib_match/total × 70) + (plus_match/total × 30)"] = "# Readiness = (match_mandatory/total × 70) + (match_plus/total × 30)";
 I18N_DICT_LOWER["roadmap personal per fase dan kursus gratis terkurasi (dicoding, hubspot, kemnaker). jika readiness ≥ 80%, langsung ke kaggle/github. chat ai menyimpan konteks gap analisis — tidak amnesia saat ditanya lanjutan."] = "Personalized phase-by-phase roadmap and curated free courses (Dicoding, HubSpot, Kemnaker). If readiness ≥ 80%, directed straight to Kaggle/GitHub. AI Chat retains gap analysis context — no amnesia during follow-up questions.";
 I18N_DICT_LOWER["# chat ai menyimpan konteks"] = "# AI Chat retains context";
+I18N_DICT_LOWER["sma/smk (sederajat)"] = "High School (Equivalent)";
+I18N_DICT_LOWER["d3/d4 (vokasi)"] = "Diploma / Vocational";
+I18N_DICT_LOWER["s1 - ilmu komputer / teknik informatika"] = "Bachelor - Computer Science / IT";
+I18N_DICT_LOWER["s1 - sains / matematika / statistika"] = "Bachelor - Science / Math / Statistics";
+I18N_DICT_LOWER["s1 - teknik (selain it) / rekayasa"] = "Bachelor - Engineering (Non-IT)";
+I18N_DICT_LOWER["s1 - ekonomi / bisnis / akuntansi"] = "Bachelor - Economics / Business / Accounting";
+I18N_DICT_LOWER["s1 - ilmu komunikasi / hubungan internasional"] = "Bachelor - Communications / International Relations";
+I18N_DICT_LOWER["s1 - desain / seni / arsitektur"] = "Bachelor - Design / Art / Architecture";
+I18N_DICT_LOWER["s1 - psikologi / ilmu sosial / hukum"] = "Bachelor - Psychology / Social Sciences / Law";
+I18N_DICT_LOWER["s1 - sastra / pendidikan / jurusan lainnya"] = "Bachelor - Literature / Education / Others";
+I18N_DICT_LOWER["s2 / s3"] = "Master / PhD";
+I18N_DICT_LOWER["self-taught / bootcamp"] = "Self-Taught / Bootcamp";
+I18N_DICT_LOWER["fresh grad / belum ada pengalaman"] = "Fresh grad / no experience";
+I18N_DICT_LOWER["magang 1-3 bulan"] = "Internship 1-3 months";
+I18N_DICT_LOWER["magang 3-6 bulan"] = "Internship 3-6 months";
+I18N_DICT_LOWER["project freelance / kontrak"] = "Freelance / contract project";
+I18N_DICT_LOWER["kerja penuh waktu < 1 tahun"] = "Full-time < 1 year";
+I18N_DICT_LOWER["kerja 1-2 tahun"] = "1-2 years experience";
+I18N_DICT_LOWER["kerja 2-5 tahun (mid-level)"] = "2-5 years experience (mid-level)";
+I18N_DICT_LOWER["kerja lebih dari 5 tahun"] = "> 5 years experience";
+I18N_DICT_LOWER["career switch / ganti bidang"] = "Career switch";
+I18N_DICT_LOWER["mengidentifikasi skill..."] = "Identifying skills...";
+I18N_DICT_LOWER["cek ulang skill kamu!"] = "DOUBLE-CHECK YOUR SKILLS!";
+I18N_DICT_LOWER["ini daftar skill yang kami tangkap (dari cv dan input manual). udah lengkap belum? kalau ada "] = "Here are the skills we captured (from CV and manual input). Is it complete? If there are specific ";
+I18N_DICT_LOWER["framework/tools spesifik"] = "Frameworks/Tools";
+I18N_DICT_LOWER[" (misal: react, node.js, tableau) yang kamu bisa tapi belum masuk sini, tambahin dulu ya biar hasil ai nggak ngawur!"] = " (e.g., React, Node.js, Tableau) that you know but aren't listed here, please add them so the AI results are accurate!";
+I18N_DICT_LOWER["oh iya, mau tambah lagi"] = "YES, I WANT TO ADD MORE";
+I18N_DICT_LOWER["udah pas, lanjut!"] = "LOOKS GOOD, CONTINUE!";
+I18N_DICT_LOWER["cek "] = "Check Your ";
+I18N_DICT_LOWER["kesiapan karir"] = "Career Readiness";
+I18N_DICT_LOWER[" kamu"] = "";
 
 // Trim all keys to ensure robust matching against trimmed node values
 const cleanedDict = {};
