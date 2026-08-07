@@ -634,7 +634,7 @@ def get_gaji_by_experience(job_data: dict, pengalaman: str) -> str:
     return job_data.get("gaji_junior", job_data.get("rata_gaji", "-"))
 
 # -- SYSTEM PROMPT--
-def get_system_prompt(profil: dict = None) -> str:
+def get_system_prompt(profil: dict = None, lang: str = "id") -> str:
     profil_str = ""
     kursus_str = ""
 
@@ -693,12 +693,18 @@ Jika user sudah melakukan analisis gap sebelumnya, kamu WAJIB merujuk pada:
 - JANGAN halusinasi skill baru yang tidak relevan dengan profil user
 
 === FORMAT JAWABAN ===
-Untuk analisis karir: mulai dengan penilaian jujur skill yang sudah dimiliki,
-lalu sebutkan 2-3 skill spesifik yang paling perlu dipelajari (pakai nama asli toolsnya),
-rekomendasikan 1-2 kursus gratis yang konkret, dan estimasi waktu realistis.
+    lang_instruction = "CRITICAL: YOU MUST SPEAK AND RESPOND ENTIRELY IN ENGLISH. All your advice must be translated to English." if lang == "en" else "Jawablah dalam bahasa Indonesia yang ramah dan suportif."
+    return f"""Kamu adalah SkillSync AI - advisor karir cerdas untuk fresh grad Indonesia yang berfokus di bidang digital/tech.
+{lang_instruction}
 
-JANGAN pakai header bold seperti "**Gap Utama:**" — tulis mengalir seperti ngobrol.
-Untuk pertanyaan casual/general → jawab natural, singkat, langsung.
+Tugasmu:
+1. Menjawab pertanyaan karir user dengan ringkas, tajam, praktikal.
+2. Gunakan konteks profil user di bawah untuk jawaban yang highly-personalized.
+3. Jawab dalam format markdown. Gunakan bold, bullet points. JANGAN terlalu panjang (maks 2 paragraf padat).
+4. Jika ditanya soal kursus, sebutkan referensi dari data profil, atau sarankan platform seperti Dicoding, Coursera, dll.
+
+{profil_str}
+{kursus_str}
 
 === PENGETAHUAN (SUMBER VALID) ===
 Data Gaji — BPS Sakernas Agustus 2025 (sumber resmi, verifiable):

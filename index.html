@@ -868,7 +868,8 @@ footer{border-top:1px solid var(--border);padding:24px 0;margin-top:40px}
       <a onclick="go('chat')">Chat AI</a>
       <a onclick="go('about')">Tentang</a>
     </div>
-    <div class="nav-badge">BETA</div>
+    <div class="nav-badge" style="background: var(--cyan); color: var(--bg);">BETA</div>
+    <div class="nav-badge" style="background: var(--bg3); cursor: pointer; color: var(--fg);" id="lang-toggle-btn" onclick="toggleLang()">EN</div>
   </div>
 </nav>
 
@@ -1980,7 +1981,7 @@ async function doAnalyze() {
   btn.classList.add('loading'); btn.disabled = true;
 
   const expandedSkills = expandSkills(userSkills);
-  lastProfil = {
+  lastProfil = { language: window.APP_LANG || 'id',
     pendidikan, jurusan: pendidikan,
     skill: expandedSkills,
     target_job: target,
@@ -2439,6 +2440,106 @@ function quickQ(q) {
         </button>
       </div>
     </div>
-  </div>
+<script>
+const I18N_DICT = {
+  "Beranda": "Home",
+  "Cek Gap": "Gap Check",
+  "Chat AI": "AI Advisor",
+  "Tentang": "About",
+  "Sistem Identifikasi GAP Skill untuk Karir": "Skill Gap Identification System for Your Career",
+  "Tau Persis Apa yang<br><span class=\"it\">Harus Kamu Pelajari</span>": "Know Exactly What You<br><span class=\"it\">Need to Learn</span>",
+  "Masukkan skill kamu, SkillSync menganalisis gap vs kebutuhan pasar dan memberikan roadmap belajar konkret — lengkap dengan kursus gratis.": "Input your skills, SkillSync analyzes your gap against market demand and provides a concrete learning roadmap — complete with free courses.",
+  "ANALISIS SEKARANG": "ANALYZE NOW",
+  "Pusat Karir AI": "AI Career Center",
+  "Tanya SkillSync AI \u2192": "Ask SkillSync AI \u2192",
+  "PROFIL PENGGUNA": "USER PROFILE",
+  "PENDIDIKAN TERAKHIR": "LATEST EDUCATION",
+  "PENGALAMAN KERJA": "WORK EXPERIENCE",
+  "TARGET PEKERJAAN": "TARGET JOB",
+  "Kosongkan = AI merekomendasikan": "Leave blank = AI will recommend",
+  "LOKASI": "LOCATION",
+  "UPLOAD CV (OPSIONAL)": "UPLOAD CV (OPTIONAL)",
+  "SKILL YANG DIKUASAI": "YOUR SKILLS",
+  "Upload CV atau tambah manual:": "Upload CV or add manually:",
+  "💡 Skill tidak terdeteksi dari CV? Tambahkan manual di atas — kamu yang paling tahu skill kamu.": "💡 Skill not detected from CV? Add manually above — you know your skills best.",
+  "ANALISIS GAP SKILL": "ANALYZE SKILL GAP",
+  "HASIL ANALISIS": "ANALYSIS RESULT",
+  "REKOMENDASI SkillSync": "SkillSync RECOMMENDATION",
+  "KARIR TERBAIK BERDASARKAN PROFIL KAMU:": "BEST CAREER BASED ON YOUR PROFILE:",
+  "ANALISIS GAP DAN ROADMAP TERSEDIA DI BAWAH.": "GAP ANALYSIS AND ROADMAP AVAILABLE BELOW.",
+  "KESIAPAN": "READINESS",
+  "TERPENUHI": "FULFILLED",
+  "Belum ada skill yang match": "No matching skills yet",
+  "GAP / KURANG": "GAP / MISSING",
+  "SOFT SKILL": "SOFT SKILLS",
+  "INFO PEKERJAAN": "JOB INFO",
+  "ESTIMASI GAJI FRESH GRAD": "ESTIMATED FRESH GRAD SALARY",
+  "DEMAND PASAR": "MARKET DEMAND",
+  "OUTLOOK": "OUTLOOK",
+  "LOKASI TERSEDIA": "AVAILABLE LOCATIONS",
+  "KURSUS REKOMENDASI": "RECOMMENDED COURSES",
+  "LIHAT ROADMAP BELAJAR \u2193": "VIEW LEARNING ROADMAP \u2193",
+  "TANYA SkillSync AI \u2192": "ASK SkillSync AI \u2192",
+  "S1 — Ilmu Komputer / Teknik Informatika": "Bachelor — Computer Science / IT",
+  "S1 — Sistem Informasi": "Bachelor — Information Systems",
+  "S1 — Matematika / Statistika": "Bachelor — Mathematics / Statistics",
+  "S1 — Non-IT (Manajemen, Hukum, dll)": "Bachelor — Non-IT (Management, Law, etc)",
+  "Fresh grad / belum ada pengalaman": "Fresh grad / no experience",
+  "Magang / Freelance (< 1 tahun)": "Internship / Freelance (< 1 year)",
+  "Junior (1-2 tahun)": "Junior (1-2 years)"
+};
+
+let currentLang = 'id';
+let originalTexts = new Map();
+window.APP_LANG = 'id';
+
+function translateNode(node) {
+  if (node.nodeType === 3) {
+    let text = node.nodeValue.trim();
+    if (text === '') return;
+    
+    if (currentLang === 'en') {
+      if (I18N_DICT[text]) {
+        if (!originalTexts.has(node)) originalTexts.set(node, text);
+        node.nodeValue = node.nodeValue.replace(text, I18N_DICT[text]);
+      }
+    } else {
+      if (originalTexts.has(node)) {
+        let orig = originalTexts.get(node);
+        node.nodeValue = node.nodeValue.replace(node.nodeValue.trim(), orig);
+      }
+    }
+  } else if (node.nodeType === 1 && node.nodeName !== 'SCRIPT' && node.nodeName !== 'STYLE') {
+    if (node.placeholder) {
+      if (currentLang === 'en' && I18N_DICT[node.placeholder]) {
+        if (!originalTexts.has(node)) originalTexts.set(node, node.placeholder);
+        node.placeholder = I18N_DICT[node.placeholder];
+      } else if (currentLang === 'id' && originalTexts.has(node)) {
+        node.placeholder = originalTexts.get(node);
+      }
+    }
+    for (let child of node.childNodes) {
+      translateNode(child);
+    }
+  }
+}
+
+function toggleLang() {
+  currentLang = currentLang === 'id' ? 'en' : 'id';
+  window.APP_LANG = currentLang;
+  document.getElementById('lang-toggle-btn').innerText = currentLang === 'id' ? 'EN' : 'ID';
+  translateNode(document.body);
+  
+  // Custom manual translations for elements that script might miss
+  const heroH1 = document.querySelector('.hero h1');
+  if (heroH1) {
+    if (currentLang === 'en') {
+      heroH1.innerHTML = 'Know Exactly What You<br><span class="it">Need to Learn</span>';
+    } else {
+      heroH1.innerHTML = 'Tau Persis Apa yang<br><span class="it">Harus Kamu Pelajari</span>';
+    }
+  }
+}
+</script>
 </body>
 </html>

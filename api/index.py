@@ -100,6 +100,7 @@ app.add_middleware(
 
 # ── SCHEMAS ───────────────────────────────────────────────────────────────
 class ProfilUser(BaseModel):
+    language: Optional[str] = "id"
     pendidikan:   str
     jurusan:      str
     skill:        List[str] = []
@@ -117,6 +118,7 @@ class ChatMessage(BaseModel):
     content: str
 
 class ChatRequest(BaseModel):
+    language: Optional[str] = "id"
     message:      str
     history:      List[ChatMessage] = []
     profil:       Optional[ProfilUser] = None
@@ -125,6 +127,7 @@ class CVTextRequest(BaseModel):
     text: str
 
 class AdvisoryRequest(BaseModel):
+    language: Optional[str] = "id"
     readiness_score: float
     skill_gap: List[str] = []
     user_reply: str
@@ -863,7 +866,7 @@ ATURAN KETAT:
 }}"""
 
     messages = [
-        {"role": "system", "content": get_system_prompt(profil_dict) + " Return strict JSON."},
+        {"role": "system", "content": get_system_prompt(profil_dict, req.language) + " Return strict JSON."},
         {"role": "user", "content": prompt}
     ]
 
@@ -935,7 +938,7 @@ async def chat(req: ChatRequest):
             "skill_kurang": skill_kurang,
         }
 
-    messages = [{"role": "system", "content": get_system_prompt(profil_dict)}]
+    messages = [{"role": "system", "content": get_system_prompt(profil_dict, req.language)}]
     for msg in req.history[-10:]:
         messages.append({"role": msg.role, "content": msg.content})
     messages.append({"role": "user", "content": req.message})
@@ -962,7 +965,10 @@ async def parse_cv_text(req: CVTextRequest):
 @api_router.post("/chat-advisory", tags=["Advisory"])
 @api_router_index.post("/chat-advisory", tags=["Advisory"])
 async def chat_advisory(req: AdvisoryRequest):
-    prompt = f"""Kamu adalah AI Career Advisor.
+    lang_instruction = "CRITICAL: TRANSLATE YOUR ENTIRE RESPONSE TO ENGLISH. Keep the JSON keys exactly the same, but translate all the values to English." if lang == "en" else ""
+    lang_instruction = "CRITICAL: TRANSLATE YOUR ENTIRE RESPONSE TO ENGLISH. Keep the JSON keys exactly the same, but translate all the values to English." if req.language == "en" else ""
+    prompt = f"""Kamu adalah AI Career Advisor...
+{lang_instruction}
 User Readiness Score: {req.readiness_score}%
 Target Pekerjaan: {req.target_job}
 Skill yang kurang: {', '.join(req.skill_gap) if req.skill_gap else 'Tidak ada, sudah memenuhi kriteria dasar.'}
