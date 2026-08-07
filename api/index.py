@@ -1,5 +1,5 @@
 """
-SIGAP — AI Advisor Skill Gap untuk Fresh Grad Indonesia
+SkillSync — AI Advisor Skill Gap untuk Fresh Grad Indonesia
 Backend: FastAPI + Groq (Llama 3.3)
 Jalankan: python api.py
 """
@@ -71,13 +71,13 @@ SKILL_PATTERNS = [
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     if GROQ_API_KEY:
-        logger.info(f"✓ SIGAP ready! Model: {GROQ_MODEL}")
+        logger.info(f"✓ SkillSync ready! Model: {GROQ_MODEL}")
     else:
         logger.warning("⚠ GROQ_API_KEY tidak ditemukan! Set di file .env")
     yield
 
 app = FastAPI(
-    title="SIGAP — AI Advisor Skill Gap",
+    title="SkillSync — AI Advisor Skill Gap",
     description="Sistem Identifikasi GAP Skill untuk Karir fresh grad Indonesia",
     version="1.0.0",
     lifespan=lifespan,
@@ -756,7 +756,7 @@ async def analyze(profil: ProfilUser):
     if not profil.target_job.strip() and not profil.skill:
         raise HTTPException(
             status_code=400,
-            detail="SIGAP butuh minimal satu info: isi target pekerjaan, atau masukkan skill yang kamu punya (bisa juga upload CV dulu)."
+            detail="SkillSync butuh minimal satu info: isi target pekerjaan, atau masukkan skill yang kamu punya (bisa juga upload CV dulu)."
         )
 
     if not profil.target_job.strip():
@@ -942,7 +942,7 @@ async def chat(req: ChatRequest):
 
     reply = await groq_request(messages)
     if not reply:
-        reply = "Maaf, SIGAP AI belum tersedia. Pastikan GROQ_API_KEY sudah diset di file .env (gratis di console.groq.com)."
+        reply = "Maaf, SkillSync AI belum tersedia. Pastikan GROQ_API_KEY sudah diset di file .env (gratis di console.groq.com)."
 
     return {"reply": reply}
 
