@@ -2493,15 +2493,59 @@ let currentLang = 'id';
 let originalTexts = new Map();
 window.APP_LANG = 'id';
 
+const I18N_DICT_LOWER = {};
+for (let k in I18N_DICT) {
+  I18N_DICT_LOWER[k.toLowerCase()] = I18N_DICT[k];
+}
+// Specific mappings for elements missed by exact case match
+I18N_DICT_LOWER["profil pengguna"] = "USER PROFILE";
+I18N_DICT_LOWER["pendidikan terakhir"] = "LATEST EDUCATION";
+I18N_DICT_LOWER["pengalaman kerja"] = "WORK EXPERIENCE";
+I18N_DICT_LOWER["target pekerjaan"] = "TARGET JOB";
+I18N_DICT_LOWER["lokasi"] = "LOCATION";
+I18N_DICT_LOWER["upload cv (opsional)"] = "UPLOAD CV (OPTIONAL)";
+I18N_DICT_LOWER["skill yang dikuasai"] = "YOUR SKILLS";
+I18N_DICT_LOWER["cek gap skill sekarang"] = "ANALYZE SKILL GAP NOW";
+I18N_DICT_LOWER["konsultasi ai"] = "AI ADVISOR";
+I18N_DICT_LOWER["pengangguran terbuka"] = "Open Unemployment";
+I18N_DICT_LOWER["usia 15-24 tahun"] = "Age 15-24 Years";
+I18N_DICT_LOWER["rata-rata cari kerja"] = "Average Time to Hire";
+I18N_DICT_LOWER["jalur karir dianalisis"] = "Career Paths Analyzed";
+I18N_DICT_LOWER["empat langkah ke karir impian"] = "Four Steps to Your Dream Career";
+I18N_DICT_LOWER["profil & skill"] = "Profile & Skills";
+I18N_DICT_LOWER["isi pendidikan, skill yang dimiliki, dan target pekerjaan."] = "Fill in your education, skills, and target job.";
+I18N_DICT_LOWER["gap score"] = "Gap Score";
+I18N_DICT_LOWER["skillsync bandingkan skill vs kebutuhan pasar dan hitung kesiapan."] = "SkillSync compares your skills vs market demand and calculates readiness.";
+I18N_DICT_LOWER["kursus gratis"] = "Free Courses";
+I18N_DICT_LOWER["roadmap belajar per fase + kursus gratis dicoding, coursera, kemnaker."] = "Phased learning roadmap + free courses from Dicoding, Coursera, Kemnaker.";
+I18N_DICT_LOWER["tanya soal skill, kursus, cv, interview ke skillsync ai."] = "Ask about skills, courses, CV, and interviews to SkillSync AI.";
+I18N_DICT_LOWER["cek kesiapan karir kamu"] = "Check Your Career Readiness";
+I18N_DICT_LOWER["isi dengan jujur — semakin lengkap datanya, semakin akurat hasilnya."] = "Fill honestly — the more complete the data, the more accurate the results.";
+I18N_DICT_LOWER["tanya skillsync"] = "Ask SkillSync";
+I18N_DICT_LOWER["skill, kursus, cv, interview — tanya apa saja."] = "Skills, courses, CV, interviews — ask anything.";
+I18N_DICT_LOWER["halo! saya skillsync — advisor karir untuk fresh grad indonesia."] = "Hello! I am SkillSync — your career advisor for Indonesian fresh grads.";
+I18N_DICT_LOWER["bisa bantu kamu dengan:"] = "I can help you with:";
+I18N_DICT_LOWER["- skill apa yang harus dipelajari"] = "- What skills to learn";
+I18N_DICT_LOWER["- kursus gratis yang worth it"] = "- Worthwhile free courses";
+I18N_DICT_LOWER["- cara bikin portofolio yang menarik"] = "- How to create an attractive portfolio";
+I18N_DICT_LOWER["- tips cv dan interview"] = "- CV and interview tips";
+I18N_DICT_LOWER["- strategi job hunting"] = "- Job hunting strategy";
+I18N_DICT_LOWER["mau tanya apa?"] = "What do you want to ask?";
+I18N_DICT_LOWER["klik atau drag cv ke sini"] = "Click or drag CV here";
+I18N_DICT_LOWER["pdf, txt — skill terdeteksi otomatis"] = "PDF, TXT — skills auto-detected";
+I18N_DICT_LOWER["ketik skill lalu enter.."] = "Type skill and hit enter..";
+I18N_DICT_LOWER["tentang"] = "About";
+
 function translateNode(node) {
   if (node.nodeType === 3) {
     let text = node.nodeValue.trim();
     if (text === '') return;
     
     if (currentLang === 'en') {
-      if (I18N_DICT[text]) {
+      let lower = text.toLowerCase();
+      if (I18N_DICT_LOWER[lower]) {
         if (!originalTexts.has(node)) originalTexts.set(node, text);
-        node.nodeValue = node.nodeValue.replace(text, I18N_DICT[text]);
+        node.nodeValue = node.nodeValue.replace(text, I18N_DICT_LOWER[lower]);
       }
     } else {
       if (originalTexts.has(node)) {
@@ -2511,9 +2555,10 @@ function translateNode(node) {
     }
   } else if (node.nodeType === 1 && node.nodeName !== 'SCRIPT' && node.nodeName !== 'STYLE') {
     if (node.placeholder) {
-      if (currentLang === 'en' && I18N_DICT[node.placeholder]) {
+      let lower = node.placeholder.toLowerCase();
+      if (currentLang === 'en' && I18N_DICT_LOWER[lower]) {
         if (!originalTexts.has(node)) originalTexts.set(node, node.placeholder);
-        node.placeholder = I18N_DICT[node.placeholder];
+        node.placeholder = I18N_DICT_LOWER[lower];
       } else if (currentLang === 'id' && originalTexts.has(node)) {
         node.placeholder = originalTexts.get(node);
       }
