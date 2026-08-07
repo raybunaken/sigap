@@ -1870,6 +1870,10 @@ function showTech(idx) {
     </div>
   `;
   document.getElementById('tech-detail').classList.add('show');
+  
+  if (currentLang === 'en') {
+    translateNode(document.getElementById('tech-detail'));
+  }
 }
 
 // Init
@@ -2627,6 +2631,15 @@ I18N_DICT_LOWER["pelajari model bisnis, traksi, dan strategi pertumbuhan kami se
 I18N_DICT_LOWER["akses investor relations →"] = "Access Investor Relations →";
 I18N_DICT_LOWER["sumber data"] = "DATA SOURCES";
 I18N_DICT_LOWER["skill requirements dari agregasi data lowongan kerja indonesia 2024-2025."] = "Skill requirements from aggregated Indonesian job vacancies data 2024-2025.";
+I18N_DICT_LOWER["01 — input & ekstraksi"] = "01 — INPUT & EXTRACTION";
+I18N_DICT_LOWER["02 — semantic matching"] = "02 — SEMANTIC MATCHING";
+I18N_DICT_LOWER["03 — gap analysis"] = "03 — GAP ANALYSIS";
+I18N_DICT_LOWER["04 — rekomendasi"] = "04 — RECOMMENDATION";
+I18N_DICT_LOWER["teks cv diproses oleh llama 3.3 70b via groq api. ai memahami konteks semantik, bukan hanya keyword — \"kepanitiaan\" → kepemimpinan, \"press release\" → public relations. diperkuat regex hybrid untuk skill teknis."] = "CV text is processed by Llama 3.3 70B via Groq API. AI understands semantic context, not just keywords — \"kepanitiaan\" → Leadership, \"press release\" → Public Relations. Enhanced with Hybrid Regex for technical skills.";
+I18N_DICT_LOWER["readiness score dihitung dengan weighted scoring: skill wajib (bobot 3) dan skill plus (bobot 1). sistem mendeteksi career pivot otomatis. fuzzy matching memastikan typo tetap diarahkan ke role yang tepat."] = "Readiness Score is calculated using Weighted Scoring: mandatory skills (weight 3) and plus skills (weight 1). The system automatically detects Career Pivots. Fuzzy matching ensures typos are correctly mapped to the right roles.";
+I18N_DICT_LOWER["# readiness = (wajib_match/total × 70) + (plus_match/total × 30)"] = "# Readiness = (match_mandatory/total × 70) + (match_plus/total × 30)";
+I18N_DICT_LOWER["roadmap personal per fase dan kursus gratis terkurasi (dicoding, hubspot, kemnaker). jika readiness ≥ 80%, langsung ke kaggle/github. chat ai menyimpan konteks gap analisis — tidak amnesia saat ditanya lanjutan."] = "Personalized phase-by-phase roadmap and curated free courses (Dicoding, HubSpot, Kemnaker). If readiness ≥ 80%, directed straight to Kaggle/GitHub. AI Chat retains gap analysis context — no amnesia during follow-up questions.";
+I18N_DICT_LOWER["# chat ai menyimpan konteks"] = "# AI Chat retains context";
 
 // Trim all keys to ensure robust matching against trimmed node values
 const cleanedDict = {};
