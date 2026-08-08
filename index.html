@@ -2475,18 +2475,19 @@ function quickQ(q) {
         <div class="chat-av" style="background:var(--indigo); color:#fff; border:none; width:40px; height:40px; font-size:12px;">AI</div>
         <div>
           <div style="font-size:16px; font-weight:700; color:var(--fg); font-family:'Outfit',sans-serif;">SkillSync Advisor</div>
-          <div style="font-size:12px; color:var(--cyan); font-weight:700; text-transform:uppercase; letter-spacing:1px;">${currentLang === 'en' ? 'Determine Your Learning Path' : 'Tentukan Arah Belajarmu'}</div>
+          <div style="font-size:12px; color:var(--cyan); font-weight:700; text-transform:uppercase; letter-spacing:1px;">Tentukan Arah Belajarmu</div>
         </div>
       </div>
       <div id="advisory-modal-messages" style="font-size:14px; color:var(--fg-dim); line-height:1.7; margin-bottom:24px; font-family:'DM Sans',sans-serif;">
       </div>
       <div style="display:flex; gap:12px; margin-top:28px;">
-        <input type="text" id="advisory-modal-input" placeholder="${currentLang === 'en' ? 'Type focus area, or leave blank...' : 'Ketik area fokus, atau kosongkan...'}" style="flex:1; background:var(--bg3); font-size:14px; padding:14px 16px; border:1px solid var(--border-strong); border-radius:var(--r-sm); color:var(--fg);" onkeydown="if(event.key==='Enter') generateRoadmapFromModal()">
+        <input type="text" id="advisory-modal-input" placeholder="Ketik area fokus, atau kosongkan..." style="flex:1; background:var(--bg3); font-size:14px; padding:14px 16px; border:1px solid var(--border-strong); border-radius:var(--r-sm); color:var(--fg);" onkeydown="if(event.key==='Enter') generateRoadmapFromModal()">
         <button id="advisory-modal-btn" onclick="generateRoadmapFromModal()" class="btn-p" style="width:auto; padding:0 24px; border-radius:var(--r-sm); font-size:12px;">
-          <span class="lbl">${currentLang === 'en' ? 'SEND' : 'KIRIM'}</span><div class="spin"></div>
+          <span class="lbl">KIRIM</span><div class="spin"></div>
         </button>
       </div>
     </div>
+  </div>
 <script>
 const I18N_DICT = {
   "Beranda": "Home",
