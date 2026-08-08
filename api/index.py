@@ -998,6 +998,7 @@ async def parse_cv_text(req: CVTextRequest):
 @api_router_index.post("/chat-advisory", tags=["Advisory"])
 async def chat_advisory(req: AdvisoryRequest):
     lang_instruction = "CRITICAL: TRANSLATE YOUR ENTIRE RESPONSE TO ENGLISH. Keep the JSON keys exactly the same, but translate all the values to English." if req.language == "en" else ""
+    fase_label = "Step 1" if req.language == "en" else "Langkah 1"
     prompt = f"""Kamu adalah AI Career Advisor...
 {lang_instruction}
 User Readiness Score: {req.readiness_score}%
@@ -1016,8 +1017,8 @@ WAJIB return format JSON murni:
 {{
   "ai_response": "Balasan hangat dan semangat dari kamu...",
   "flashcards": [
-    {{"fase": "Langkah 1", "nama": "Judul Langkah", "skill": ["Skill Fokus"], "kursus": "Saran Kursus/Platform", "milestone": "Target hasil langkah ini"}},
-    {{"fase": "Langkah 2", "nama": "...", "skill": ["..."], "kursus": "...", "milestone": "..."}}
+    {{"fase": "{fase_label}", "nama": "Judul Langkah", "skill": ["Skill Fokus"], "kursus": "Saran Kursus/Platform", "milestone": "Target hasil langkah ini"}},
+    {{"fase": "{fase_label.replace('1', '2')}", "nama": "...", "skill": ["..."], "kursus": "...", "milestone": "..."}}
   ]
 }}"""
 
