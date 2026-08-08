@@ -286,7 +286,7 @@ h1,h2,h3{font-family:'Outfit',sans-serif;letter-spacing:-1px}
   function checkCode() {
     const input = document.getElementById('access-code').value;
     const errorMsg = document.getElementById('auth-error');
-    if (input === 'DIGDAYA2026') {
+    if (input.trim().toUpperCase() === 'DIGDAYA2026') {
       document.getElementById('auth-overlay').style.opacity = '0';
       setTimeout(() => {
         document.getElementById('auth-overlay').style.display = 'none';
