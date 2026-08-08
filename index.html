@@ -20,18 +20,18 @@
   --glass:rgba(163,230,53,0.1);
 
   /* 🍃 ACCENT — Lime Green 🍃 */
-  --indigo:#A3E635;      /* Lime 400 (Slightly less blinding than 300) */
+  --indigo:#A3E635;      /* Lime 400 */
   --indigo-dim:rgba(163,230,53,0.3);
   --indigo-glow:rgba(163,230,53,0.5);
   --gold:#84CC16;        /* Lime 500 */
   --gold-dim:rgba(132,204,22,0.15);
-  --green:#10B981;
-  --green-dim:rgba(16,185,129,0.15);
-  --red:#EF4444;
-  --red-dim:rgba(239,68,68,0.15);
-  --amber:#F59E0B;
+  --green:#84CC16;       /* Lime 500 */
+  --green-dim:rgba(132,204,22,0.15);
+  --red:#DC2626;         /* Red 600 */
+  --red-dim:rgba(220,38,38,0.15);
+  --amber:var(--dim);    /* Zinc 400 for neutral tags */
 
-  --cyan:#65A30D;        /* Lime 600 (Matching hue with indigo, but dark enough for text readability) */
+  --cyan:#65A30D;        /* Lime 600 */
 
   --r:8px;
   --r-sm:5px;
@@ -132,10 +132,10 @@ input:focus,select:focus,textarea:focus{
 input::placeholder{color:var(--dim)}
 select option{background:var(--bg3)}
 
-/* ── SKILL TAGS ── */
+/* 🗂️ SKILL TAGS 🗂️ */
 .skill-wrap{
   display:flex;flex-wrap:wrap;gap:5px;padding:8px 10px;
-  background:var(--bg3);border:1px solid var(--border);border-radius:var(--r-sm);
+  background:var(--bg2);border:1px solid var(--border-strong);border-radius:var(--r-sm);
   min-height:46px;max-height:130px;overflow-y:auto;overflow-x:hidden;
   cursor:text;transition:border-color .18s;
 }
@@ -143,13 +143,13 @@ select option{background:var(--bg3)}
 .skill-wrap::-webkit-scrollbar-thumb{background:var(--border)}
 .skill-wrap:focus-within{
   border-color:var(--cyan);
-  box-shadow:0 0 0 3px rgba(110,106,244,0.10);
+  box-shadow:0 0 0 3px var(--indigo-dim);
 }
 .skill-tag{
   display:flex;align-items:center;gap:4px;
-  background:var(--indigo-dim);
-  color:var(--cyan);
-  border:1px solid rgba(110,106,244,0.3);
+  background:var(--bg3);
+  color:var(--fg-dim);
+  border:1px solid var(--border-strong);
   padding:3px 9px;border-radius:20px;
   font-size:11px;font-weight:600;
   letter-spacing:0.3px;white-space:nowrap;flex-shrink:0;
@@ -331,14 +331,13 @@ select option{background:var(--bg3)}
 /* ── AI SUMMARY ── */
 .ai-summary{
   padding:20px 24px;
-  background:linear-gradient(135deg,rgba(110,106,244,0.1),rgba(255,255,255,0.02));
-  backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
-  border:1px solid rgba(110,106,244,0.3);
+  background:linear-gradient(135deg,var(--bg3),var(--bg2));
+  border:1px solid var(--border-strong);
   border-radius:20px;
   font-size:15.5px;line-height:1.75;color:var(--fg-dim);
   margin-bottom:24px;
   font-family:'DM Sans','Outfit',sans-serif;
-  box-shadow:0 8px 32px rgba(0,0,0,0.15);
+  box-shadow:0 8px 32px rgba(0,0,0,0.05);
   transition:all .3s ease;
 }
 .ai-summary:hover{transform:translateY(-2px);box-shadow:0 12px 40px rgba(0,0,0,0.2)}
