@@ -337,10 +337,31 @@ h1,h2,h3{font-family:'Outfit',sans-serif;letter-spacing:-1px}
       </div>
     </div>
 
+    <!-- CONTACT SECTION -->
+    <div style="margin-top:48px; text-align:center; padding:40px; background:var(--indigo-dim); border:1px solid var(--border); border-radius:12px;">
+      <h2 style="font-size:24px; font-weight:800; font-family:'Outfit',sans-serif; margin-bottom:8px;">Let's Connect</h2>
+      <p style="color:var(--fg-dim); margin-bottom:24px; font-size:15px;">Interested in our Seed Round? Reach out directly to the founder.</p>
+      <div style="display:flex; gap:16px; justify-content:center;">
+        <a href="mailto:raybunaken@gmail.com" class="auth-btn" style="text-decoration:none; display:inline-block; width:auto; padding:12px 24px; border-radius:8px;">
+          EMAIL FOUNDER
+        </a>
+        <a href="https://www.linkedin.com/in/dzaky-rayssa-buntoro-b13694318/" target="_blank" class="auth-btn" style="text-decoration:none; display:inline-block; width:auto; padding:12px 24px; border-radius:8px; background:var(--bg2); color:var(--fg); border:1px solid var(--border-strong);">
+          LINKEDIN PROFILE
+        </a>
+      </div>
+    </div>
+
   </div>
 </div>
 
 <script>
+  document.addEventListener('DOMContentLoaded', () => {
+    if (localStorage.getItem('investor_unlocked') === 'true') {
+      document.getElementById('auth-overlay').style.display = 'none';
+      document.getElementById('main-content').style.opacity = '1';
+    }
+  });
+
   function submitEmail(e) {
     e.preventDefault();
     const email = document.getElementById('investor-email').value;
@@ -371,6 +392,7 @@ h1,h2,h3{font-family:'Outfit',sans-serif;letter-spacing:-1px}
     .then(response => response.json())
     .then(data => {
       // Success
+      localStorage.setItem('investor_unlocked', 'true');
       document.getElementById('auth-overlay').style.opacity = '0';
       setTimeout(() => {
         document.getElementById('auth-overlay').style.display = 'none';
