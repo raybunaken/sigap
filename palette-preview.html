@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Color Palette Preview</title>
+  <style>
+    body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; display: flex; height: 100vh; }
+    .split { flex: 1; padding: 40px; display: flex; flex-direction: column; gap: 20px; }
+    
+    /* Option 1: Zinc (Clean) */
+    .zinc { background-color: #F4F4F5; color: #18181B; }
+    .zinc-card { background-color: #FFFFFF; border: 1px solid #E4E4E7; padding: 24px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+    .zinc-btn { background-color: #BEF264; color: #18181B; padding: 12px 24px; border: none; border-radius: 24px; font-weight: bold; cursor: pointer; }
+    .zinc-accent { color: #65A30D; font-weight: bold; }
+    
+    /* Option 2: Stone (Warm) */
+    .stone { background-color: #F5F5F4; color: #1C1917; }
+    .stone-card { background-color: #FAFAF9; border: 1px solid #E7E5E4; padding: 24px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.04); }
+    .stone-btn { background-color: #BEF264; color: #1C1917; padding: 12px 24px; border: none; border-radius: 24px; font-weight: bold; cursor: pointer; }
+    .stone-accent { color: #65A30D; font-weight: bold; }
+    
+    h1 { margin-top: 0; }
+  </style>
+</head>
+<body>
+
+  <!-- Option 1 -->
+  <div class="split zinc">
+    <h1>Opsi 1: Pure Neutral (Zinc)</h1>
+    <p>Abu-abu murni tanpa campuran biru. Terlihat sangat bersih dan profesional mirip referensi Norde.</p>
+    <div class="zinc-card">
+      <div class="zinc-accent">SKILL GAP ANALYZER</div>
+      <h2 style="margin: 8px 0;">Check Your Career Readiness</h2>
+      <p style="color: #71717A;">Fill honestly &mdash; the more complete the data, the more accurate the results.</p>
+      <br>
+      <button class="zinc-btn">ANALYZE SKILL GAP NOW</button>
+    </div>
+  </div>
+
+  <!-- Option 2 -->
+  <div class="split stone">
+    <h1>Opsi 2: Warm/Earthy (Stone)</h1>
+    <p>Abu-abu dengan sedikit sentuhan hangat (krem). Sangat adem di mata kalau dilihat lama.</p>
+    <div class="stone-card">
+      <div class="stone-accent">SKILL GAP ANALYZER</div>
+      <h2 style="margin: 8px 0;">Check Your Career Readiness</h2>
+      <p style="color: #78716C;">Fill honestly &mdash; the more complete the data, the more accurate the results.</p>
+      <br>
+      <button class="stone-btn">ANALYZE SKILL GAP NOW</button>
+    </div>
+  </div>
+
+</body>
+</html>
