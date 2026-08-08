@@ -1232,49 +1232,13 @@ Mau tanya apa?</div>
     <p style="font-size:14px;color:var(--dim);margin-top:10px;font-weight:300;max-width:520px">Tim lulusan Universitas Muhammadiyah Surakarta (UMS) yang berfokus membangun solusi AI praktis untuk masalah <span class="it">skill mismatch</span> pencari kerja muda di Indonesia.</p>
   </div>
   <div class="about-grid">
-    <div class="about-card bento-span-2">
-      <h3 style="font-size:24px;margin-bottom:12px;color:var(--cyan)">Visi Kami: Mengatasi Skill Mismatch</h3>
-      <p style="font-size:15px;line-height:1.7;color:var(--fg-dim)">
-        Menurut data BPS 2024, terdapat 7,47 juta pengangguran terbuka di Indonesia, yang didominasi oleh anak muda usia 15-24 tahun. Masalah utamanya bukanlah kurangnya lapangan kerja, melainkan <strong>skill mismatch</strong>—jurang pemisah antara apa yang diajarkan di kampus dengan apa yang diminta industri saat ini. <br><br>
-        SkillSync dibangun dengan satu misi: <strong>Menghilangkan tebak-tebakan dalam karir.</strong> Kami menyediakan platform berbasis AI yang langsung mengidentifikasi <i>skill gap</i> pengguna secara akurat, dan membuatkan peta jalan (roadmap) belajar yang sepenuhnya mengambil sumber dari kursus gratis berkualitas tinggi (seperti Coursera, Google, dan Dicoding).
-      </p>
+    <div class="about-card">
+      <h3>Latar Belakang</h3>
+      <p>Menurut data BPS 2024, Tingkat Pengangguran Terbuka (TPT) mencapai 4,91% dan didominasi usia 15-24 tahun. Masalah utamanya adalah <span class="it">skill mismatch</span> (ketidaksesuaian keahlian dengan permintaan industri). SkillSync hadir untuk membantu <i>fresh graduate</i> mengetahui langsung *skill* apa yang kurang dan harus mereka pelajari.</p>
     </div>
-    
-    <div class="about-card bento-span-2" style="background:var(--indigo-dim);border-color:var(--cyan)">
-      <div class="kicker" style="color:var(--cyan);margin-bottom:8px">Under The Hood</div>
-      <h3 style="font-size:24px;margin-bottom:12px;">Not Just Another "AI Slop"</h3>
-      <p style="font-size:15px;line-height:1.7;color:var(--fg-dim);margin-bottom:20px">
-        Kami sadar betul bahwa saat ini banyak aplikasi yang sekadar membungkus API ChatGPT tanpa memberikan nilai tambah (<i>AI Slop</i>). Oleh karena itu, SkillSync di-<i>engineer</i> menggunakan pendekatan <strong>Neuro-Symbolic AI</strong> dan <strong>RAG (Retrieval-Augmented Generation)</strong> untuk menjamin nol halusinasi dan akurasi 100% pada kalkulasi <i>gap</i>.
-      </p>
-      
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;">
-        <div>
-          <h4 style="font-size:16px;margin-bottom:8px;font-family:'Outfit',sans-serif">1. Deterministic Engine (Symbolic)</h4>
-          <p style="font-size:13.5px;color:var(--dim);line-height:1.6">
-            Pencocokan <i>skill</i> pengguna dengan kebutuhan industri <strong>tidak</strong> dilakukan oleh LLM, melainkan oleh algoritma deterministik berbasis <i>Knowledge Graph</i> kami yang secara rutin di-<i>update</i> dari data nyata portal lowongan kerja (Jobstreet & Kalibrr). Ini memastikan hasil perhitungan kelulusan (Readiness Score) bersifat matematis dan pasti.
-          </p>
-        </div>
-        <div>
-          <h4 style="font-size:16px;margin-bottom:8px;font-family:'Outfit',sans-serif">2. Semantic CV Parser (Neuro)</h4>
-          <p style="font-size:13.5px;color:var(--dim);line-height:1.6">
-            LLM (Llama 3.3 70B via Groq) <strong>hanya</strong> bertugas di layer pertama untuk membaca dan mengekstraksi data mentah dari CV pengguna secara semantik. Groq dipilih karena LPU-nya memberikan kecepatan <i>inference</i> instan (sub-second), sangat cocok untuk UX interaktif tanpa *loading* lama.
-          </p>
-        </div>
-        <div>
-          <h4 style="font-size:16px;margin-bottom:8px;font-family:'Outfit',sans-serif">3. Tech Stack</h4>
-          <p style="font-size:13.5px;color:var(--dim);line-height:1.6">
-            <strong>Frontend:</strong> Vanilla JS SPA + CSS Custom Properties untuk performa *rendering* secepat kilat (0 framework overhead).<br>
-            <strong>Backend:</strong> FastAPI (Python) untuk *handling* asinkron dan integrasi *agentic workflow*.<br>
-            <strong>Infra:</strong> Vercel Edge Network.
-          </p>
-        </div>
-        <div>
-          <h4 style="font-size:16px;margin-bottom:8px;font-family:'Outfit',sans-serif">4. Context-Aware Advisory</h4>
-          <p style="font-size:13.5px;color:var(--dim);line-height:1.6">
-            Fitur Chat AI kami disuntik dengan *System Prompt* yang sudah diformat dengan JSON hasil analisis gap *real-time* pengguna. AI tidak menebak-nebak profil pengguna, ia merespons secara spesifik berdasarkan kekurangan *skill* pengguna tersebut.
-          </p>
-        </div>
-      </div>
+    <div class="about-card">
+      <h3>Arsitektur Sistem</h3>
+      <p>Menggunakan pendekatan <strong>Neuro-Symbolic</strong>: menggabungkan <i>Knowledge Base</i> lokal (untuk memastikan rekomendasi valid dan anti-halusinasi) dengan LLM Llama 3.3 (untuk membaca CV secara semantik). Sistem langsung menghubungkan kekurangan *skill* pengguna dengan kursus gratis dari partner kami.</p>
     </div>
   </div>
   <div class="about-stats">

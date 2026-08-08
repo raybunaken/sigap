@@ -168,11 +168,18 @@ h1,h2,h3{font-family:'Outfit',sans-serif;letter-spacing:-1px}
 <!-- AUTH MODAL -->
 <div id="auth-overlay">
   <div class="auth-box">
-    <h2>Access Restricted</h2>
-    <p>Please enter the investor access code to view the Pitch Deck.</p>
-    <input type="password" class="auth-input" id="access-code" placeholder="Enter Code" />
-    <button class="auth-btn" onclick="checkCode()">VERIFY ACCESS</button>
-    <div class="auth-error" id="auth-error">Incorrect Access Code. Please try again.</div>
+    <h2>Investor Deck Access</h2>
+    <p>Please enter your business email to view the SkillSync Seed Round Pitch Deck.</p>
+    <form id="lead-form" onsubmit="submitEmail(event)">
+      <!-- FormSubmit config -->
+      <input type="hidden" name="_captcha" value="false">
+      <input type="hidden" name="_subject" value="New Investor Access Request!">
+      
+      <input type="email" class="auth-input" name="email" id="investor-email" placeholder="name@vc.com" required style="text-transform:lowercase; letter-spacing:0.5px;" />
+      <button type="submit" class="auth-btn" id="submit-btn">GET ACCESS</button>
+      <div class="auth-error" id="auth-error">Error. Please try again.</div>
+    </form>
+    <div style="font-size:11px;color:var(--dim);margin-top:16px;">We respect your privacy. No spam.</div>
   </div>
 </div>
 
@@ -258,6 +265,57 @@ h1,h2,h3{font-family:'Outfit',sans-serif;letter-spacing:-1px}
       </div>
     </div>
 
+    <!-- TECHNOLOGY ARCHITECTURE -->
+    <div class="pitch-section" style="background:var(--bg); border:1px solid var(--border-strong);">
+      <div class="kicker" style="color:var(--cyan);">Under The Hood</div>
+      <h2 class="pitch-title">Neuro-Symbolic Architecture</h2>
+      <p class="pitch-desc">
+        SkillSync is not a standard LLM wrapper. To prevent AI hallucinations and ensure 100% accurate readiness scores, we utilize a <strong>Neuro-Symbolic</strong> approach combining deterministic Knowledge Graphs with Semantic parsing.
+      </p>
+      
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:32px;">
+        <div style="background:var(--bg2);padding:24px;border-radius:var(--r);border:1px solid var(--border);">
+          <div style="width:40px;height:40px;background:var(--indigo-dim);color:var(--cyan);border-radius:8px;display:flex;align-items:center;justify-content:center;margin-bottom:16px;">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M12 16v-4"></path><path d="M12 8h.01"></path></svg>
+          </div>
+          <h4 style="font-size:16px;margin-bottom:8px;font-family:'Outfit',sans-serif">Deterministic Engine (Symbolic)</h4>
+          <p style="font-size:13.5px;color:var(--dim);line-height:1.6">
+            Skill gap calculation is purely mathematical. We use a proprietary Knowledge Graph updated daily from real-world job portals to compute the exact match percentage. No guessing, 100% deterministic.
+          </p>
+        </div>
+        
+        <div style="background:var(--bg2);padding:24px;border-radius:var(--r);border:1px solid var(--border);">
+          <div style="width:40px;height:40px;background:var(--indigo-dim);color:var(--cyan);border-radius:8px;display:flex;align-items:center;justify-content:center;margin-bottom:16px;">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
+          </div>
+          <h4 style="font-size:16px;margin-bottom:8px;font-family:'Outfit',sans-serif">Semantic Parser (Neuro)</h4>
+          <p style="font-size:13.5px;color:var(--dim);line-height:1.6">
+            Llama 3.3 (via Groq LPU) is strictly utilized at the edge layer to semantically parse messy CV PDFs into structured JSON. Groq guarantees sub-second inference speeds for real-time UX.
+          </p>
+        </div>
+
+        <div style="background:var(--bg2);padding:24px;border-radius:var(--r);border:1px solid var(--border);">
+          <div style="width:40px;height:40px;background:var(--indigo-dim);color:var(--cyan);border-radius:8px;display:flex;align-items:center;justify-content:center;margin-bottom:16px;">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>
+          </div>
+          <h4 style="font-size:16px;margin-bottom:8px;font-family:'Outfit',sans-serif">Tech Stack</h4>
+          <p style="font-size:13.5px;color:var(--dim);line-height:1.6">
+            Frontend is a Vanilla JS SPA running on Vercel Edge for zero-overhead rendering. Backend powered by FastAPI (Python) for asynchronous agentic workflows.
+          </p>
+        </div>
+
+        <div style="background:var(--bg2);padding:24px;border-radius:var(--r);border:1px solid var(--border);">
+          <div style="width:40px;height:40px;background:var(--indigo-dim);color:var(--cyan);border-radius:8px;display:flex;align-items:center;justify-content:center;margin-bottom:16px;">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+          </div>
+          <h4 style="font-size:16px;margin-bottom:8px;font-family:'Outfit',sans-serif">Context-Aware Advisory</h4>
+          <p style="font-size:13.5px;color:var(--dim);line-height:1.6">
+            The AI Advisor is injected with the computed gap analysis JSON payload, allowing it to provide hyper-personalized mentorship based on factual missing skills, not generic advice.
+          </p>
+        </div>
+      </div>
+    </div>
+
     <!-- Q&A -->
     <div class="pitch-section">
       <div class="kicker">Anticipated Questions</div>
@@ -283,36 +341,66 @@ h1,h2,h3{font-family:'Outfit',sans-serif;letter-spacing:-1px}
 </div>
 
 <script>
-  function checkCode() {
-    const input = document.getElementById('access-code').value;
+  function submitEmail(e) {
+    e.preventDefault();
+    const email = document.getElementById('investor-email').value;
+    const btn = document.getElementById('submit-btn');
     const errorMsg = document.getElementById('auth-error');
-    if (input.trim().toUpperCase() === 'DIGDAYA2026') {
+    
+    if (!email || !email.includes('@')) {
+      showError('Please enter a valid email address.');
+      return;
+    }
+
+    btn.innerText = 'VERIFYING...';
+    btn.style.opacity = '0.7';
+    
+    // Submit via AJAX to FormSubmit
+    fetch('https://formsubmit.co/ajax/raybunaken@gmail.com', {
+      method: 'POST',
+      headers: { 
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      },
+      body: JSON.stringify({
+        email: email,
+        _subject: 'New Investor Lead: ' + email,
+        message: 'A new investor has requested access to the Pitch Deck: ' + email
+      })
+    })
+    .then(response => response.json())
+    .then(data => {
+      // Success
       document.getElementById('auth-overlay').style.opacity = '0';
       setTimeout(() => {
         document.getElementById('auth-overlay').style.display = 'none';
         document.getElementById('main-content').style.opacity = '1';
         window.scrollTo(0,0);
       }, 300);
-    } else {
-      errorMsg.style.opacity = '1';
-      document.querySelector('.auth-box').animate([
-        { transform: 'translateX(0px)' },
-        { transform: 'translateX(-10px)' },
-        { transform: 'translateX(10px)' },
-        { transform: 'translateX(-10px)' },
-        { transform: 'translateX(10px)' },
-        { transform: 'translateX(0px)' }
-      ], { duration: 400, easing: 'ease-in-out' });
-      
-      setTimeout(() => { errorMsg.style.opacity = '0'; }, 3000);
-    }
+    })
+    .catch(error => {
+      // Error
+      showError('Network error. Please try again later.');
+      btn.innerText = 'GET ACCESS';
+      btn.style.opacity = '1';
+    });
   }
 
-  document.getElementById('access-code').addEventListener('keypress', function (e) {
-    if (e.key === 'Enter') {
-      checkCode();
-    }
-  });
+  function showError(msg) {
+    const errorMsg = document.getElementById('auth-error');
+    errorMsg.innerText = msg;
+    errorMsg.style.opacity = '1';
+    document.querySelector('.auth-box').animate([
+      { transform: 'translateX(0px)' },
+      { transform: 'translateX(-10px)' },
+      { transform: 'translateX(10px)' },
+      { transform: 'translateX(-10px)' },
+      { transform: 'translateX(10px)' },
+      { transform: 'translateX(0px)' }
+    ], { duration: 400, easing: 'ease-in-out' });
+    
+    setTimeout(() => { errorMsg.style.opacity = '0'; }, 3000);
+  }
 </script>
 </body>
 </html>
