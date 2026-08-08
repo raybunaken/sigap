@@ -626,36 +626,66 @@ async def hitung_gap(profil: ProfilUser, job_data_override: dict = None) -> dict
         # Tidak ada kursus spesifik ditemukan
         if readiness >= 70:
             # Readiness tinggi → prioritas portofolio & apply
-            kursus_reko = [
-                {"nama": "Buat portofolio project nyata di GitHub", "platform": "GitHub", "url": "github.com", "biaya": "GRATIS", "skill_tags": []},
-                {"nama": "Bergabung komunitas tech & mulai networking", "platform": "LinkedIn", "url": "linkedin.com", "biaya": "GRATIS", "skill_tags": []},
-                {"nama": "Latihan soal interview teknis", "platform": "LeetCode", "url": "leetcode.com", "biaya": "GRATIS", "skill_tags": []},
-            ]
+            if profil.language == "en":
+                kursus_reko = [
+                    {"nama": "Build real portfolio projects on GitHub", "platform": "GitHub", "url": "github.com", "biaya": "FREE", "skill_tags": []},
+                    {"nama": "Join tech communities & start networking", "platform": "LinkedIn", "url": "linkedin.com", "biaya": "FREE", "skill_tags": []},
+                    {"nama": "Practice technical interview questions", "platform": "LeetCode", "url": "leetcode.com", "biaya": "FREE", "skill_tags": []},
+                ]
+            else:
+                kursus_reko = [
+                    {"nama": "Buat portofolio project nyata di GitHub", "platform": "GitHub", "url": "github.com", "biaya": "GRATIS", "skill_tags": []},
+                    {"nama": "Bergabung komunitas tech & mulai networking", "platform": "LinkedIn", "url": "linkedin.com", "biaya": "GRATIS", "skill_tags": []},
+                    {"nama": "Latihan soal interview teknis", "platform": "LeetCode", "url": "leetcode.com", "biaya": "GRATIS", "skill_tags": []},
+                ]
         else:
-            kursus_reko = [
-                {"nama": "Pelatihan Skillhub Kemnaker — e-training resmi gratis", "platform": "Skillhub Kemnaker", "url": "skillhub.kemnaker.go.id", "biaya": "GRATIS", "skill_tags": []},
-            ]
+            if profil.language == "en":
+                kursus_reko = [
+                    {"nama": "Skillhub Kemnaker Training — Official Free E-Training", "platform": "Skillhub Kemnaker", "url": "skillhub.kemnaker.go.id", "biaya": "FREE", "skill_tags": []},
+                ]
+            else:
+                kursus_reko = [
+                    {"nama": "Pelatihan Skillhub Kemnaker — e-training resmi gratis", "platform": "Skillhub Kemnaker", "url": "skillhub.kemnaker.go.id", "biaya": "GRATIS", "skill_tags": []},
+                ]
     elif len(kursus_reko) < 3 and readiness >= 50:
         # Sudah ada beberapa kursus, tapi slot masih ada → tambah aksi portofolio
         job_lower = job.lower()
         if any(k in job_lower for k in ["data", "analyst", "scientist", "engineer"]):
-            extra = {"nama": "Kaggle Competitions — bangun portofolio data nyata", "platform": "Kaggle", "url": "kaggle.com/competitions", "biaya": "GRATIS", "skill_tags": []}
+            if profil.language == "en":
+                extra = {"nama": "Kaggle Competitions — build real data portfolio", "platform": "Kaggle", "url": "kaggle.com/competitions", "biaya": "FREE", "skill_tags": []}
+            else:
+                extra = {"nama": "Kaggle Competitions — bangun portofolio data nyata", "platform": "Kaggle", "url": "kaggle.com/competitions", "biaya": "GRATIS", "skill_tags": []}
         elif any(k in job_lower for k in ["backend", "frontend", "full stack", "mobile", "devops"]):
-            extra = {"nama": "Buat portofolio project di GitHub — bukti nyata untuk recruiter", "platform": "GitHub", "url": "github.com", "biaya": "GRATIS", "skill_tags": []}
+            if profil.language == "en":
+                extra = {"nama": "Build project portfolio on GitHub — real proof for recruiters", "platform": "GitHub", "url": "github.com", "biaya": "FREE", "skill_tags": []}
+            else:
+                extra = {"nama": "Buat portofolio project di GitHub — bukti nyata untuk recruiter", "platform": "GitHub", "url": "github.com", "biaya": "GRATIS", "skill_tags": []}
         elif any(k in job_lower for k in ["ui", "ux", "design", "graphic"]):
-            extra = {"nama": "Kumpulkan portfolio desain di Behance / Dribbble", "platform": "Behance", "url": "behance.net", "biaya": "GRATIS", "skill_tags": []}
+            if profil.language == "en":
+                extra = {"nama": "Collect design portfolio on Behance / Dribbble", "platform": "Behance", "url": "behance.net", "biaya": "FREE", "skill_tags": []}
+            else:
+                extra = {"nama": "Kumpulkan portfolio desain di Behance / Dribbble", "platform": "Behance", "url": "behance.net", "biaya": "GRATIS", "skill_tags": []}
         else:
-            extra = {"nama": "Update profil LinkedIn dan mulai bangun koneksi industri", "platform": "LinkedIn", "url": "linkedin.com", "biaya": "GRATIS", "skill_tags": []}
+            if profil.language == "en":
+                extra = {"nama": "Update LinkedIn profile and start building industry connections", "platform": "LinkedIn", "url": "linkedin.com", "biaya": "FREE", "skill_tags": []}
+            else:
+                extra = {"nama": "Update profil LinkedIn dan mulai bangun koneksi industri", "platform": "LinkedIn", "url": "linkedin.com", "biaya": "GRATIS", "skill_tags": []}
         if extra not in kursus_reko:
             kursus_reko.append(extra)
 
     roadmap_full = ROADMAP.get(job, [])
 
     if not roadmap_full:
-        roadmap_full = [
-             {"fase": "Bulan 1-2", "nama": "Riset & Fondasi", "skill": ["Komunikasi", "Problem Solving"], "kursus": "Pelatihan Skillhub Kemnaker", "milestone": "Pahami fundamental industri ini"},
-             {"fase": "Bulan 3-4", "nama": "Praktek Langsung", "skill": ["Praktek Lapangan"], "kursus": "Cari referensi di YouTube/LinkedIn", "milestone": "Mulai apply magang atau project kecil"}
-        ]
+        if profil.language == "en":
+            roadmap_full = [
+                 {"fase": "Month 1-2", "nama": "Research & Foundation", "skill": ["Communication", "Problem Solving"], "kursus": "Skillhub Kemnaker Training", "milestone": "Understand the fundamentals of this industry"},
+                 {"fase": "Month 3-4", "nama": "Hands-on Practice", "skill": ["Field Practice"], "kursus": "Find references on YouTube/LinkedIn", "milestone": "Start applying for internships or small projects"}
+            ]
+        else:
+            roadmap_full = [
+                 {"fase": "Bulan 1-2", "nama": "Riset & Fondasi", "skill": ["Komunikasi", "Problem Solving"], "kursus": "Pelatihan Skillhub Kemnaker", "milestone": "Pahami fundamental industri ini"},
+                 {"fase": "Bulan 3-4", "nama": "Praktek Langsung", "skill": ["Praktek Lapangan"], "kursus": "Cari referensi di YouTube/LinkedIn", "milestone": "Mulai apply magang atau project kecil"}
+            ]
 
     import copy
     roadmap = [copy.deepcopy(r) for r in roadmap_full]
@@ -768,6 +798,7 @@ async def analyze(profil: ProfilUser):
             profil.skill, profil.pendidikan, profil.pengalaman, profil.cv_summary
         )
         profil = ProfilUser(
+            language=profil.language,
             pendidikan=profil.pendidikan,
             jurusan=profil.jurusan,
             skill=profil.skill,
