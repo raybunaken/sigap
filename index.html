@@ -2194,7 +2194,7 @@ function renderResult(data) {
   document.getElementById('kursus-list').innerHTML = kursus.length
     ? kursus.map(k => `
       <div class="kursus-item">
-        <span class="kursus-badge ${k.biaya?.includes('GRATIS')||k.biaya?.includes('Gratis')?'free':'paid'}">${k.biaya?.includes('GRATIS')||k.biaya?.includes('Gratis')?'GRATIS':'Berbayar'}</span>
+        <span class="kursus-badge ${k.biaya?.toUpperCase().includes('GRATIS')||k.biaya?.toUpperCase().includes('FREE')?'free':'paid'}">${k.biaya?.toUpperCase().includes('GRATIS')||k.biaya?.toUpperCase().includes('FREE')?(currentLang==='en'?'FREE':'GRATIS'):(currentLang==='en'?'PAID':'Berbayar')}</span>
         <div><div class="kursus-name">${k.nama}</div><div class="kursus-platform">${k.platform}</div></div>
       </div>`).join('')
     : '<div style="font-size:13px;color:var(--dim)">-</div>';
