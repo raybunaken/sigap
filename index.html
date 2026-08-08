@@ -2801,6 +2801,16 @@ function toggleLang() {
       heroH1.innerHTML = 'Tau Persis Apa yang<br><span class="it">Harus Kamu Pelajari</span>';
     }
   }
+
+  // AI Initial Message translation
+  const initialChatMsg = document.getElementById('chat-initial-msg');
+  if (initialChatMsg) {
+    if (currentLang === 'en') {
+      initialChatMsg.textContent = 'Hello! I am SkillSync — a career advisor for Indonesian fresh grads.\n\nI can help you with:\n- Skills you need to learn\n- Worthwhile free courses\n- How to build an attractive portfolio\n- CV and interview tips\n- Job hunting strategy\n\nWhat would you like to ask?';
+    } else {
+      initialChatMsg.textContent = 'Halo! Saya SkillSync — advisor karir untuk fresh grad Indonesia.\n\nBisa bantu kamu dengan:\n- Skill apa yang harus dipelajari\n- Kursus gratis yang worth it\n- Cara bikin portofolio yang menarik\n- Tips CV dan interview\n- Strategi job hunting\n\nMau tanya apa?';
+    }
+  }
 }
 </script>
 </body>
