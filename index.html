@@ -4,35 +4,35 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
 <title>SkillSync — AI Advisor Karir</title>
-<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
 <style>
 :root{
-  /* ── PALETTE — dark navy ── */
-  --bg:#0E0F1A;
-  --bg2:#13141F;
-  --bg3:#191A28;
-  --bg4:#1E1F30;
-  --fg:#F0F0F8;
-  --fg-dim:#B0B3CC;
-  --dim:#6B6E8A;
+  /* 🌊 PALETTE — Ocean Blue 🌊 */
+  --bg:#0B1120;
+  --bg2:#0F172A;
+  --bg3:#1E293B;
+  --bg4:#334155;
+  --fg:#F8FAFC;
+  --fg-dim:#94A3B8;
+  --dim:#64748B;
   --border:rgba(255,255,255,0.08);
-  --border-strong:rgba(255,255,255,0.14);
-  --glass:rgba(255,255,255,0.025);
+  --border-strong:rgba(255,255,255,0.15);
+  --glass:rgba(37,99,235,0.05);
 
-  /* ── ACCENT — gold + slate ── */
-  --indigo:#C8A84C;                      /* warm gold — CTA, active */
-  --indigo-dim:rgba(200,168,76,0.10);
-  --indigo-glow:rgba(200,168,76,0.18);
-  --gold:#C8A84C;
-  --gold-dim:rgba(200,168,76,0.10);
-  --green:#50D890;
-  --green-dim:rgba(80,216,144,0.10);
-  --red:#F0706A;
-  --red-dim:rgba(240,112,106,0.09);
-  --amber:#C8A84C;
+  /* 💎 ACCENT — Electric Blue + Cyan 💎 */
+  --indigo:#2563EB;                      
+  --indigo-dim:rgba(37,99,235,0.15);
+  --indigo-glow:rgba(37,99,235,0.3);
+  --gold:#2DD4BF;
+  --gold-dim:rgba(45,212,191,0.15);
+  --green:#10B981;
+  --green-dim:rgba(16,185,129,0.15);
+  --red:#EF4444;
+  --red-dim:rgba(239,68,68,0.15);
+  --amber:#F59E0B;
 
   /* backward compat */
-  --cyan:var(--indigo);
+  --cyan:#38BDF8;
 
   --r:8px;
   --r-sm:5px;
@@ -40,7 +40,7 @@
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth}
 body{
-  font-family:'DM Sans','Outfit',sans-serif;
+  font-family:'Inter',sans-serif;
   background:var(--bg);
   color:var(--fg);
   min-height:100vh;
@@ -90,12 +90,24 @@ nav{
   font-size:11px;font-weight:700;letter-spacing:2px;
   text-transform:uppercase;color:var(--indigo);
 }
-.it{font-family:"Instrument Serif",serif;font-style:italic;font-weight:400;color:var(--fg-dim);letter-spacing:-0.5px}
+.it{
+  font-family:'Inter',sans-serif;
+  font-weight:800;
+  font-style:normal;
+  background: linear-gradient(90deg, var(--indigo) 0%, var(--gold) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  display: inline-block;
+  letter-spacing: -0.5px;
+}
 .card{
-  background:var(--bg2);
-  border:1px solid var(--border);
+  background:rgba(15, 23, 42, 0.6);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border:1px solid var(--border-strong);
   border-radius:var(--r);
   padding:24px;
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
 }
 .card-head{
   font-family:'Outfit',sans-serif;
