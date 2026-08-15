@@ -761,9 +761,7 @@ RELEVANCE_KEYWORDS = {
 api_router = APIRouter(prefix="/api")
 api_router_index = APIRouter(prefix="/api/index.py")
 
-@app.get("/")
-def serve_index():
-    return FileResponse(pathlib.Path(__file__).parent.parent / "index.html")
+
 
 @app.get("/health")
 @api_router.get("/health")
