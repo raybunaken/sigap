@@ -360,6 +360,16 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
   });
 
+  const resetBtn = document.getElementById('dev-reset-btn');
+  if (resetBtn) {
+      resetBtn.addEventListener('click', () => {
+          chrome.storage.local.clear(() => {
+              resetBtn.textContent = "Berhasil Reset!";
+              setTimeout(() => window.location.reload(), 800);
+          });
+      });
+  }
+
   function activateMain() {
     document.getElementById('cv-name-home').textContent = cvName;
     document.getElementById('bottom-nav').style.display = 'flex';
