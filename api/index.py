@@ -1235,6 +1235,13 @@ def serve_index():
         return FileResponse(file_path)
     return {"detail": "index.html not found"}
 
+@app.get("/mockup.jpg")
+def serve_mockup():
+    file_path = pathlib.Path(__file__).parent.parent / "mockup.jpg"
+    if file_path.exists():
+        return FileResponse(file_path)
+    return {"detail": "mockup.jpg not found"}
+
 @app.api_route("/{path_name:path}", methods=["GET", "POST", "PUT", "DELETE", "OPTIONS", "HEAD", "PATCH", "TRACE"])
 async def catch_all(path_name: str):
     return {"detail": f"Not Found in catch_all. Path received: {path_name}"}
