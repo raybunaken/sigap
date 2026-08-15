@@ -38,7 +38,7 @@ def load_scraped_data() -> dict:
 
 SCRAPED_JOBS = load_scraped_data()
 
-from api.knowledge_base import (
+from knowledge_base import (
     PEKERJAAN_DATABASE, KURSUS_GRATIS, ROADMAP,
     STATISTIK, get_system_prompt,
     get_kursus_for_skill, get_gaji_by_experience,
@@ -47,7 +47,7 @@ from api.knowledge_base import (
 
 # ── CONFIG ────────────────────────────────────────────────────────────────
 GROQ_API_KEY = os.getenv("GROQ_API_KEY", "")
-GROQ_MODEL   = "llama-3.3-70b-versatile"
+GROQ_MODEL   = "llama-3.1-8b-instant"
 GROQ_URL     = "https://api.groq.com/openai/v1/chat/completions"
 
 # ── SKILL PATTERNS (satu sumber, untuk regex fallback CV parsing) ─────────
@@ -132,6 +132,12 @@ class AdvisoryRequest(BaseModel):
     skill_gap: List[str] = []
     user_reply: str
     target_job: str
+
+class AnalyzeJobRequest(BaseModel):
+    cv_text: str
+    job_title: str
+    job_description: str
+
 
 # ── GROQ API (satu entry point untuk semua panggilan) ─────────────────────
 async def groq_request(
@@ -1078,6 +1084,138 @@ async def parse_cv(file: UploadFile = File(...)):
         "text": text[:500],
         "method": result["method"],
     }
+
+@app.post("/analyze-job", tags=["Extension"])
+@api_router.post("/analyze-job", tags=["Extension"])
+@api_router_index.post("/analyze-job", tags=["Extension"])
+async def analyze_job(req: AnalyzeJobRequest):
+    cv = req.cv_text[:6000]
+    job_title = req.job_title[:200]
+    job_desc = req.job_description[:4000]
+    
+    prompt = f"""You are an AI Career Copilot. Analyze how well this candidate fits the job.
+
+Job Title: {job_title}
+Job Description:
+{job_desc}
+
+Candidate CV:
+{cv}
+
+YOUR TASK: You are a STRICT, LITERAL Auditor. Evaluate the candidate against the Job Description (JD).
+
+STEP 1: Identify HARD requirements directly from the JD text. Do NOT infer or invent. Extract exact phrases for:
+- Minimum years of experience (e.g. "3-5 years of experience")
+- Specific domain knowledge (e.g. "NPL forecasting", "credit scoring development")
+- Specific tools, platforms, or data sources (e.g. "SQL", "SLIK")
+- Education or Languages (e.g. "Fluent in English")
+
+STEP 2: Evaluate the CV against these exact requirements. Be brutally honest. If it's missing, say it's missing.
+
+Return JSON with these fields:
+
+1. "_thought_process": A brief string where you list the exact hard requirements you found in the text.
+2. "readiness_score" (0-100): Overall honest fit score. Be harsh. If they lack the required years of experience, the score should be low (<60).
+3. "seniority_level": A very short label indicating the seniority of the role (e.g. "Entry Level", "Mid Level", "Senior", "Lead"). 
+4. "seniority_fit": ONE short sentence evaluating their years of experience vs the exact requirement. Use "Lowongan ini", DO NOT use the acronym "JD".
+5. "requirements_check": Array of 5-7 MOST IMPORTANT HARD REQUIREMENTS.
+   - "req": MUST BE A DIRECT TRANSLATION/QUOTE. (e.g., "3-5 tahun pengalaman financial analytics"). NEVER use generic words.
+   - "status": "missing", "met", or "partial". 
+   - "detail": ONE sentence in Bahasa Indonesia explaining WHY based on the CV. Use "Lowongan ini" instead of "JD".
+
+6. "matched_skills": Array of concrete technical tools (e.g., "SQL") EXPLICITLY MENTIONED that are ALSO in the CV.
+7. "missing_skills": Array of concrete technical tools EXPLICITLY MENTIONED that are MISSING from the CV. NEVER list tools that are not requested. If none, return [].
+8. "ats_keywords": 3-5 exact phrases for ATS screening.
+9. "advice": 2-3 sentences in Bahasa Indonesia. Brutally honest advice about their gaps.
+
+CRITICAL RULES:
+- DO NOT use the acronym "JD" in your Indonesian response. Use "Lowongan ini" or "Posisi ini".
+- If a tool/skill is in the CV but NOT requested, DO NOT put it in matched_skills. 
+- If a tool/skill is NOT in the JD, DO NOT put it in missing_skills.
+- "req" MUST be literal requirements from the JD. Do not generalize (e.g., write "Credit scoring development" instead of "Pengalaman Data Analyst").
+
+
+Reply ONLY in valid JSON:
+{{
+  "_thought_process": "Requires: 3-5 years financial analytics, credit scoring, SQL, SLIK. CV has: 1 year sales ops, SQL, no credit scoring.",
+  "readiness_score": 40,
+  "seniority_level": "Mid Level",
+  "seniority_fit": "Lowongan ini mensyaratkan 3-5 tahun pengalaman, sedangkan kamu baru memiliki pengalaman sekitar 1 tahun.",
+  "requirements_check": [
+    {{"req": "3-5 tahun pengalaman financial analytics", "status": "missing", "detail": "Kamu belum memenuhi syarat 3-5 tahun pengalaman; CV-mu menunjukkan 1 tahun di sales operations."}},
+    {{"req": "Pengalaman credit scoring development", "status": "missing", "detail": "Tidak ada rekam jejak pengembangan credit scoring di CV kamu."}},
+    {{"req": "Profisiensi SQL", "status": "met", "detail": "SQL tercantum kuat dalam pengalaman kerjamu."}}
+  ],
+  "matched_skills": ["SQL"],
+  "missing_skills": ["SLIK"],
+  "ats_keywords": ["credit scoring", "NPL forecasting", "financial analysis"],
+  "advice": "..."
+}}"""
+
+    messages = [
+        {"role": "system", "content": "Reply ONLY with valid JSON. No other text."},
+        {"role": "user", "content": prompt}
+    ]
+    
+    ai_resp = await groq_request(messages, response_format={"type": "json_object"}, max_tokens=1200)
+    if not ai_resp:
+        return {"error": "Gagal menghubungi AI Server."}
+        
+    try:
+        parsed = json.loads(ai_resp)
+        return parsed
+    except Exception as e:
+        logger.error(f"Failed to parse JSON analyze_job: {e}")
+        return {"error": "Gagal parsing respons AI."}
+
+class CoverLetterRequest(BaseModel):
+    cv_text: str
+    job_title: str
+    job_description: str
+    company_name: str = ""
+
+@app.post("/generate-cover-letter", tags=["Extension"])
+@api_router.post("/generate-cover-letter", tags=["Extension"])
+@api_router_index.post("/generate-cover-letter", tags=["Extension"])
+async def generate_cover_letter(req: CoverLetterRequest):
+    cv = req.cv_text[:3000]
+    job_title = req.job_title[:200]
+    job_desc = req.job_description[:2500]
+
+    company_name = req.company_name.strip() or "perusahaan ini"
+
+    prompt = f"""Tulis cover letter profesional dalam Bahasa Indonesia untuk posisi "{job_title}" di {company_name}.
+
+CV Kandidat:
+{cv}
+
+Deskripsi Pekerjaan:
+{job_desc}
+
+ATURAN PENULISAN:
+- Tulis dalam 3 paragraf yang mengalir natural:
+  1. Pembuka: Sebut posisi dan perusahaan yang BENAR yaitu "{company_name}", tunjukkan antusias yang spesifik
+  2. Isi: Highlight 2-3 skill/pengalaman dari CV yang paling relevan dengan JD
+  3. Penutup: Call to action yang percaya diri
+- CRITICAL: Jangan sebut nama perusahaan lain selain "{company_name}". Jangan mengarang nama perusahaan.
+- Nada: Profesional, percaya diri, hangat
+- Panjang: 180-230 kata, tidak lebih
+- Gunakan "Saya" sebagai sapaan diri
+- Jangan sebut nama kandidat atau nominal gaji
+- Jangan pakai template generic
+
+Tulis HANYA teks cover letter-nya langsung. Tidak ada label, tidak ada markdown."""
+
+    messages = [
+        {"role": "system", "content": "Kamu adalah career coach berpengalaman. Tulis cover letter langsung tanpa embel-embel."},
+        {"role": "user", "content": prompt}
+    ]
+
+    result = await groq_request(messages, max_tokens=600, temperature=0.7, timeout=25)
+    if not result:
+        return {"error": "Gagal generate cover letter. Coba lagi."}
+
+    return {"cover_letter": result}
 
 # ── MAIN ──────────────────────────────────────────────────────────────────
 app.include_router(api_router)
