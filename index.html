@@ -126,10 +126,16 @@
     }
 
     .hero-image img {
-      max-width: 100%;
+      max-width: 320px; /* Constrain vertical screenshot width */
+      width: 100%;
       border-radius: 20px;
-      box-shadow: 0 16px 48px rgba(0,0,0,0.6);
-      border: 1px solid rgba(255, 255, 255, 0.1);
+      box-shadow: 0 24px 64px rgba(0,0,0,0.8), 0 0 0 1px rgba(255, 255, 255, 0.1);
+      transform: perspective(1000px) rotateY(-5deg); /* Slight 3D tilt for premium feel */
+      transition: transform 0.5s ease;
+    }
+    
+    .hero-image img:hover {
+      transform: perspective(1000px) rotateY(0deg) scale(1.02);
     }
 
     h1 {
@@ -262,7 +268,7 @@
         <a href="#" class="cta-btn" data-en="Install Free Extension" data-id="Install Ekstensi Gratis">Install Free Extension</a>
       </div>
       <div class="hero-image">
-        <img src="mockup.jpg" alt="Skillsy AI Copilot Mockup">
+        <img src="screenshot.png" alt="Skillsy AI Copilot Mockup">
       </div>
     </main>
   </div>
