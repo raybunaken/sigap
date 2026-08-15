@@ -1242,6 +1242,18 @@ def serve_screenshot():
         return FileResponse(file_path)
     return {"detail": "screenshot.png not found"}
 
+class WaitlistRequest(BaseModel):
+    email: str
+
+@app.post("/waitlist", tags=["Waitlist"])
+@api_router.post("/waitlist", tags=["Waitlist"])
+@api_router_index.post("/waitlist", tags=["Waitlist"])
+async def join_waitlist(req: WaitlistRequest):
+    # For now, just log the email to Vercel logs so it's not lost.
+    # We will connect this to Supabase later.
+    logger.info(f"🚀 NEW WAITLIST SIGNUP: {req.email}")
+    return {"status": "success", "message": "Email added to waitlist"}
+
 @app.api_route("/{path_name:path}", methods=["GET", "POST", "PUT", "DELETE", "OPTIONS", "HEAD", "PATCH", "TRACE"])
 async def catch_all(path_name: str):
     return {"detail": f"Not Found in catch_all. Path received: {path_name}"}

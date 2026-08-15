@@ -460,7 +460,7 @@
         <button class="modal-btn" id="wlSubmit" data-en="Get Early Access" data-id="Dapatkan Akses Awal">Get Early Access</button>
       </div>
       <div id="waitlistSuccess" style="display: none; color: #d4ff32; font-weight: 600; font-size: 18px; margin-top: 20px;">
-        <span data-en="You're on the list! 🎉" data-id="Berhasil mendaftar! 🎉">You're on the list! 🎉</span>
+        <span data-en="You're on the list!" data-id="Berhasil mendaftar!">You're on the list!</span>
       </div>
     </div>
   </div>
@@ -500,8 +500,23 @@
     if (e.target === waitlistModal) waitlistModal.classList.remove('active');
   });
   
-  wlSubmit.addEventListener('click', () => {
-    if (wlEmail.value && wlEmail.value.includes('@')) {
+  wlSubmit.addEventListener('click', async () => {
+    const email = wlEmail.value;
+    if (email && email.includes('@')) {
+      const originalText = wlSubmit.innerText;
+      wlSubmit.innerText = 'Loading...';
+      wlSubmit.disabled = true;
+      
+      try {
+        await fetch('https://skillsy.my.id/api/waitlist', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email })
+        });
+      } catch (err) {
+        console.error('Waitlist error:', err);
+      }
+      
       waitlistForm.style.display = 'none';
       waitlistSuccess.style.display = 'block';
     } else {
