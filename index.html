@@ -202,6 +202,91 @@
       box-shadow: 0 12px 40px rgba(192, 132, 252, 0.3);
     }
 
+    /* MODAL STYLES */
+    .modal-overlay {
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0, 0, 0, 0.7);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      opacity: 0;
+      pointer-events: none;
+      transition: all 0.3s ease;
+    }
+    .modal-overlay.active {
+      opacity: 1;
+      pointer-events: all;
+    }
+    .modal-content {
+      background: #16101c;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 24px;
+      padding: 40px;
+      width: 90%;
+      max-width: 480px;
+      text-align: center;
+      position: relative;
+      transform: translateY(20px);
+      transition: all 0.3s ease;
+      box-shadow: 0 24px 64px rgba(0, 0, 0, 0.9), 0 4px 24px rgba(212, 255, 50, 0.05);
+    }
+    .modal-overlay.active .modal-content {
+      transform: translateY(0);
+    }
+    .modal-close {
+      position: absolute;
+      top: 20px; right: 24px;
+      background: none; border: none;
+      color: rgba(255, 255, 255, 0.6);
+      font-size: 24px;
+      cursor: pointer;
+      transition: color 0.3s;
+    }
+    .modal-close:hover { color: #fff; }
+    .modal-content h3 {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 28px;
+      font-weight: 800;
+      margin-bottom: 12px;
+      color: #fff;
+    }
+    .modal-content p {
+      font-size: 15px;
+      color: rgba(255, 255, 255, 0.7);
+      margin-bottom: 24px;
+      line-height: 1.5;
+    }
+    .modal-input {
+      width: 100%;
+      padding: 16px 20px;
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      background: rgba(255, 255, 255, 0.05);
+      color: #fff;
+      font-family: 'Inter', sans-serif;
+      font-size: 15px;
+      margin-bottom: 16px;
+      outline: none;
+    }
+    .modal-input:focus { border-color: #d4ff32; }
+    .modal-btn {
+      width: 100%;
+      background: #d4ff32;
+      color: #0d1210;
+      font-weight: 600;
+      font-size: 16px;
+      padding: 16px;
+      border-radius: 12px;
+      border: none;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    .modal-btn:hover { background: #c084fc; color: #0d1210; }
+
     /* HOW IT WORKS SECTION */
     .hiw-wrapper {
       height: auto;
@@ -328,7 +413,7 @@
           </li>
         </ul>
 
-        <a href="https://chromewebstore.google.com/" target="_blank" id="installBtn" class="cta-btn" data-en="Install Free Extension" data-id="Install Ekstensi Gratis">Install Free Extension</a>
+        <a href="#" id="installBtn" class="cta-btn" data-en="Join Waitlist" data-id="Daftar Tunggu">Join Waitlist</a>
       </div>
       <div class="hero-image">
         <img src="screenshot.png" alt="Skillsy AI Copilot Mockup">
@@ -364,6 +449,22 @@
     </div>
   </div>
 
+  <!-- Waitlist Modal -->
+  <div class="modal-overlay" id="waitlistModal">
+    <div class="modal-content">
+      <button class="modal-close" id="closeModal">&times;</button>
+      <h3 data-en="Join the Waitlist" data-id="Daftar Tunggu">Join the Waitlist</h3>
+      <p id="modalDesc" data-en="We are launching on Chrome Web Store this November. Enter your email to get Early Beta Access in September." data-id="Kami akan rilis di Chrome Web Store November ini. Masukkan emailmu untuk dapat Akses Beta di bulan September.">We are launching on Chrome Web Store this November. Enter your email to get Early Beta Access in September.</p>
+      <div id="waitlistForm">
+        <input type="email" class="modal-input" placeholder="Email address" required id="wlEmail">
+        <button class="modal-btn" id="wlSubmit" data-en="Get Early Access" data-id="Dapatkan Akses Awal">Get Early Access</button>
+      </div>
+      <div id="waitlistSuccess" style="display: none; color: #d4ff32; font-weight: 600; font-size: 18px; margin-top: 20px;">
+        <span data-en="You're on the list! 🎉" data-id="Berhasil mendaftar! 🎉">You're on the list! 🎉</span>
+      </div>
+    </div>
+  </div>
+
 <script>
   const langToggle = document.getElementById('langToggle');
   let currentLang = 'en';
@@ -375,6 +476,37 @@
     document.querySelectorAll('[data-en]').forEach(el => {
       el.innerHTML = el.getAttribute(`data-${currentLang}`);
     });
+  });
+
+  // Modal Logic
+  const installBtn = document.getElementById('installBtn');
+  const waitlistModal = document.getElementById('waitlistModal');
+  const closeModal = document.getElementById('closeModal');
+  const wlSubmit = document.getElementById('wlSubmit');
+  const wlEmail = document.getElementById('wlEmail');
+  const waitlistForm = document.getElementById('waitlistForm');
+  const waitlistSuccess = document.getElementById('waitlistSuccess');
+  
+  installBtn.addEventListener('click', (e) => {
+    e.preventDefault();
+    waitlistModal.classList.add('active');
+  });
+  
+  closeModal.addEventListener('click', () => {
+    waitlistModal.classList.remove('active');
+  });
+  
+  waitlistModal.addEventListener('click', (e) => {
+    if (e.target === waitlistModal) waitlistModal.classList.remove('active');
+  });
+  
+  wlSubmit.addEventListener('click', () => {
+    if (wlEmail.value && wlEmail.value.includes('@')) {
+      waitlistForm.style.display = 'none';
+      waitlistSuccess.style.display = 'block';
+    } else {
+      wlEmail.style.borderColor = '#ff4d4d';
+    }
   });
 </script>
 </body>
