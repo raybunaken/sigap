@@ -20,15 +20,12 @@
     body {
       font-family: 'Inter', sans-serif;
       min-height: 100vh;
-      /* Background image: Generated abstract neon tech background */
-      background-image: url('hero_bg.jpg');
-      background-size: cover;
-      background-position: center;
-      background-attachment: fixed;
+      background: radial-gradient(circle at top left, #1a2a22 0%, #0d1210 50%, #16101c 100%);
       display: flex;
       align-items: center;
       justify-content: center;
       padding: 40px;
+      color: #ffffff;
     }
 
     /* Outer wrapper to center the glass pane */
@@ -39,12 +36,12 @@
       min-height: 600px;
       border-radius: 32px;
       
-      /* Glassmorphism magic */
-      background: rgba(43, 66, 47, 0.45);
+      /* Dark Glassmorphism magic */
+      background: rgba(255, 255, 255, 0.03);
       backdrop-filter: blur(24px);
       -webkit-backdrop-filter: blur(24px);
-      border: 1px solid rgba(255, 255, 255, 0.15);
-      box-shadow: 0 24px 64px rgba(0, 0, 0, 0.4);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: 0 16px 48px rgba(0, 0, 0, 0.8), 0 4px 24px rgba(212, 255, 50, 0.05);
       
       display: flex;
       flex-direction: column;
@@ -147,22 +144,22 @@
     /* CTA BUTTON */
     .cta-btn {
       display: inline-block;
-      background: #f8f9fa;
-      color: #1a2a22;
+      background: #d4ff32;
+      color: #0d1210;
       font-weight: 600;
       font-size: 15px;
       padding: 16px 36px;
       border-radius: 100px; /* Pill shape */
       text-decoration: none;
       transition: all 0.3s ease;
-      box-shadow: 0 8px 32px rgba(255, 255, 255, 0.15);
+      box-shadow: 0 4px 24px rgba(212, 255, 50, 0.15);
     }
 
     .cta-btn:hover {
       transform: translateY(-3px);
-      background: #d4ff32;
-      color: #000;
-      box-shadow: 0 12px 40px rgba(212, 255, 50, 0.3);
+      background: #c084fc;
+      color: #0d1210;
+      box-shadow: 0 12px 40px rgba(192, 132, 252, 0.3);
     }
 
     /* RESPONSIVE DESIGN */
