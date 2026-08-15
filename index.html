@@ -202,6 +202,44 @@
       box-shadow: 0 12px 40px rgba(192, 132, 252, 0.3);
     }
 
+    /* SUPPORTED BY SECTION */
+    .supported-by {
+      margin-top: 56px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .supported-text {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: rgba(255, 255, 255, 0.4);
+      font-weight: 600;
+    }
+    .supported-logos {
+      display: flex;
+      gap: 32px;
+      align-items: center;
+      opacity: 0.5;
+      transition: all 0.3s ease;
+    }
+    .supported-logos:hover {
+      opacity: 0.9;
+    }
+    .supported-logo {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-weight: 800;
+      font-size: 18px;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      letter-spacing: -0.02em;
+    }
+    .supported-logo span { 
+      font-weight: 500; 
+      margin-left: 4px;
+    }
+
     /* MODAL STYLES */
     .modal-overlay {
       position: fixed;
@@ -414,6 +452,15 @@
         </ul>
 
         <a href="#" id="installBtn" class="cta-btn" data-en="Join Waitlist" data-id="Daftar Tunggu">Join Waitlist</a>
+
+        <div class="supported-by">
+          <div class="supported-text" data-en="Infrastructure & AI Partners" data-id="Mitra Infrastruktur & AI">Infrastructure & AI Partners</div>
+          <div class="supported-logos">
+            <div class="supported-logo">AWS</div>
+            <div class="supported-logo">Alibaba<span>Cloud</span></div>
+            <div class="supported-logo">Google<span>Cloud</span></div>
+          </div>
+        </div>
       </div>
       <div class="hero-image">
         <img src="screenshot.png" alt="Skillsy AI Copilot Mockup">
