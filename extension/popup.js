@@ -4,7 +4,7 @@ let cvName = '';
 let activeResultData = null; // current result shown in view-result
 let activeJobData = null;    // job info (title, description) for cover letter
 
-const API_URL = 'http://localhost:8000';
+const API_URL = 'https://skillsy.my.id';
 
 /* ── HELPERS ────────────────────────────────────────────────────────────── */
 function showView(id) {
