@@ -1228,6 +1228,13 @@ async def serve_investor():
     return {"detail": "investor.html not found on disk"}
 
 # Catch-all route to debug Vercel path issues
+@app.get("/")
+def serve_index():
+    file_path = pathlib.Path(__file__).parent.parent / "index.html"
+    if file_path.exists():
+        return FileResponse(file_path)
+    return {"detail": "index.html not found"}
+
 @app.api_route("/{path_name:path}", methods=["GET", "POST", "PUT", "DELETE", "OPTIONS", "HEAD", "PATCH", "TRACE"])
 async def catch_all(path_name: str):
     return {"detail": f"Not Found in catch_all. Path received: {path_name}"}
