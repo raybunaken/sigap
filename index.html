@@ -73,6 +73,7 @@
     nav {
       display: flex;
       gap: 40px;
+      align-items: center;
     }
 
     nav a {
@@ -87,16 +88,48 @@
       color: #d4ff32;
     }
 
+    .lang-toggle {
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: #fff;
+      padding: 6px 14px;
+      border-radius: 12px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.3s ease;
+    }
+
+    .lang-toggle:hover {
+      background: #d4ff32;
+      color: #000;
+    }
+
     /* MAIN HERO CONTENT */
     main {
       flex: 1;
       display: flex;
       align-items: center;
+      justify-content: space-between;
       padding: 0 60px;
+      gap: 40px;
     }
 
     .hero-content {
-      max-width: 600px;
+      max-width: 520px;
+    }
+
+    .hero-image {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .hero-image img {
+      max-width: 100%;
+      border-radius: 20px;
+      box-shadow: 0 16px 48px rgba(0,0,0,0.6);
+      border: 1px solid rgba(255, 255, 255, 0.1);
     }
 
     h1 {
@@ -177,10 +210,15 @@
         padding: 30px;
       }
       main {
+        flex-direction: column;
         padding: 0 30px;
+        text-align: center;
+      }
+      .hero-features {
+        align-items: center;
       }
       h1 {
-        font-size: 48px;
+        font-size: 40px;
       }
     }
   </style>
@@ -192,38 +230,55 @@
     <header>
       <div class="logo">Skillsy<span class="logo-accent">.</span></div>
       <nav>
-        <a href="#">Beranda</a>
-        <a href="#">Cara Kerja</a>
-        <a href="#">Fitur Pro</a>
-        <a href="#">Hubungi Kami</a>
+        <a href="#" data-en="Home" data-id="Beranda">Home</a>
+        <a href="#" data-en="How it Works" data-id="Cara Kerja">How it Works</a>
+        <a href="#" data-en="Pro Features" data-id="Fitur Pro">Pro Features</a>
+        <a href="#" data-en="Contact Us" data-id="Hubungi Kami">Contact Us</a>
+        <button id="langToggle" class="lang-toggle">EN</button>
       </nav>
     </header>
 
     <!-- Hero Section -->
     <main>
       <div class="hero-content">
-        <h1>Hack Karirmu.<br>Bypass Filter HRD.</h1>
-        <p class="subtitle">Berhenti menebak-nebak apa yang dicari oleh rekruter. Skillsy Copilot secara otomatis membedah CV kamu dan membandingkannya dengan kriteria lowongan dari LinkedIn atau JobStreet dalam hitungan detik.</p>
+        <h1 data-en="Hack Your Career.<br>Bypass HR Filters." data-id="Hack Karirmu.<br>Bypass Filter HRD.">Hack Your Career.<br>Bypass HR Filters.</h1>
+        <p class="subtitle" data-en="Stop guessing what recruiters are looking for. Skillsy Copilot automatically dissects your CV and compares it against job requirements from LinkedIn or JobStreet in seconds." data-id="Berhenti menebak-nebak apa yang dicari oleh rekruter. Skillsy Copilot secara otomatis membedah CV kamu dan membandingkannya dengan kriteria lowongan dari LinkedIn atau JobStreet dalam hitungan detik.">Stop guessing what recruiters are looking for. Skillsy Copilot automatically dissects your CV and compares it against job requirements from LinkedIn or JobStreet in seconds.</p>
         
         <ul class="hero-features">
           <li>
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-            Analisis Skor ATS Secara Instan
+            <span data-en="Instant ATS Score Analysis" data-id="Analisis Skor ATS Secara Instan">Instant ATS Score Analysis</span>
           </li>
           <li>
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-            Deteksi Skill yang Hilang (Skill Gap)
+            <span data-en="Missing Skills Detection (Skill Gap)" data-id="Deteksi Skill yang Hilang (Skill Gap)">Missing Skills Detection (Skill Gap)</span>
           </li>
           <li>
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-            Terintegrasi Langsung di LinkedIn & JobStreet
+            <span data-en="Direct Integration with LinkedIn & JobStreet" data-id="Terintegrasi Langsung di LinkedIn & JobStreet">Direct Integration with LinkedIn & JobStreet</span>
           </li>
         </ul>
 
-        <a href="#" class="cta-btn">Install Ekstensi Gratis</a>
+        <a href="#" class="cta-btn" data-en="Install Free Extension" data-id="Install Ekstensi Gratis">Install Free Extension</a>
+      </div>
+      <div class="hero-image">
+        <img src="mockup.jpg" alt="Skillsy AI Copilot Mockup">
       </div>
     </main>
   </div>
 
+<script>
+  const langToggle = document.getElementById('langToggle');
+  let currentLang = 'en';
+
+  langToggle.addEventListener('click', () => {
+    currentLang = currentLang === 'en' ? 'id' : 'en';
+    langToggle.innerText = currentLang === 'en' ? 'EN' : 'ID';
+    
+    document.querySelectorAll('[data-en]').forEach(el => {
+      el.innerHTML = el.getAttribute(`data-${currentLang}`);
+    });
+  });
+</script>
 </body>
 </html>
