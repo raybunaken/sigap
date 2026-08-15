@@ -22,9 +22,10 @@
       min-height: 100vh;
       background: radial-gradient(circle at top left, #1a2a22 0%, #0d1210 50%, #16101c 100%);
       display: flex;
+      flex-direction: column;
       align-items: center;
-      justify-content: center;
       padding: 40px;
+      gap: 60px;
       color: #ffffff;
     }
 
@@ -201,6 +202,65 @@
       box-shadow: 0 12px 40px rgba(192, 132, 252, 0.3);
     }
 
+    /* HOW IT WORKS SECTION */
+    .hiw-wrapper {
+      height: auto;
+      min-height: auto;
+      padding: 60px;
+      align-items: center;
+    }
+    .hiw-title {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 36px;
+      font-weight: 800;
+      margin-bottom: 48px;
+      text-align: center;
+    }
+    .hiw-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 32px;
+      width: 100%;
+    }
+    .hiw-card {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 24px;
+      padding: 32px;
+      text-align: center;
+      transition: transform 0.3s ease;
+    }
+    .hiw-card:hover {
+      transform: translateY(-5px);
+      background: rgba(255, 255, 255, 0.05);
+      border-color: rgba(212, 255, 50, 0.3);
+    }
+    .hiw-icon {
+      width: 64px;
+      height: 64px;
+      margin: 0 auto 24px auto;
+      background: rgba(212, 255, 50, 0.1);
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #d4ff32;
+    }
+    .hiw-icon svg {
+      width: 32px;
+      height: 32px;
+    }
+    .hiw-card h3 {
+      font-size: 20px;
+      margin-bottom: 16px;
+      font-weight: 600;
+    }
+    .hiw-card p {
+      font-size: 14px;
+      line-height: 1.6;
+      color: rgba(255, 255, 255, 0.7);
+    }
+
     /* RESPONSIVE DESIGN */
     @media (max-width: 768px) {
       body {
@@ -223,8 +283,11 @@
       .hero-features {
         align-items: center;
       }
-      h1 {
-        font-size: 40px;
+      .hiw-grid {
+        grid-template-columns: 1fr;
+      }
+      .hiw-wrapper {
+        padding: 40px 20px;
       }
     }
   </style>
@@ -237,7 +300,7 @@
       <div class="logo">Skillsy<span class="logo-accent">.</span></div>
       <nav>
         <a href="#" data-en="Home" data-id="Beranda">Home</a>
-        <a href="#" data-en="How it Works" data-id="Cara Kerja">How it Works</a>
+        <a href="#how-it-works" data-en="How it Works" data-id="Cara Kerja">How it Works</a>
         <a href="#" data-en="Pro Features" data-id="Fitur Pro">Pro Features</a>
         <a href="#" data-en="Contact Us" data-id="Hubungi Kami">Contact Us</a>
         <button id="langToggle" class="lang-toggle">EN</button>
@@ -271,6 +334,34 @@
         <img src="screenshot.png" alt="Skillsy AI Copilot Mockup">
       </div>
     </main>
+  </div>
+
+  <!-- How It Works Section -->
+  <div class="glass-wrapper hiw-wrapper" id="how-it-works">
+    <h2 class="hiw-title" data-en="How it Works in 3 Simple Steps" data-id="Cara Kerja dalam 3 Langkah Mudah">How it Works in 3 Simple Steps</h2>
+    <div class="hiw-grid">
+      <div class="hiw-card">
+        <div class="hiw-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>
+        </div>
+        <h3 data-en="1. Open Job Posting" data-id="1. Buka Lowongan">1. Open Job Posting</h3>
+        <p data-en="Browse any job opening on LinkedIn or JobStreet as you normally would." data-id="Buka lowongan pekerjaan apa saja di LinkedIn atau JobStreet seperti biasa.">Browse any job opening on LinkedIn or JobStreet as you normally would.</p>
+      </div>
+      <div class="hiw-card">
+        <div class="hiw-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="12" y1="18" x2="12" y2="12"></line><line x1="9" y1="15" x2="15" y2="15"></line></svg>
+        </div>
+        <h3 data-en="2. Upload your CV" data-id="2. Unggah CV-mu">2. Upload your CV</h3>
+        <p data-en="Click the Skillsy Extension icon and upload your latest PDF CV." data-id="Klik ikon Ekstensi Skillsy dan unggah CV PDF terbarumu.">Click the Skillsy Extension icon and upload your latest PDF CV.</p>
+      </div>
+      <div class="hiw-card">
+        <div class="hiw-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
+        </div>
+        <h3 data-en="3. Get Instant Analysis" data-id="3. Dapatkan Analisis Instan">3. Get Instant Analysis</h3>
+        <p data-en="Click 'Scan' and our AI will instantly highlight skill gaps and provide a matching score." data-id="Klik 'Pindai' dan AI kami akan langsung menyoroti kekurangan skill serta memberikan skor kecocokan.">Click 'Scan' and our AI will instantly highlight skill gaps and provide a matching score.</p>
+      </div>
+    </div>
   </div>
 
 <script>
