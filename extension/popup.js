@@ -26,7 +26,9 @@ function strHash(s) {
   return (h >>> 0).toString(36);
 }
 function analysisCacheKey(cv, title, desc) {
-  return strHash(cv + '||' + title + '||' + desc);
+  // 'v3' = versi format hasil; naikkan kalau struktur respons berubah
+  // supaya cache lama (format lama) tidak pernah dipakai lagi
+  return 'v3' + strHash(cv + '||' + title + '||' + desc);
 }
 async function cacheGet(key) {
   return new Promise(res => {
@@ -138,6 +140,18 @@ function renderResult(data, jobData) {
   document.getElementById('result-seniority').textContent = data.seniority_level || 'Semua Level';
   document.getElementById('result-level').innerHTML = scoreLabel(score);
 
+  // Pembahasan naratif (synthesis): langsung di bawah skor
+  const synEl = document.getElementById('synthesis-section');
+  if (synEl) {
+    if (data.synthesis) {
+      synEl.innerHTML = `<div class="breakdown-title">Pembahasan</div><p>${data.synthesis}</p>`;
+      synEl.style.display = 'block';
+    } else {
+      synEl.style.display = 'none';
+      synEl.innerHTML = '';
+    }
+  }
+
   // Hard filter banner (v2)
   const hfEl = document.getElementById('hard-filter-banner');
   if (hfEl) {
@@ -208,18 +222,6 @@ function renderResult(data, jobData) {
       <h4>${statusTitle}</h4>
     </div>
   `;
-
-  if (data.synthesis) {
-    html += `
-      <div class="advice-section advice-synthesis">
-        <div class="advice-section-title">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
-          Gambaran Besar
-        </div>
-        <p>${data.synthesis}</p>
-      </div>
-    `;
-  }
 
   if (data.seniority_fit) {
     let cleanSummary = data.seniority_fit.replace(/Kesimpulan Pengalaman:\s*/i, '');
@@ -302,15 +304,24 @@ function renderResult(data, jobData) {
     reqListEl.innerHTML = '<span class="empty-chips">Tidak ada data requirements.</span>';
   }
 
-  // Matched skills
+  // Matched skills (must yang met; plus yang met tampil lebih pudar)
   const matchedEl = document.getElementById('result-matched');
   if (matchedEl) {
     matchedEl.innerHTML = '';
-    if (data.matched_skills && data.matched_skills.length) {
-      data.matched_skills.forEach(s => {
+    const mustMet = data.matched_skills || [];
+    const plusMet = data.matched_plus_skills || [];
+    if (mustMet.length || plusMet.length) {
+      mustMet.forEach(s => {
         const chip = document.createElement('span');
         chip.className = 'chip green';
         chip.textContent = s;
+        matchedEl.appendChild(chip);
+      });
+      plusMet.forEach(s => {
+        const chip = document.createElement('span');
+        chip.className = 'chip green plus';
+        chip.textContent = s + ' +';
+        chip.title = 'Bukan syarat wajib, tapi jadi nilai plus';
         matchedEl.appendChild(chip);
       });
     } else {

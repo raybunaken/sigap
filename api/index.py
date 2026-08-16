@@ -1208,6 +1208,71 @@ def _machine_skill_status(skill: str, cv_skill_pool: list) -> str:
     return "missing"
 
 
+# ── SANITIZER EKSTRAKSI (penjaga di kode, prompt boleh gagal tapi ini tidak) ──
+# Work arrangement & logistik kerja bukan gap yang bisa user aksikan.
+WORK_MODE_RE = re.compile(
+    r"\b(on.?site|onsite|hybrid|remote|wfo|wfa|work from (office|home)|"
+    r"full.?time|part.?time|kontrak|contract|freelance|magang|internship|"
+    r"relokasi|relocat(e|ion)|kantor|office location|jakarta|bandung|surabaya|"
+    r"gaji|salary|benefit|bpjs kesehatan|thr|bonus|jam kerja|working hours)\b",
+    re.IGNORECASE,
+)
+# Kata sifat/kalimat pembuka yang membuat nama skill jadi verbose.
+SKILL_ADJ_RE = re.compile(
+    r"^(strong|good|excellent|proficient|solid|advanced|basic|deep|"
+    r"familiar(ity)?( with)?|experience(d)? (with|in)?|knowledge of|"
+    r"skills? (in|of|with)|menguasai|ahli (dalam|di)?|expert(ise)?( in)?|"
+    r"pemahaman tentang|understanding of|pengalaman (dengan|di)|min\.?|minimal|"
+    r"kemampuan|ability to)\s+",
+    re.IGNORECASE,
+)
+
+
+def _clean_skill_name(s: str) -> str:
+    out = s.strip()
+    prev = None
+    while prev != out:
+        prev = out
+        out = SKILL_ADJ_RE.sub("", out).strip(" .:-,")
+    return out
+
+
+def _sanitize_skill_list(skills: list, max_items: int) -> list:
+    """Bersihkan nama skill: buang noise, kata sifat, duplikat, dan terlalu panjang."""
+    seen = set()
+    cleaned = []
+    for raw in skills:
+        if not isinstance(raw, str):
+            continue
+        s = _clean_skill_name(raw)
+        if not s or len(s) < 2 or len(s) > 40 or WORK_MODE_RE.search(s):
+            continue
+        if re.match(r"^[a-z]/[a-z]$", s.lower()):  # fragment aneh spt "and/or"
+            continue
+        key = normalize_skill(s)
+        if key in seen:
+            continue
+        seen.add(key)
+        cleaned.append(s)
+        if len(cleaned) >= max_items:
+            break
+    return cleaned
+
+
+def _sanitize_other_requirements(others: list) -> list:
+    """Hanya kondisi yang bisa user aksikan: bahasa, sertifikasi wajib, dsb."""
+    kept = []
+    for raw in others:
+        if not isinstance(raw, str) or not raw.strip():
+            continue
+        if WORK_MODE_RE.search(raw):
+            continue
+        kept.append(raw.strip()[:120])
+        if len(kept) >= 4:
+            break
+    return kept
+
+
 def _years_ratio_score(years: Optional[float], min_years: Optional[float]) -> Optional[float]:
     """Band pengalaman: penuh / 0.6 / 0.3 / 0. None kalau tidak bisa dinilai."""
     if min_years is None or min_years <= 0:
@@ -1245,11 +1310,12 @@ Return ONLY valid JSON with this exact shape:
 {{
   "seniority": "junior|mid|senior|lead|any",
   "min_years": 3,
-  "must_skills": ["concrete hard skills/tools explicitly required, 3-10 items, each 1-3 words (e.g. 'Go', 'Kubernetes', 'PostgreSQL'), never full sentences"],
-  "plus_skills": ["nice-to-have items, 0-8 items, same format"],
+  "must_skills": ["concrete technical/professional skills explicitly required, 3-8 items, each 1-3 words, canonical names only (e.g. 'Go', 'Kubernetes', 'PostgreSQL', 'SQL'), never sentences, never adjectives like 'strong/proficient'"],
+  "plus_skills": ["nice-to-have skills, 0-8 items, same format"],
   "education_requirement": "ONE string quoting the education requirement, or null if none stated. If the posting lists alternatives (e.g. 'Statistics, Public Health, or related field'), keep them as ONE requirement with alternatives, NOT separate items.",
   "industry_requirement": "specific industry background if required, else null",
-  "other_requirements": ["language, certification, on-site, or other hard conditions, 0-5 items"],
+  "other_requirements": ["hard conditions the candidate must satisfy and can act on: language, mandatory certification, shift availability. 0-4 items. NEVER include work arrangement (on-site/hybrid/remote/WFO/WFA), work hours type (full-time/contract), office location, salary, or benefits - those are job metadata, not requirements."],
+  "work_arrangement": "onsite, hybrid, remote, or null - informational only, never judged",
   "ats_keywords": ["5-8 exact searchable phrases appearing in the posting"]
 }}
 min_years must be a number or null (null if not stated)."""
@@ -1261,15 +1327,15 @@ min_years must be a number or null (null if not stated)."""
     if not stage_a:
         return None
 
-    must_skills = [s for s in stage_a.get("must_skills", []) if isinstance(s, str)][:10]
-    plus_skills = [s for s in stage_a.get("plus_skills", []) if isinstance(s, str)][:8]
+    must_skills = _sanitize_skill_list(stage_a.get("must_skills", []), max_items=8)
+    plus_skills = _sanitize_skill_list(stage_a.get("plus_skills", []) or [], max_items=6)
     # edukasi: satu syarat utuh (alternatif "atau" tidak dipecah jadi item terpisah)
     education_req = stage_a.get("education_requirement")
     if not isinstance(education_req, str) or not education_req.strip():
         # kompatibilitas kalau LLM masih balikin list
         legacy = [s for s in stage_a.get("education_requirements", []) if isinstance(s, str)]
         education_req = " atau ".join(legacy) if legacy else None
-    other_reqs = [s for s in stage_a.get("other_requirements", []) if isinstance(s, str)][:5]
+    other_reqs = _sanitize_other_requirements(stage_a.get("other_requirements", []))
     industry_req = stage_a.get("industry_requirement") or None
     min_years = stage_a.get("min_years")
     if not isinstance(min_years, (int, float)) or min_years < 0:
@@ -1296,7 +1362,7 @@ Technical SKILLS are scored separately by machine, do NOT judge them here.
 
 Tasks:
 1. Estimate the candidate's total years of professional experience from the CV. "cv_years_estimate" MUST be a JSON NUMBER (e.g. 2.5), never a string. Internships count as 0.5.
-2. List ALL concrete skills evidenced in the CV, including skills clearly implied by stated tools (Laravel implies PHP, React implies JavaScript). 5-20 items.
+2. List ALL concrete skills evidenced in the CV, including skills clearly implied by stated tools (Laravel implies PHP, React implies JavaScript). 5-20 items. NEVER invent a skill that has no textual basis in the CV.
 3. Judge each item in "items_to_judge": status met/partial/missing based on CV evidence.
    - "req": quote or translate the requirement into natural Indonesian, keep it specific (never generic).
    - "detail": ONE sentence in Bahasa Indonesia citing concrete evidence from the CV.
@@ -1408,7 +1474,8 @@ If items_to_judge is empty, return an empty "items" list."""
         requirements_check.append(skill_item(s, plus_status[s], is_plus=True))
     requirements_check = requirements_check[:12]
 
-    matched = [s for s, st in {**must_status, **plus_status}.items() if st == "met"][:12]
+    matched = [s for s, st in must_status.items() if st == "met"][:10]
+    matched_plus = [s for s, st in plus_status.items() if st == "met"][:8]
     missing_must = [s for s, st in must_status.items() if st != "met"]
     missing = (missing_must + [s for s, st in plus_status.items() if st == "missing"])[:8]
 
@@ -1444,7 +1511,7 @@ You receive a CV and a FINAL list of requirement verdicts (statuses were decided
 
 Tasks:
 1. For EACH requirement, write a natural 1-2 sentence explanation in Bahasa Indonesia that DISCUSSES the verdict in the context of the candidate's actual career story: their industry, their experience level, what transfers over and what does not.
-2. Write one synthesis paragraph (2-3 sentences): name the candidate's real strengths, then the main gap (industry direction? depth? tools?), then the bridge (what they already have that helps them close it).
+2. Write one synthesis paragraph (2-3 sentences) that OPENS by framing the position naturally, e.g. "Lowongan ini mid-level di industri kesehatan, dan kamu hampir siap di sisi analisis...". Then name the candidate's real strengths, the main gap (industry direction? depth? tools?), and the bridge (what they already have that helps close it).
 
 STYLE (this is the core of your job):
 - DISCUSS, do not restate. Compare their background with what the role needs.
@@ -1493,6 +1560,7 @@ Return ONLY valid JSON:
         "seniority_fit": stage_b.get("seniority_fit", ""),
         "requirements_check": requirements_check,
         "matched_skills": matched,
+        "matched_plus_skills": matched_plus,
         "missing_skills": missing,
         "ats_keywords": ats_keywords,
         "advice": advice,
