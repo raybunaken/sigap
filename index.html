@@ -1,9 +1,23 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Skillsy Copilot | Intelligent Career Engine</title>
+  <meta name="description" content="Skillsy Copilot analyzes job postings on LinkedIn & JobStreet against your CV in seconds — instant ATS score, missing skills detection, and AI cover letters. Free Chrome extension.">
+  <link rel="icon" type="image/svg+xml" href="logo.svg">
+
+  <!-- Open Graph / Social Sharing -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://skillsy.my.id/">
+  <meta property="og:title" content="Skillsy Copilot | Intelligent Career Engine">
+  <meta property="og:description" content="Stop guessing what recruiters want. Get an instant match score and skill gap analysis for any LinkedIn or JobStreet job posting — right in your browser.">
+  <meta property="og:image" content="https://skillsy.my.id/screenshot.png">
+  <meta property="og:site_name" content="Skillsy">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Skillsy Copilot | Intelligent Career Engine">
+  <meta name="twitter:description" content="Instant ATS score & skill gap analysis for LinkedIn/JobStreet job postings. Free Chrome extension.">
+  <meta name="twitter:image" content="https://skillsy.my.id/screenshot.png">
   
   <!-- Google Fonts: Plus Jakarta Sans & Inter -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -198,12 +212,12 @@
 
     .cta-btn:hover {
       transform: translateY(-3px);
-      background: #c084fc;
+      background: #e4ff5c;
       color: #0d1210;
-      box-shadow: 0 12px 40px rgba(192, 132, 252, 0.3);
+      box-shadow: 0 12px 40px rgba(212, 255, 50, 0.35);
     }
 
-    /* SUPPORTED BY SECTION */
+    /* POWERED BY + STATS STRIP */
     .supported-by {
       margin-top: 56px;
       display: flex;
@@ -238,7 +252,127 @@
     }
     .supported-logo span { 
       font-weight: 500; 
-      margin-left: 4px;
+      margin-left: 4px; 
+    }
+
+    /* STATS STRIP (BPS) */
+    .stats-wrapper {
+      height: auto;
+      min-height: auto;
+      padding: 40px 60px;
+    }
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 24px;
+      width: 100%;
+    }
+    .stat-item {
+      text-align: center;
+      padding: 24px 16px;
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 20px;
+    }
+    .stat-value {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 34px;
+      font-weight: 800;
+      color: #d4ff32;
+      margin-bottom: 8px;
+      letter-spacing: -0.02em;
+    }
+    .stat-label {
+      font-size: 13px;
+      line-height: 1.5;
+      color: rgba(255, 255, 255, 0.6);
+    }
+
+    /* FAQ SECTION */
+    .faq-wrapper {
+      height: auto;
+      min-height: auto;
+      padding: 60px;
+      align-items: center;
+    }
+    .faq-title {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 36px;
+      font-weight: 800;
+      margin-bottom: 48px;
+      text-align: center;
+    }
+    .faq-list {
+      width: 100%;
+      max-width: 760px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .faq-item {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 20px;
+      padding: 24px 28px;
+      transition: border-color 0.3s ease;
+    }
+    .faq-item[open] {
+      border-color: rgba(212, 255, 50, 0.3);
+    }
+    .faq-item summary {
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: 600;
+      list-style: none;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      color: #fff;
+    }
+    .faq-item summary::-webkit-details-marker { display: none; }
+    .faq-item summary::after {
+      content: '+';
+      font-size: 22px;
+      font-weight: 400;
+      color: #d4ff32;
+      flex-shrink: 0;
+      transition: transform 0.3s ease;
+    }
+    .faq-item[open] summary::after {
+      transform: rotate(45deg);
+    }
+    .faq-item p {
+      margin-top: 16px;
+      font-size: 14px;
+      line-height: 1.7;
+      color: rgba(255, 255, 255, 0.7);
+    }
+
+    /* FOOTER */
+    .site-footer {
+      width: 100%;
+      max-width: 1200px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 20px;
+      padding: 0 20px;
+      color: rgba(255, 255, 255, 0.5);
+      font-size: 13px;
+    }
+    .site-footer a {
+      color: rgba(255, 255, 255, 0.7);
+      text-decoration: none;
+      transition: color 0.3s ease;
+    }
+    .site-footer a:hover { color: #d4ff32; }
+    .footer-links {
+      display: flex;
+      gap: 24px;
+      align-items: center;
+      flex-wrap: wrap;
     }
 
     /* MODAL STYLES */
@@ -324,7 +458,19 @@
       cursor: pointer;
       transition: all 0.3s ease;
     }
-    .modal-btn:hover { background: #c084fc; color: #0d1210; }
+    .modal-btn:hover { background: #e4ff5c; color: #0d1210; }
+    .modal-error {
+      display: none;
+      color: #ff6b6b;
+      font-size: 13px;
+      margin-bottom: 12px;
+      text-align: left;
+    }
+    .modal-note {
+      font-size: 12px;
+      color: rgba(255, 255, 255, 0.4);
+      margin-top: 16px;
+    }
 
     /* HOW IT WORKS SECTION */
     .hiw-wrapper {
@@ -413,20 +559,34 @@
       .hiw-wrapper {
         padding: 40px 20px;
       }
+      .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 16px;
+      }
+      .stats-wrapper {
+        padding: 30px 20px;
+      }
+      .faq-wrapper {
+        padding: 40px 20px;
+      }
+      .site-footer {
+        flex-direction: column;
+        text-align: center;
+      }
     }
   </style>
 </head>
 <body>
 
-  <div class="glass-wrapper">
+  <div class="glass-wrapper" id="top">
     <!-- Header -->
     <header>
       <div class="logo">Skillsy<span class="logo-accent">.</span></div>
       <nav>
-        <a href="#" data-en="Home" data-id="Beranda">Home</a>
+        <a href="#top" data-en="Home" data-id="Beranda">Home</a>
         <a href="#how-it-works" data-en="How it Works" data-id="Cara Kerja">How it Works</a>
-        <a href="#" data-en="Pro Features" data-id="Fitur Pro">Pro Features</a>
-        <a href="#" data-en="Contact Us" data-id="Hubungi Kami">Contact Us</a>
+        <a href="#faq" data-en="FAQ" data-id="FAQ">FAQ</a>
+        <a href="mailto:raybunaken@gmail.com" data-en="Contact Us" data-id="Hubungi Kami">Contact Us</a>
         <button id="langToggle" class="lang-toggle">EN</button>
       </nav>
     </header>
@@ -455,11 +615,9 @@
         <a href="#" id="installBtn" class="cta-btn" data-en="Join Waitlist" data-id="Daftar Tunggu">Join Waitlist</a>
 
         <div class="supported-by">
-          <div class="supported-text" data-en="Infrastructure & AI Partners" data-id="Mitra Infrastruktur & AI">Infrastructure & AI Partners</div>
+          <div class="supported-text" data-en="Powered By" data-id="Didukung Oleh">Powered By</div>
           <div class="supported-logos">
-            <div class="supported-logo">AWS</div>
-            <div class="supported-logo">Alibaba<span>Cloud</span></div>
-            <div class="supported-logo">Google<span>Cloud</span></div>
+            <div class="supported-logo">Groq<span>LPU Inference</span></div>
           </div>
         </div>
       </div>
@@ -467,6 +625,28 @@
         <img src="screenshot.png" alt="Skillsy AI Copilot Mockup">
       </div>
     </main>
+  </div>
+
+  <!-- Stats Strip (BPS data) -->
+  <div class="glass-wrapper stats-wrapper">
+    <div class="stats-grid">
+      <div class="stat-item">
+        <div class="stat-value">7.47M</div>
+        <div class="stat-label" data-en="Openly unemployed Indonesians competing for the same jobs (BPS, Aug 2024)" data-id="Penganggur terbuka di Indonesia yang bersaing memperebutkan pekerjaan yang sama (BPS, Agustus 2024)">Openly unemployed Indonesians competing for the same jobs (BPS, Aug 2024)</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-value">6–12</div>
+        <div class="stat-label" data-en="Months the average fresh graduate spends job hunting — Skillsy cuts the guessing game" data-id="Bulan yang dihabiskan fresh graduate rata-rata untuk mencari kerja — Skillsy memangkas bertebaran menebak">Months the average fresh graduate spends job hunting — Skillsy cuts the guessing game</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-value">75%</div>
+        <div class="stat-label" data-en="Of resumes are rejected by ATS filters before a human ever sees them" data-id="Resume ditolak oleh filter ATS bahkan sebelum dibaca manusia">Of resumes are rejected by ATS filters before a human ever sees them</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-value">Rp 5.28M</div>
+        <div class="stat-label" data-en="Average salary in Indonesia's highest-paying sector: Information & Communication (BPS, Aug 2025)" data-id="Rata-rata gaji sektor tertinggi di Indonesia: Informasi & Komunikasi (BPS, Agustus 2025)">Average salary in Indonesia's highest-paying sector: Information & Communication (BPS, Aug 2025)</div>
+      </div>
+    </div>
   </div>
 
   <!-- How It Works Section -->
@@ -497,6 +677,33 @@
     </div>
   </div>
 
+  <!-- FAQ Section -->
+  <div class="glass-wrapper faq-wrapper" id="faq">
+    <h2 class="faq-title" data-en="Frequently Asked Questions" data-id="Pertanyaan yang Sering Diajukan">Frequently Asked Questions</h2>
+    <div class="faq-list">
+      <details class="faq-item">
+        <summary data-en="Is my CV safe? Where is my data stored?" data-id="Apakah CV saya aman? Di mana data saya disimpan?">Is my CV safe? Where is my data stored?</summary>
+        <p data-en="Your CV PDF is parsed entirely inside your browser — the file itself never leaves your device. For analysis, the extracted text (plus the job posting you're viewing) is sent securely to our server, processed by our AI engine, and never stored or shared." data-id="PDF CV kamu diproses sepenuhnya di dalam browser kamu — file-nya tidak pernah meninggalkan perangkatmu. Untuk analisis, teks hasil ekstraksi (beserta lowongan yang kamu lihat) dikirim aman ke server kami, diproses oleh mesin AI kami, dan tidak pernah disimpan atau dibagikan.">Your CV PDF is parsed entirely inside your browser — the file itself never leaves your device. For analysis, the extracted text (plus the job posting you're viewing) is sent securely to our server, processed by our AI engine, and never stored or shared.</p>
+      </details>
+      <details class="faq-item">
+        <summary data-en="Is Skillsy free to use?" data-id="Apakah Skillsy gratis?">Is Skillsy free to use?</summary>
+        <p data-en="Yes. The core extension — ATS score, skill gap analysis, and keyword suggestions — is free during beta. Pro features (like AI cover letters at scale) may be paid in the future, but early waitlist members get privileged pricing." data-id="Ya. Ekstensi intinya — skor ATS, analisis skill gap, dan saran keyword — gratis selama masa beta. Fitur Pro (seperti surat lamaran AI skala besar) mungkin berbayar di masa depan, tetapi member waitlist awal mendapat harga istimewa.">Yes. The core extension — ATS score, skill gap analysis, and keyword suggestions — is free during beta. Pro features (like AI cover letters at scale) may be paid in the future, but early waitlist members get privileged pricing.</p>
+      </details>
+      <details class="faq-item">
+        <summary data-en="Which job sites are supported?" data-id="Situs lowongan apa saja yang didukung?">Which job sites are supported?</summary>
+        <p data-en="LinkedIn, JobStreet, Glints, Kalibrr, Tech in Asia, Kintsugi, and MyCareersFuture — with smart fallback extraction that works on most other job boards too." data-id="LinkedIn, JobStreet, Glints, Kalibrr, Tech in Asia, Kintsugi, dan MyCareersFuture — dengan ekstraksi fallback pintar yang juga bekerja di sebagian besar job board lainnya.">LinkedIn, JobStreet, Glints, Kalibrr, Tech in Asia, Kintsugi, and MyCareersFuture — with smart fallback extraction that works on most other job boards too.</p>
+      </details>
+      <details class="faq-item">
+        <summary data-en="How accurate is the match score?" data-id="Seberapa akurat skor kecocokannya?">How accurate is the match score?</summary>
+        <p data-en="Skillsy combines rule-based skill matching (with synonym detection, e.g. ReactJS = React) and AI semantic matching. Transferable skills (like PHP → Python) get partial credit, so the score reflects how a recruiter would realistically assess your profile." data-id="Skillsy menggabungkan pencocokan skill berbasis aturan (dengan deteksi sinonim, mis. ReactJS = React) dan pencocokan semantik AI. Skill yang transferable (seperti PHP → Python) mendapat kredit parsial, sehingga skor mencerminkan cara rekruter menilai profilmu secara realistis.">Skillsy combines rule-based skill matching (with synonym detection, e.g. ReactJS = React) and AI semantic matching. Transferable skills (like PHP → Python) get partial credit, so the score reflects how a recruiter would realistically assess your profile.</p>
+      </details>
+      <details class="faq-item">
+        <summary data-en="When does the beta launch?" data-id="Kapan beta-nya rilis?">When does the beta launch?</summary>
+        <p data-en="Early Beta Access opens this September, with the public Chrome Web Store launch in November. Waitlist members get access first, in order of signup." data-id="Akses Beta Awal dibuka bulan September ini, dengan rilis publik di Chrome Web Store pada November. Member waitlist mendapat akses lebih dulu, sesuai urutan pendaftaran.">Early Beta Access opens this September, with the public Chrome Web Store launch in November. Waitlist members get access first, in order of signup.</p>
+      </details>
+    </div>
+  </div>
+
   <!-- Waitlist Modal -->
   <div class="modal-overlay" id="waitlistModal">
     <div class="modal-content">
@@ -504,8 +711,10 @@
       <h3 data-en="Join the Waitlist" data-id="Daftar Tunggu">Join the Waitlist</h3>
       <p id="modalDesc" data-en="We are launching on Chrome Web Store this November. Enter your email to get Early Beta Access in September." data-id="Kami akan rilis di Chrome Web Store November ini. Masukkan emailmu untuk dapat Akses Beta di bulan September.">We are launching on Chrome Web Store this November. Enter your email to get Early Beta Access in September.</p>
       <div id="waitlistForm">
+        <div id="waitlistError" class="modal-error" role="alert"></div>
         <input type="email" class="modal-input" placeholder="Email address" required id="wlEmail">
-        <button class="modal-btn" id="wlSubmit" data-en="Get Early Access" data-id="Dapatkan Akses Awal">Get Early Access</button>
+        <button type="button" class="modal-btn" id="wlSubmit" data-en="Get Early Access" data-id="Dapatkan Akses Awal">Get Early Access</button>
+        <div class="modal-note" data-en="No spam. One email when your beta invite is ready." data-id="Tanpa spam. Satu email saat undangan beta-mu siap.">No spam. One email when your beta invite is ready.</div>
       </div>
       <div id="waitlistSuccess" style="display: none; color: #d4ff32; font-weight: 600; font-size: 18px; margin-top: 20px;">
         <span data-en="You're on the list!" data-id="Berhasil mendaftar!">You're on the list!</span>
@@ -513,20 +722,40 @@
     </div>
   </div>
 
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div>&copy; 2026 Skillsy. <span data-en="All rights reserved." data-id="Hak cipta dilindungi.">All rights reserved.</span></div>
+    <div class="footer-links">
+      <a href="privacy.html" data-en="Privacy Policy" data-id="Kebijakan Privasi">Privacy Policy</a>
+      <a href="mailto:raybunaken@gmail.com" data-en="Contact" data-id="Kontak">Contact</a>
+      <a href="investor.html" data-en="For Investors" data-id="Untuk Investor">For Investors</a>
+    </div>
+  </footer>
+
 <script>
+  // ── Language toggle with persistence ──
   const langToggle = document.getElementById('langToggle');
-  let currentLang = 'en';
+  const savedLang = localStorage.getItem('skillsy-lang');
+  let currentLang = savedLang === 'id' ? 'id' : 'en';
+
+  function applyLang(lang) {
+    currentLang = lang;
+    document.documentElement.lang = lang;
+    langToggle.innerText = lang === 'en' ? 'EN' : 'ID';
+    document.querySelectorAll('[data-en]').forEach(el => {
+      el.innerHTML = el.getAttribute(`data-${lang}`);
+    });
+  }
 
   langToggle.addEventListener('click', () => {
-    currentLang = currentLang === 'en' ? 'id' : 'en';
-    langToggle.innerText = currentLang === 'en' ? 'EN' : 'ID';
-    
-    document.querySelectorAll('[data-en]').forEach(el => {
-      el.innerHTML = el.getAttribute(`data-${currentLang}`);
-    });
+    const next = currentLang === 'en' ? 'id' : 'en';
+    localStorage.setItem('skillsy-lang', next);
+    applyLang(next);
   });
 
-  // Modal Logic
+  applyLang(currentLang);
+
+  // ── Waitlist Modal Logic ──
   const installBtn = document.getElementById('installBtn');
   const waitlistModal = document.getElementById('waitlistModal');
   const closeModal = document.getElementById('closeModal');
@@ -534,10 +763,27 @@
   const wlEmail = document.getElementById('wlEmail');
   const waitlistForm = document.getElementById('waitlistForm');
   const waitlistSuccess = document.getElementById('waitlistSuccess');
-  
+  const waitlistError = document.getElementById('waitlistError');
+
+  const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+
+  function showWaitlistError(msg) {
+    waitlistError.textContent = msg;
+    waitlistError.style.display = 'block';
+    wlEmail.style.borderColor = '#ff6b6b';
+  }
+
+  function clearWaitlistError() {
+    waitlistError.style.display = 'none';
+    wlEmail.style.borderColor = '';
+  }
+
+  wlEmail.addEventListener('input', clearWaitlistError);
+
   installBtn.addEventListener('click', (e) => {
     e.preventDefault();
     waitlistModal.classList.add('active');
+    wlEmail.focus();
   });
   
   closeModal.addEventListener('click', () => {
@@ -547,28 +793,53 @@
   waitlistModal.addEventListener('click', (e) => {
     if (e.target === waitlistModal) waitlistModal.classList.remove('active');
   });
-  
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && waitlistModal.classList.contains('active')) {
+      waitlistModal.classList.remove('active');
+    }
+  });
+
+  wlEmail.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') wlSubmit.click();
+  });
+
   wlSubmit.addEventListener('click', async () => {
-    const email = wlEmail.value;
-    if (email && email.includes('@')) {
-      const originalText = wlSubmit.innerText;
-      wlSubmit.innerText = 'Loading...';
-      wlSubmit.disabled = true;
-      
-      try {
-        await fetch('https://skillsy.my.id/api/waitlist', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email })
-        });
-      } catch (err) {
-        console.error('Waitlist error:', err);
-      }
-      
+    const email = wlEmail.value.trim();
+    if (!EMAIL_RE.test(email)) {
+      showWaitlistError(
+        currentLang === 'id'
+          ? 'Format email tidak valid. Contoh: nama@email.com'
+          : 'Please enter a valid email address, e.g. name@email.com'
+      );
+      return;
+    }
+
+    const originalText = wlSubmit.innerText;
+    const loadingText = currentLang === 'id' ? 'Memproses...' : 'Loading...';
+    wlSubmit.innerText = loadingText;
+    wlSubmit.disabled = true;
+    clearWaitlistError();
+    
+    try {
+      const res = await fetch('https://skillsy.my.id/api/waitlist', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email })
+      });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
       waitlistForm.style.display = 'none';
       waitlistSuccess.style.display = 'block';
-    } else {
-      wlEmail.style.borderColor = '#ff4d4d';
+    } catch (err) {
+      console.error('Waitlist error:', err);
+      showWaitlistError(
+        currentLang === 'id'
+          ? 'Gagal terhubung ke server. Periksa koneksi internetmu lalu coba lagi.'
+          : 'Could not reach the server. Check your internet connection and try again.'
+      );
+    } finally {
+      wlSubmit.innerText = originalText;
+      wlSubmit.disabled = false;
     }
   });
 </script>
