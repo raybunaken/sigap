@@ -1247,7 +1247,7 @@ Return ONLY valid JSON with this exact shape:
   "min_years": 3,
   "must_skills": ["concrete hard skills/tools explicitly required, 3-10 items, each 1-3 words (e.g. 'Go', 'Kubernetes', 'PostgreSQL'), never full sentences"],
   "plus_skills": ["nice-to-have items, 0-8 items, same format"],
-  "education_requirements": ["explicit education/major requirements, empty list if none"],
+  "education_requirement": "ONE string quoting the education requirement, or null if none stated. If the posting lists alternatives (e.g. 'Statistics, Public Health, or related field'), keep them as ONE requirement with alternatives, NOT separate items.",
   "industry_requirement": "specific industry background if required, else null",
   "other_requirements": ["language, certification, on-site, or other hard conditions, 0-5 items"],
   "ats_keywords": ["5-8 exact searchable phrases appearing in the posting"]
@@ -1263,7 +1263,12 @@ min_years must be a number or null (null if not stated)."""
 
     must_skills = [s for s in stage_a.get("must_skills", []) if isinstance(s, str)][:10]
     plus_skills = [s for s in stage_a.get("plus_skills", []) if isinstance(s, str)][:8]
-    education_reqs = [s for s in stage_a.get("education_requirements", []) if isinstance(s, str)][:4]
+    # edukasi: satu syarat utuh (alternatif "atau" tidak dipecah jadi item terpisah)
+    education_req = stage_a.get("education_requirement")
+    if not isinstance(education_req, str) or not education_req.strip():
+        # kompatibilitas kalau LLM masih balikin list
+        legacy = [s for s in stage_a.get("education_requirements", []) if isinstance(s, str)]
+        education_req = " atau ".join(legacy) if legacy else None
     other_reqs = [s for s in stage_a.get("other_requirements", []) if isinstance(s, str)][:5]
     industry_req = stage_a.get("industry_requirement") or None
     min_years = stage_a.get("min_years")
@@ -1278,8 +1283,8 @@ min_years must be a number or null (null if not stated)."""
             "req": f"Minimal {min_years} tahun pengalaman kerja relevan",
             "type": "experience",
         })
-    for e in education_reqs:
-        items_to_judge.append({"req": e, "type": "education"})
+    if education_req:
+        items_to_judge.append({"req": education_req, "type": "education"})
     if industry_req:
         items_to_judge.append({"req": f"Pengalaman industri {industry_req}", "type": "industry"})
     for o in other_reqs:
@@ -1290,7 +1295,7 @@ You receive a CV and non-skill requirements extracted from a job posting.
 Technical SKILLS are scored separately by machine, do NOT judge them here.
 
 Tasks:
-1. Estimate the candidate's total years of professional experience from the CV (decimal allowed, 0 if fresh graduate).
+1. Estimate the candidate's total years of professional experience from the CV. "cv_years_estimate" MUST be a JSON NUMBER (e.g. 2.5), never a string. Internships count as 0.5.
 2. List ALL concrete skills evidenced in the CV, including skills clearly implied by stated tools (Laravel implies PHP, React implies JavaScript). 5-20 items.
 3. Judge each item in "items_to_judge": status met/partial/missing based on CV evidence.
    - "req": quote or translate the requirement into natural Indonesian, keep it specific (never generic).
@@ -1322,7 +1327,13 @@ If items_to_judge is empty, return an empty "items" list."""
         return None
 
     cv_years = stage_b.get("cv_years_estimate")
-    if not isinstance(cv_years, (int, float)) or cv_years < 0:
+    if isinstance(cv_years, str):
+        # LLM kadang balikin "2.5" atau "2,5 tahun" -> paksa jadi number
+        try:
+            cv_years = float(re.sub(r"[^0-9.,]", "", cv_years).replace(",", "."))
+        except (ValueError, TypeError):
+            cv_years = None
+    if not isinstance(cv_years, (int, float)) or isinstance(cv_years, bool) or cv_years < 0:
         cv_years = None
     cv_skill_pool = list(dict.fromkeys(
         [s for s in stage_b.get("cv_skills", []) if isinstance(s, str)]
@@ -1367,7 +1378,7 @@ If items_to_judge is empty, return an empty "items" list."""
         hard_messages.append(
             f"Syarat {min_years} tahun pengalaman belum terpenuhi (terbaca sekitar {cv_years:g} tahun di CV)."
         )
-    if education_reqs and edu_items and all(i.get("status") == "missing" for i in edu_items):
+    if education_req and edu_items and all(i.get("status") == "missing" for i in edu_items):
         readiness = min(readiness, 60)
         hard_messages.append("Syarat pendidikan tidak terpenuhi.")
 
@@ -1423,6 +1434,59 @@ If items_to_judge is empty, return an empty "items" list."""
         ) + "Pertimbangkan juga posisi serupa dengan level lebih junior."
     advice = f"{verdict} {action}".strip()
 
+    # ── STAGE D: narasi manusiawi (verdict & skor SUDAH final dari mesin) ──
+    # Mesin memutuskan, LLM hanya bercerita: detail per item + paragraf sintesis.
+    # Gagal -> tetap pakai detail template (fallback), skor tidak tersentuh.
+    synthesis = None
+    if requirements_check:
+        stage_d_prompt = f"""You are an honest senior career coach writing for an Indonesian job seeker.
+You receive a CV and a FINAL list of requirement verdicts (statuses were decided by a machine audit).
+
+Tasks:
+1. For EACH requirement, write a natural 1-2 sentence explanation in Bahasa Indonesia that DISCUSSES the verdict in the context of the candidate's actual career story: their industry, their experience level, what transfers over and what does not.
+2. Write one synthesis paragraph (2-3 sentences): name the candidate's real strengths, then the main gap (industry direction? depth? tools?), then the bridge (what they already have that helps them close it).
+
+STYLE (this is the core of your job):
+- DISCUSS, do not restate. Compare their background with what the role needs.
+- GOOD, for a sales analyst missing healthcare industry: "Analisis data kamu sudah jalan di konteks sales, dan metodenya (SQL, Tableau, forecasting) tetap terpakai di healthcare. Yang belum kamu punya adalah cara kerja data klinis dan regulasi rumah sakit, itu yang perlu dipelajari duluan."
+- BAD (forbidden, mere restatement): "Andi belum memiliki pengalaman di industri kesehatan."
+- For career-pivot or industry-mismatch items, always name the transferable part first, then the gap.
+- For 'met' items: one short confident sentence pointing at where it shows in their background.
+
+STRICT RULES:
+- The statuses are FINAL. NEVER contradict them and NEVER soften a 'missing' into something positive.
+- Each detail under 320 characters. Synthesis under 500 characters.
+- Use "kamu" (second person), not the candidate's name.
+- "details" array must contain EXACTLY {len(requirements_check)} items in the same order as the requirements given.
+
+Job: {job_title}
+
+CV:
+{cv[:4000]}
+
+Requirements (final, in order):
+{json.dumps([{"req": r["req"], "status": r["status"]} for r in requirements_check], ensure_ascii=False)}
+
+Return ONLY valid JSON:
+{{
+  "synthesis": "...",
+  "details": ["...", "..."]
+}}"""
+
+        stage_d = await _groq_json([
+            {"role": "system", "content": "Reply ONLY with valid JSON. No other text."},
+            {"role": "user", "content": stage_d_prompt},
+        ], max_tokens=1600)
+        if stage_d:
+            details = [d for d in stage_d.get("details", []) if isinstance(d, str)]
+            if len(details) == len(requirements_check):
+                for item, new_detail in zip(requirements_check, details):
+                    if new_detail.strip():
+                        item["detail"] = new_detail.strip()[:400]
+            raw_synthesis = stage_d.get("synthesis")
+            if isinstance(raw_synthesis, str) and raw_synthesis.strip():
+                synthesis = raw_synthesis.strip()[:600]
+
     return {
         "readiness_score": readiness,
         "seniority_level": stage_b.get("seniority_level", ""),
@@ -1432,6 +1496,7 @@ If items_to_judge is empty, return an empty "items" list."""
         "missing_skills": missing,
         "ats_keywords": ats_keywords,
         "advice": advice,
+        "synthesis": synthesis,
         "score_breakdown": {
             "experience": {"score": round(exp_score * 100), "weight": 25},
             "must_skills": {"score": round(must_score * 100), "weight": 45},
