@@ -1427,6 +1427,13 @@ If items_to_judge is empty, return an empty "items" list."""
     must_score = _items_pct(list(must_status.values()))
     if must_score is None:
         must_score = 1.0
+    # keselarasan industri dihitung sebagai bobot wajib: pivot industri
+    # (mis. sales analysis -> health analysis) harus menurunkan skor
+    industry_items = [i for i in b_items if i.get("type") == "industry"]
+    if industry_items:
+        ind_score = _items_pct([i.get("status") for i in industry_items])
+        if ind_score is not None:
+            must_score = (must_score + ind_score) / 2
     plus_score = _items_pct(list(plus_status.values()))
     if plus_score is None:
         plus_score = 1.0
