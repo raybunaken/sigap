@@ -1,5 +1,5 @@
 """
-SkillSync — AI Advisor Skill Gap untuk Fresh Grad Indonesia
+SkillSync - AI Advisor Skill Gap untuk Fresh Grad Indonesia
 Backend: FastAPI + Groq (Llama 3.3)
 Jalankan: python api.py
 """
@@ -77,7 +77,7 @@ async def lifespan(app: FastAPI):
     yield
 
 app = FastAPI(
-    title="SkillSync — AI Advisor Skill Gap",
+    title="SkillSync - AI Advisor Skill Gap",
     description="Sistem Identifikasi GAP Skill untuk Karir fresh grad Indonesia",
     version="1.0.0",
     lifespan=lifespan,
@@ -108,7 +108,7 @@ class ProfilUser(BaseModel):
     pengalaman:   str = "Fresh grad / belum ada"
     lokasi:       str = "Jakarta"
     cv_summary:   str = ""
-    # Fields dari frontend setelah /analyze — supaya /chat tidak perlu re-compute gap
+    # Fields dari frontend setelah /analyze - supaya /chat tidak perlu re-compute gap
     readiness:    Optional[float] = None
     skill_kurang: List[str] = []
     job_target:   str = ""
@@ -198,16 +198,16 @@ def regex_extract_skills(text: str) -> list:
 # Skill yang paradigmanya sama walau nama/tech stack beda.
 # User yang punya skill A mendapat 50% credit untuk skill B dalam grup yang sama.
 TRANSFERABLE_GROUPS = [
-    # Backend languages — PHP, Python, Node.js, Java semua paradigma sama
+    # Backend languages - PHP, Python, Node.js, Java semua paradigma sama
     {"backend language", "python", "node.js", "php", "laravel", "java", "go", "django",
      "fastapi", "express", "ruby", "spring", "asp.net", "kotlin"},
     # SQL databases
     {"sql", "mysql", "postgresql", "sqlite", "oracle", "microsoft sql server"},
     # NoSQL databases
     {"mongodb", "firestore", "dynamodb", "redis", "cassandra"},
-    # Frontend frameworks — React, Vue, Angular paradigma sama
+    # Frontend frameworks - React, Vue, Angular paradigma sama
     {"react", "react.js", "vue", "vue.js", "angular", "svelte"},
-    # Mobile — Flutter, React Native, Kotlin paradigma sama
+    # Mobile - Flutter, React Native, Kotlin paradigma sama
     {"flutter", "react native", "kotlin", "swift", "android sdk"},
     # Cloud platforms
     {"aws", "gcp", "azure", "cloud computing", "google cloud"},
@@ -266,7 +266,7 @@ async def extract_skills_from_text(text: str, include_summary: bool = False) -> 
 
         prompt = f"""Kamu adalah CV parser expert Indonesia. Baca CV berikut dan extract SEMUA skill.
 
-ATURAN PENTING — Inference dari konteks project:
+ATURAN PENTING - Inference dari konteks project:
 - Jika ada "Laravel" atau "Django" atau "FastAPI" → tambahkan "RESTful API" dan "Backend Development"
 - Jika ada "React" atau "Vue" → tambahkan "Frontend Development"
 - Jika ada project deploy ke server → tambahkan "Git"
@@ -277,7 +277,7 @@ ATURAN PENTING — Inference dari konteks project:
 - Jika ada "React" atau "Next.js" → tambahkan "JavaScript"
 - Jika ada "Flutter" → tambahkan "Dart"
 - Jika mengelola tim/proyek → tambahkan "Manajemen Proyek"
-- Jangan inference yang tidak ada buktinya di CV — hanya inference yang logis dari tools yang disebutkan
+- Jangan inference yang tidak ada buktinya di CV - hanya inference yang logis dari tools yang disebutkan
 
 Kembalikan dalam format JSON:
 1. "skills": array SEMUA skill (eksplisit + inferensi logis dari context){summary_instruction}
@@ -395,7 +395,7 @@ async def auto_recommend_job(skill: list, pendidikan: str, pengalaman: str, cv_s
     """
     job_list = list(PEKERJAAN_DATABASE.keys())
     
-    # 1. Groq AI (Prioritas Utama — lebih pintar menebak konteks karir)
+    # 1. Groq AI (Prioritas Utama - lebih pintar menebak konteks karir)
     if GROQ_API_KEY:
         skill_str = ", ".join(skill) if skill else "belum ada"
         cv_context = f"\nRingkasan CV: {cv_summary}" if cv_summary else ""
@@ -466,7 +466,7 @@ async def ai_skill_matching(
     sisa_plus   = [s for s in skill_plus  if s not in exact_plus]
 
     # Layer 1b: Transferable skill scoring (partial credit 0.5x)
-    # PHP→Python, Laravel→RESTful API, dll — paradigma sama, stack beda
+    # PHP→Python, Laravel→RESTful API, dll - paradigma sama, stack beda
     transferable_wajib = [s for s in sisa_wajib
                           if any(is_transferable(u, s) for u in skill_user)]
     transferable_plus  = [s for s in sisa_plus
@@ -499,7 +499,7 @@ Skill kandidat: {json.dumps(skill_user, ensure_ascii=False)}
 SISA Skill WAJIB yang belum terdeteksi: {json.dumps(sisa_wajib, ensure_ascii=False)}
 SISA Skill PLUS yang belum terdeteksi: {json.dumps(sisa_plus, ensure_ascii=False)}
 
-PANDUAN KESETARAAN — boleh dianggap setara:
+PANDUAN KESETARAAN - boleh dianggap setara:
 - "PHP" / "Laravel" / "Django" / "Express" → memenuhi "Python" (sama-sama backend language) ✓
 - "MySQL" / "PostgreSQL" / "SQLite" → memenuhi "SQL" ✓
 - "SPSS" / "SPSS Dasar" → memenuhi "Statistik" ✓
@@ -511,7 +511,7 @@ PANDUAN KESETARAAN — boleh dianggap setara:
 
 LARANGAN KERAS (ANTI-HALUSINASI):
 - JANGAN PERNAH mengasumsikan skill teknis spesifik (seperti React, HTML, CSS, JavaScript, Node.js) HANYA DARI kata kunci umum seperti "Web Development", "Software Engineering", atau "Programming". Web dev bisa saja pakai WordPress, PHP, atau No-Code. Kalau tidak disebut spesifik, berarti TIDAK MATCH! ✗
-- "JavaScript" TIDAK memenuhi "Node.js" — frontend JS dan Node.js server berbeda ✗
+- "JavaScript" TIDAK memenuhi "Node.js" - frontend JS dan Node.js server berbeda ✗
 - "Python" TIDAK memenuhi "Machine Learning" tanpa bukti di CV ✗
 - "Canva" TIDAK memenuhi "Adobe Illustrator" atau "Figma" ✗
 - "Excel" TIDAK memenuhi "SQL" ✗
@@ -539,7 +539,7 @@ Jawab HANYA JSON:
             final_wajib = list(set(exact_wajib + ai_data.get("ai_matched_wajib", [])))
             final_plus  = list(set(exact_plus  + ai_data.get("ai_matched_plus", [])))
 
-            # Sisa setelah AI — hitung transferable partial credit
+            # Sisa setelah AI - hitung transferable partial credit
             sisa_after_ai_wajib = [s for s in skill_wajib if s not in final_wajib]
             sisa_after_ai_plus  = [s for s in skill_plus  if s not in final_plus]
             transferable_remain_wajib = [s for s in sisa_after_ai_wajib
@@ -611,7 +611,7 @@ async def hitung_gap(profil: ProfilUser, job_data_override: dict = None) -> dict
     kursus_reko = []
 
     # ── STEP 1: Kursus untuk skill WAJIB yang kurang (prioritas utama) ──
-    # Ini yang paling relevan — user harus tahu kursus untuk gap yang kritis dulu
+    # Ini yang paling relevan - user harus tahu kursus untuk gap yang kritis dulu
     for sk in skill_kurang[:4]:
         matches = get_kursus_for_skill(sk)
         for k in matches[:2]:          # maks 2 kursus per skill
@@ -647,25 +647,25 @@ async def hitung_gap(profil: ProfilUser, job_data_override: dict = None) -> dict
         else:
             if profil.language == "en":
                 kursus_reko = [
-                    {"nama": "Skillhub Kemnaker Training — Official Free E-Training", "platform": "Skillhub Kemnaker", "url": "skillhub.kemnaker.go.id", "biaya": "FREE", "skill_tags": []},
+                    {"nama": "Skillhub Kemnaker Training - Official Free E-Training", "platform": "Skillhub Kemnaker", "url": "skillhub.kemnaker.go.id", "biaya": "FREE", "skill_tags": []},
                 ]
             else:
                 kursus_reko = [
-                    {"nama": "Pelatihan Skillhub Kemnaker — e-training resmi gratis", "platform": "Skillhub Kemnaker", "url": "skillhub.kemnaker.go.id", "biaya": "GRATIS", "skill_tags": []},
+                    {"nama": "Pelatihan Skillhub Kemnaker - e-training resmi gratis", "platform": "Skillhub Kemnaker", "url": "skillhub.kemnaker.go.id", "biaya": "GRATIS", "skill_tags": []},
                 ]
     elif len(kursus_reko) < 3 and readiness >= 50:
         # Sudah ada beberapa kursus, tapi slot masih ada → tambah aksi portofolio
         job_lower = job.lower()
         if any(k in job_lower for k in ["data", "analyst", "scientist", "engineer"]):
             if profil.language == "en":
-                extra = {"nama": "Kaggle Competitions — build real data portfolio", "platform": "Kaggle", "url": "kaggle.com/competitions", "biaya": "FREE", "skill_tags": []}
+                extra = {"nama": "Kaggle Competitions - build real data portfolio", "platform": "Kaggle", "url": "kaggle.com/competitions", "biaya": "FREE", "skill_tags": []}
             else:
-                extra = {"nama": "Kaggle Competitions — bangun portofolio data nyata", "platform": "Kaggle", "url": "kaggle.com/competitions", "biaya": "GRATIS", "skill_tags": []}
+                extra = {"nama": "Kaggle Competitions - bangun portofolio data nyata", "platform": "Kaggle", "url": "kaggle.com/competitions", "biaya": "GRATIS", "skill_tags": []}
         elif any(k in job_lower for k in ["backend", "frontend", "full stack", "mobile", "devops"]):
             if profil.language == "en":
-                extra = {"nama": "Build project portfolio on GitHub — real proof for recruiters", "platform": "GitHub", "url": "github.com", "biaya": "FREE", "skill_tags": []}
+                extra = {"nama": "Build project portfolio on GitHub - real proof for recruiters", "platform": "GitHub", "url": "github.com", "biaya": "FREE", "skill_tags": []}
             else:
-                extra = {"nama": "Buat portofolio project di GitHub — bukti nyata untuk recruiter", "platform": "GitHub", "url": "github.com", "biaya": "GRATIS", "skill_tags": []}
+                extra = {"nama": "Buat portofolio project di GitHub - bukti nyata untuk recruiter", "platform": "GitHub", "url": "github.com", "biaya": "GRATIS", "skill_tags": []}
         elif any(k in job_lower for k in ["ui", "ux", "design", "graphic"]):
             if profil.language == "en":
                 extra = {"nama": "Collect design portfolio on Behance / Dribbble", "platform": "Behance", "url": "behance.net", "biaya": "FREE", "skill_tags": []}
@@ -797,7 +797,7 @@ async def analyze(profil: ProfilUser):
         )
 
     if not profil.target_job.strip():
-        logger.info(f"Target kosong — jalankan auto_recommend untuk skill: {profil.skill}")
+        logger.info(f"Target kosong - jalankan auto_recommend untuk skill: {profil.skill}")
         recommended_job = await auto_recommend_job(
             profil.skill, profil.pendidikan, profil.pengalaman, profil.cv_summary
         )
@@ -852,24 +852,24 @@ async def analyze(profil: ProfilUser):
         pivot_note = f"""
 PERINGATAN: Ini adalah career pivot yang cukup ekstrem. 
 Pengalaman user berasal dari latar belakang yang berbeda dengan target {result['job_target']}.
-Evaluasi dengan jujur — butuh waktu dan dedikasi panjang."""
+Evaluasi dengan jujur - butuh waktu dan dedikasi panjang."""
     elif is_career_pivot and is_cv_relevant:
         pivot_note = f"""
 CATATAN PENTING: Meski readiness rendah secara metrik, cv_summary menunjukkan 
 user sudah punya pengalaman RELEVAN dengan {result['job_target']}.
-Akui pengalaman yang sudah ada dan fokus pada gap yang perlu ditutup — 
+Akui pengalaman yang sudah ada dan fokus pada gap yang perlu ditutup - 
 jangan bilang pengalaman mereka tidak relevan!"""
 
     readiness_context = (
-        "SANGAT RENDAH — career pivot berat, butuh waktu dan dedikasi panjang" if result['readiness'] < 30 else
-        "RENDAH — masih jauh, tapi bisa dicapai dengan konsistensi 6-12 bulan" if result['readiness'] < 50 else
-        "SEDANG — sudah ada fondasi, perlu 3-6 bulan fokus belajar" if result['readiness'] < 70 else
-        "TINGGI — sudah hampir siap, fokus ke portofolio dan apply kerja"
+        "SANGAT RENDAH - career pivot berat, butuh waktu dan dedikasi panjang" if result['readiness'] < 30 else
+        "RENDAH - masih jauh, tapi bisa dicapai dengan konsistensi 6-12 bulan" if result['readiness'] < 50 else
+        "SEDANG - sudah ada fondasi, perlu 3-6 bulan fokus belajar" if result['readiness'] < 70 else
+        "TINGGI - sudah hampir siap, fokus ke portofolio dan apply kerja"
     )
 
     cv_context_str = f"""
 
-RIWAYAT PENGALAMAN (dari CV — WAJIB DIBACA sebelum evaluasi):
+RIWAYAT PENGALAMAN (dari CV - WAJIB DIBACA sebelum evaluasi):
 {profil.cv_summary}
 
 PENTING: Evaluasi harus mempertimbangkan pengalaman nyata di atas. 
@@ -879,7 +879,7 @@ Jangan abaikan riwayat kerja/organisasi yang sudah ada.""" if profil.cv_summary 
 Konteks readiness: {readiness_context}
 
 Skill yang sudah dimiliki: {', '.join(result['skill_dimiliki']) or 'belum ada yang relevan dengan target karir ini'}
-Skill wajib yang MASIH KURANG: {', '.join(result['skill_kurang']) or 'tidak ada — sudah siap!'}
+Skill wajib yang MASIH KURANG: {', '.join(result['skill_kurang']) or 'tidak ada - sudah siap!'}
 Pengalaman: {profil.pengalaman}
 {pivot_note}
 
@@ -930,13 +930,13 @@ ATURAN KETAT:
         sd = result.get("skill_dimiliki", [])
         job = result.get("job_target", profil.target_job)
         if r >= 70:
-            ai_summary = f"Kamu sudah punya fondasi yang kuat untuk {job} dengan {len(sd)} skill yang relevan. Sekarang fokus ke portofolio nyata — recruiter butuh bukti, bukan sekadar klaim di CV. Mulai apply ke perusahaan yang cocok!"
+            ai_summary = f"Kamu sudah punya fondasi yang kuat untuk {job} dengan {len(sd)} skill yang relevan. Sekarang fokus ke portofolio nyata - recruiter butuh bukti, bukan sekadar klaim di CV. Mulai apply ke perusahaan yang cocok!"
         elif r >= 40:
             gap_str = ", ".join(sk[:2]) if sk else "beberapa skill teknis"
             ai_summary = f"Kamu sudah punya fondasi, tapi masih ada gap di {gap_str}. Estimasi realistis: 3-6 bulan belajar konsisten sudah bisa apply. Prioritaskan kursus gratis di Dicoding atau Skillhub Kemnaker dulu."
         else:
             gap_str = sk[0] if sk else "skill fundamental"
-            ai_summary = f"Gap-nya cukup besar untuk {job}, tapi bisa diatasi. Mulai dari {gap_str} sebagai fondasi utama — itu kunci untuk membuka akses ke skill berikutnya. Konsisten 2 jam per hari selama 6-12 bulan sudah cukup untuk berubah."
+            ai_summary = f"Gap-nya cukup besar untuk {job}, tapi bisa diatasi. Mulai dari {gap_str} sebagai fondasi utama - itu kunci untuk membuka akses ke skill berikutnya. Konsisten 2 jam per hari selama 6-12 bulan sudah cukup untuk berubah."
             
     if not skill_kurang_detail:
         for sk in result.get("skill_kurang", []):

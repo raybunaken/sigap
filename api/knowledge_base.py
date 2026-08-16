@@ -1,5 +1,5 @@
 """
-SIGAP — Knowledge Base v2
+SIGAP - Knowledge Base v2
 Improvements berdasarkan review:
 1. Gap analysis eksplisit di system prompt
 2. Mapping skill → kursus konsisten via tag
@@ -22,9 +22,9 @@ PEKERJAAN_DATABASE = {
         "skill_advanced": ["Predictive Modeling", "Big Data Analytics"],
         "soft_skill":  ["Analitis", "Komunikasi", "Problem Solving", "Presentasi"],
         "tools":       ["Excel", "SQL Server", "Tableau", "Power BI"],
-        "sertifikasi": ["Google Data Analytics (Coursera — audit gratis)", "Microsoft Power BI Data Analyst (Microsoft Learn)"],
+        "sertifikasi": ["Google Data Analytics (Coursera - audit gratis)", "Microsoft Power BI Data Analyst (Microsoft Learn)"],
         "lokasi":      ["Jakarta", "Bandung", "Surabaya", "Remote"],
-        "growth":      "Volume data korporasi Indonesia tumbuh pesat — demand visualisasi dan analisis taktis sangat tinggi",
+        "growth":      "Volume data korporasi Indonesia tumbuh pesat - demand visualisasi dan analisis taktis sangat tinggi",
         "skill_tags":  ["sql", "python", "excel", "tableau", "power bi", "data visualization", "statistical analysis"],
     },
     "Data Scientist": {
@@ -38,7 +38,7 @@ PEKERJAAN_DATABASE = {
         "skill_advanced": ["Generative AI", "MLOps"],
         "soft_skill":  ["Critical Thinking", "Problem Solving", "Communication", "Business Understanding"],
         "tools":       ["Jupyter Notebook", "TensorFlow", "Scikit-Learn", "SQL"],
-        "sertifikasi": ["IBM Data Science Professional Certificate (Coursera — audit gratis)", "DeepLearning.AI TensorFlow Developer"],
+        "sertifikasi": ["IBM Data Science Professional Certificate (Coursera - audit gratis)", "DeepLearning.AI TensorFlow Developer"],
         "lokasi":      ["Jakarta", "Tangerang", "Bandung", "Remote"],
         "growth":      "Model prediktif untuk fintech dan e-commerce Indonesia memacu demand Data Scientist yang bisa deploy ke production",
         "skill_tags":  ["python", "machine learning", "statistics", "sql", "data wrangling", "deep learning"],
@@ -54,9 +54,9 @@ PEKERJAAN_DATABASE = {
         "skill_advanced": ["Distributed Systems", "Data Lakehouse Architecture"],
         "soft_skill":  ["Logical Thinking", "Problem Solving", "Attention to Detail", "Collaboration"],
         "tools":       ["PostgreSQL", "Apache Airflow", "Google BigQuery", "Git"],
-        "sertifikasi": ["Google Professional Data Engineer (Coursera — audit gratis)", "AWS Certified Data Engineer Associate"],
+        "sertifikasi": ["Google Professional Data Engineer (Coursera - audit gratis)", "AWS Certified Data Engineer Associate"],
         "lokasi":      ["Jakarta", "Surabaya", "Bandung", "Remote"],
-        "growth":      "Korporasi dan startup Indonesia beralih ke arsitektur data modern — fondasi pipeline yang scalable jadi prioritas",
+        "growth":      "Korporasi dan startup Indonesia beralih ke arsitektur data modern - fondasi pipeline yang scalable jadi prioritas",
         "skill_tags":  ["sql", "python", "etl", "data pipeline", "cloud computing", "data warehousing"],
     },
     "Machine Learning Engineer": {
@@ -86,9 +86,9 @@ PEKERJAAN_DATABASE = {
         "skill_advanced": ["Microservices Architecture", "System Design"],
         "soft_skill":  ["Logical Thinking", "Problem Solving", "Collaboration", "Debugging Mindset"],
         "tools":       ["VS Code", "Postman", "PostgreSQL", "GitHub"],
-        "sertifikasi": ["Belajar Membuat Back-End Pemula (Dicoding — Gratis)", "AWS Certified Developer Associate"],
+        "sertifikasi": ["Belajar Membuat Back-End Pemula (Dicoding - Gratis)", "AWS Certified Developer Associate"],
         "lokasi":      ["Jakarta", "Bandung", "Yogyakarta", "Remote"],
-        "growth":      "Hampir semua platform digital butuh backend solid — transisi ke microservices dan API-first terus memperluas demand",
+        "growth":      "Hampir semua platform digital butuh backend solid - transisi ke microservices dan API-first terus memperluas demand",
         "skill_tags":  ["node.js", "python", "sql", "git", "restful api", "docker", "backend"],
     },
     "Frontend Developer": {
@@ -102,7 +102,7 @@ PEKERJAAN_DATABASE = {
         "skill_advanced": ["Web Performance Optimization", "Design Systems"],
         "soft_skill":  ["Attention to Detail", "Communication", "Empathy for Users", "Creativity"],
         "tools":       ["VS Code", "GitHub", "Figma", "NPM"],
-        "sertifikasi": ["Belajar Dasar Pemrograman Web (Dicoding — Gratis)", "Meta Front-End Developer (Coursera — audit gratis)"],
+        "sertifikasi": ["Belajar Dasar Pemrograman Web (Dicoding - Gratis)", "Meta Front-End Developer (Coursera - audit gratis)"],
         "lokasi":      ["Jakarta", "Bandung", "Surabaya", "Remote"],
         "growth":      "Persaingan UX tinggi antar web-app mendorong demand Frontend Developer yang bisa buat interface mulus dan interaktif",
         "skill_tags":  ["html", "css", "javascript", "react.js", "git", "frontend", "react"],
@@ -118,9 +118,9 @@ PEKERJAAN_DATABASE = {
         "skill_advanced": ["System Design", "CI CD Implementation"],
         "soft_skill":  ["Problem Solving", "Multi-tasking", "Communication", "Adaptability"],
         "tools":       ["VS Code", "GitHub", "Postman", "Docker"],
-        "sertifikasi": ["Dicoding Full-Stack Developer Path (Dicoding — Gratis)", "Meta Back-End Developer (Coursera — audit gratis)"],
+        "sertifikasi": ["Dicoding Full-Stack Developer Path (Dicoding - Gratis)", "Meta Back-End Developer (Coursera - audit gratis)"],
         "lokasi":      ["Jakarta", "Bandung", "Yogyakarta", "Remote"],
-        "growth":      "Startup menengah-kecil sangat butuh Full Stack Developer karena efisiensi tim IT — satu orang kuasai frontend dan backend",
+        "growth":      "Startup menengah-kecil sangat butuh Full Stack Developer karena efisiensi tim IT - satu orang kuasai frontend dan backend",
         "skill_tags":  ["javascript", "node.js", "react.js", "sql", "git", "web development", "react"],
     },
     "Mobile Developer": {
@@ -134,7 +134,7 @@ PEKERJAAN_DATABASE = {
         "skill_advanced": ["App Store Publishing", "Performance Tuning"],
         "soft_skill":  ["User-centric Mindset", "Problem Solving", "Detail Orientation", "Collaboration"],
         "tools":       ["Android Studio", "VS Code", "Flutter SDK", "Git"],
-        "sertifikasi": ["Flutter Developer (Dicoding — Gratis)", "Google Associate Android Developer"],
+        "sertifikasi": ["Flutter Developer (Dicoding - Gratis)", "Google Associate Android Developer"],
         "lokasi":      ["Jakarta", "Bandung", "Surabaya", "Remote"],
         "growth":      "Penetrasi smartphone tinggi di Indonesia menuntut bisnis punya mobile app yang cepat, andal, dan ramah pengguna",
         "skill_tags":  ["flutter", "dart", "git", "mobile development", "restful api", "firebase"],
@@ -150,9 +150,9 @@ PEKERJAAN_DATABASE = {
         "skill_advanced": ["CI CD Pipeline Integration", "Performance Testing Automation"],
         "soft_skill":  ["Analytical Mindset", "Attention to Detail", "Clear Communication", "Patience"],
         "tools":       ["Jira", "Postman", "Selenium", "Git"],
-        "sertifikasi": ["ISTQB Certified Tester Foundation Level", "freeCodeCamp Quality Assurance (freeCodeCamp — Gratis)"],
+        "sertifikasi": ["ISTQB Certified Tester Foundation Level", "freeCodeCamp Quality Assurance (freeCodeCamp - Gratis)"],
         "lokasi":      ["Jakarta", "Bandung", "Yogyakarta", "Remote"],
-        "growth":      "Standar kualitas software makin tinggi — tim developer adopsi automated testing sejak awal rilis",
+        "growth":      "Standar kualitas software makin tinggi - tim developer adopsi automated testing sejak awal rilis",
         "skill_tags":  ["manual testing", "test case", "bug tracking", "postman", "git", "sql", "automation testing"],
     },
     "Cloud Engineer": {
@@ -166,9 +166,9 @@ PEKERJAAN_DATABASE = {
         "skill_advanced": ["Multi-cloud Architecture", "FinOps"],
         "soft_skill":  ["Problem Solving", "Continuous Learning", "Teamwork", "Analytical Thinking"],
         "tools":       ["AWS Console", "Linux Terminal", "Docker", "Terraform"],
-        "sertifikasi": ["AWS Cloud Practitioner (AWS Skill Builder — Gratis)", "Microsoft Azure Fundamentals (Microsoft Learn — Gratis)"],
+        "sertifikasi": ["AWS Cloud Practitioner (AWS Skill Builder - Gratis)", "Microsoft Azure Fundamentals (Microsoft Learn - Gratis)"],
         "lokasi":      ["Jakarta", "Bandung", "Tangerang", "Remote"],
-        "growth":      "Adopsi cloud masif di sektor finansial dan korporat Indonesia — demand Cloud Engineer meningkat pesat",
+        "growth":      "Adopsi cloud masif di sektor finansial dan korporat Indonesia - demand Cloud Engineer meningkat pesat",
         "skill_tags":  ["cloud computing", "linux", "aws", "docker", "networking", "cloud security"],
     },
     "DevOps Engineer": {
@@ -182,9 +182,9 @@ PEKERJAAN_DATABASE = {
         "skill_advanced": ["DevSecOps Integration", "Site Reliability Engineering"],
         "soft_skill":  ["Collaboration", "Problem Solving", "System Thinking", "Agility"],
         "tools":       ["Docker", "Jenkins", "Kubernetes", "GitHub Actions"],
-        "sertifikasi": ["AWS Certified DevOps Engineer (AWS)", "Belajar Dasar Git (Dicoding — Gratis)"],
+        "sertifikasi": ["AWS Certified DevOps Engineer (AWS)", "Belajar Dasar Git (Dicoding - Gratis)"],
         "lokasi":      ["Jakarta", "Bandung", "Yogyakarta", "Remote"],
-        "growth":      "Siklus rilis produk makin cepat — korporasi teknologi adopsi DevOps untuk satukan dev dan ops secara otomatis",
+        "growth":      "Siklus rilis produk makin cepat - korporasi teknologi adopsi DevOps untuk satukan dev dan ops secara otomatis",
         "skill_tags":  ["docker", "devops", "cloud computing", "git", "linux", "ci cd", "kubernetes"],
     },
     "Cybersecurity Analyst": {
@@ -198,9 +198,9 @@ PEKERJAAN_DATABASE = {
         "skill_advanced": ["Security Architecture", "Advanced Forensic Analysis"],
         "soft_skill":  ["Attention to Detail", "Analytical Thinking", "Ethical Mindset", "Communication"],
         "tools":       ["Wireshark", "Nmap", "Splunk", "Kali Linux"],
-        "sertifikasi": ["Foundations of Cybersecurity (Coursera — audit gratis)", "CompTIA Security+"],
+        "sertifikasi": ["Foundations of Cybersecurity (Coursera - audit gratis)", "CompTIA Security+"],
         "lokasi":      ["Jakarta", "Surabaya", "Tangerang", "Remote"],
-        "growth":      "Insiden kebocoran data nasional memicu kesadaran regulasi perlindungan data — tenaga siber makin langka dan mahal",
+        "growth":      "Insiden kebocoran data nasional memicu kesadaran regulasi perlindungan data - tenaga siber makin langka dan mahal",
         "skill_tags":  ["cybersecurity", "linux", "networking", "network security", "wireshark", "vulnerability assessment"],
     },
     "IT Support": {
@@ -214,7 +214,7 @@ PEKERJAAN_DATABASE = {
         "skill_advanced": ["Network Administration", "IT Infrastructure Management"],
         "soft_skill":  ["Patience", "Communication", "Problem Solving", "Time Management"],
         "tools":       ["Windows Server", "Active Directory", "Jira Service Desk", "TeamViewer"],
-        "sertifikasi": ["Google IT Support Professional (Coursera — audit gratis)", "CompTIA A+"],
+        "sertifikasi": ["Google IT Support Professional (Coursera - audit gratis)", "CompTIA A+"],
         "lokasi":      ["Jakarta", "Bandung", "Surabaya", "Medan"],
         "growth":      "Setiap instansi dan perusahaan butuh IT Support harian untuk menjaga stabilitas infrastruktur perkantoran",
         "skill_tags":  ["it support", "networking", "troubleshooting", "active directory", "hardware", "operating systems"],
@@ -230,7 +230,7 @@ PEKERJAAN_DATABASE = {
         "skill_advanced": ["Design Leadership", "Conversion Rate Optimization"],
         "soft_skill":  ["Empathy", "Collaboration", "Communication", "Critical Thinking"],
         "tools":       ["Figma", "Adobe XD", "Miro", "Maze"],
-        "sertifikasi": ["Google UX Design (Coursera — audit gratis)", "Interaction Design Foundation Certificate"],
+        "sertifikasi": ["Google UX Design (Coursera - audit gratis)", "Interaction Design Foundation Certificate"],
         "lokasi":      ["Jakarta", "Bandung", "Yogyakarta", "Remote"],
         "growth":      "Bisnis digital Indonesia sadar UX produk berkorelasi langsung dengan retensi user dan kesuksesan transaksi",
         "skill_tags":  ["figma", "user research", "wireframing", "ui prototyping", "usability testing", "ui ux"],
@@ -246,7 +246,7 @@ PEKERJAAN_DATABASE = {
         "skill_advanced": ["Product Strategy", "Growth Hacking"],
         "soft_skill":  ["Leadership", "Stakeholder Management", "Strategic Thinking", "Decision Making"],
         "tools":       ["Jira", "Confluence", "Mixpanel", "Figma"],
-        "sertifikasi": ["Google Project Management (Coursera — audit gratis)", "Professional Scrum Product Owner (Scrum.org)"],
+        "sertifikasi": ["Google Project Management (Coursera - audit gratis)", "Professional Scrum Product Owner (Scrum.org)"],
         "lokasi":      ["Jakarta", "Tangerang", "Bandung", "Remote"],
         "growth":      "Kebutuhan menjembatani visi bisnis, UX, dan tim developer membuat PM krusial bagi keberlanjutan produk digital",
         "skill_tags":  ["product management", "agile", "market research", "data analysis", "jira", "product roadmap"],
@@ -262,7 +262,7 @@ PEKERJAAN_DATABASE = {
         "skill_advanced": ["Creative Direction", "Brand Identity Strategy"],
         "soft_skill":  ["Creativity", "Time Management", "Receiving Criticism", "Collaboration"],
         "tools":       ["Adobe Photoshop", "Adobe Illustrator", "Canva", "Figma"],
-        "sertifikasi": ["Desain Grafis Komunikasi (Skillhub Kemnaker — Gratis)", "Adobe Certified Professional"],
+        "sertifikasi": ["Desain Grafis Komunikasi (Skillhub Kemnaker - Gratis)", "Adobe Certified Professional"],
         "lokasi":      ["Jakarta", "Bandung", "Surabaya", "Remote"],
         "growth":      "Konten visual masif untuk pemasaran digital membuat Graphic Designer selalu dicari semua sektor industri",
         "skill_tags":  ["graphic design", "canva", "photoshop", "figma", "branding", "adobe illustrator", "typography"],
@@ -278,7 +278,7 @@ PEKERJAAN_DATABASE = {
         "skill_advanced": ["Enterprise Architecture", "Strategic Business Planning"],
         "soft_skill":  ["Analytical Thinking", "Stakeholder Management", "Problem Solving", "Communication"],
         "tools":       ["Microsoft Excel", "Miro", "Jira", "Visio"],
-        "sertifikasi": ["Business Analysis Foundations (Coursera — audit gratis)", "Agile with Atlassian Jira (Coursera — audit gratis)"],
+        "sertifikasi": ["Business Analysis Foundations (Coursera - audit gratis)", "Agile with Atlassian Jira (Coursera - audit gratis)"],
         "lokasi":      ["Jakarta", "Surabaya", "Tangerang", "Remote"],
         "growth":      "Transformasi digital instansi lama dorong re-engineering proses bisnis tradisional agar lebih lincah dan hemat biaya",
         "skill_tags":  ["business analysis", "excel", "agile", "sql", "requirements gathering", "data analysis"],
@@ -294,7 +294,7 @@ PEKERJAAN_DATABASE = {
         "skill_advanced": ["Microservices System Design", "IT Governance"],
         "soft_skill":  ["Analytical Thinking", "Communication", "Bridge Builder", "Problem Solving"],
         "tools":       ["Draw.io", "Postman", "Enterprise Architect", "SQL Developer"],
-        "sertifikasi": ["System Analysis and Design (Coursera — audit gratis)", "CompTIA IT Fundamentals"],
+        "sertifikasi": ["System Analysis and Design (Coursera - audit gratis)", "CompTIA IT Fundamentals"],
         "lokasi":      ["Jakarta", "Bandung", "Surabaya", "Remote"],
         "growth":      "Menerjemahkan kebutuhan bisnis ke spesifikasi sistem IT yang presisi adalah jembatan krusial dalam siklus software",
         "skill_tags":  ["system analyst", "uml", "database", "sql", "api design", "system architecture"],
@@ -310,9 +310,9 @@ PEKERJAAN_DATABASE = {
         "skill_advanced": ["M&A Valuation", "Treasury Management"],
         "soft_skill":  ["Numerical Accuracy", "Analytical Thinking", "Ethics", "Communication"],
         "tools":       ["Microsoft Excel", "Power BI", "Bloomberg Terminal", "PowerPoint"],
-        "sertifikasi": ["Financial Markets (Coursera Yale — audit gratis)", "CFI Financial Modeling Basics (CFI — Gratis)"],
+        "sertifikasi": ["Financial Markets (Coursera Yale - audit gratis)", "CFI Financial Modeling Basics (CFI - Gratis)"],
         "lokasi":      ["Jakarta", "Surabaya", "Tangerang", "Remote"],
-        "growth":      "Ketidakpastian ekonomi global buat perusahaan Indonesia makin ketat alokasi modal — analis keuangan makin dicari",
+        "growth":      "Ketidakpastian ekonomi global buat perusahaan Indonesia makin ketat alokasi modal - analis keuangan makin dicari",
         "skill_tags":  ["financial modeling", "excel", "corporate finance", "power bi", "financial analysis", "budgeting"],
     },
     "Digital Marketing": {
@@ -326,9 +326,9 @@ PEKERJAAN_DATABASE = {
         "skill_advanced": ["Marketing Automation", "Growth Hacking Analytics"],
         "soft_skill":  ["Creativity", "Data Literacy", "Communication", "Adaptability"],
         "tools":       ["Google Analytics", "Meta Ads Manager", "HubSpot", "Mailchimp"],
-        "sertifikasi": ["HubSpot Digital Marketing (HubSpot Academy — Gratis)", "Google Ads Certification (Google Skillshop — Gratis)"],
+        "sertifikasi": ["HubSpot Digital Marketing (HubSpot Academy - Gratis)", "Google Ads Certification (Google Skillshop - Gratis)"],
         "lokasi":      ["Jakarta", "Bandung", "Surabaya", "Remote"],
-        "growth":      "Pelaku usaha Indonesia pindah penuh ke online — digital marketing jadi jantung pertumbuhan omset bisnis",
+        "growth":      "Pelaku usaha Indonesia pindah penuh ke online - digital marketing jadi jantung pertumbuhan omset bisnis",
         "skill_tags":  ["digital marketing", "seo", "social media", "copywriting", "google analytics", "email marketing"],
     },
     "Social Media Specialist": {
@@ -342,9 +342,9 @@ PEKERJAAN_DATABASE = {
         "skill_advanced": ["Social CRM Integration", "Brand Crisis Management"],
         "soft_skill":  ["Creativity", "Empathy", "Time Management", "Adaptability"],
         "tools":       ["Meta Business Suite", "TikTok Business Suite", "Canva", "CapCut"],
-        "sertifikasi": ["Introduction to Social Media Marketing (Coursera Meta — audit gratis)", "HubSpot Social Media Marketing (HubSpot — Gratis)"],
+        "sertifikasi": ["Introduction to Social Media Marketing (Coursera Meta - audit gratis)", "HubSpot Social Media Marketing (HubSpot - Gratis)"],
         "lokasi":      ["Jakarta", "Bandung", "Yogyakarta", "Remote"],
-        "growth":      "Sosmed Indonesia dinamis sebagai saluran utama interaksi brand-konsumen — specialist yang bisa analisis data sangat dicari",
+        "growth":      "Sosmed Indonesia dinamis sebagai saluran utama interaksi brand-konsumen - specialist yang bisa analisis data sangat dicari",
         "skill_tags":  ["social media", "content creation", "canva", "copywriting", "instagram", "tiktok", "social media analytics"],
     },
     "Content Creator": {
@@ -358,7 +358,7 @@ PEKERJAAN_DATABASE = {
         "skill_advanced": ["Multi-platform Brand Monetization", "Creative Campaign Management"],
         "soft_skill":  ["Creativity", "Confidence", "Consistency", "Time Management"],
         "tools":       ["CapCut", "Premiere Pro", "Canva", "TikTok"],
-        "sertifikasi": ["HubSpot Content Marketing (HubSpot Academy — Gratis)", "Mengoperasikan Media Sosial (Skillhub Kemnaker — Gratis)"],
+        "sertifikasi": ["HubSpot Content Marketing (HubSpot Academy - Gratis)", "Mengoperasikan Media Sosial (Skillhub Kemnaker - Gratis)"],
         "lokasi":      ["Jakarta", "Bandung", "Yogyakarta", "Remote"],
         "growth":      "Tren video pendek TikTok dan Reels memicu ledakan kebutuhan kreator konten kreatif dari brand FMCG hingga startup",
         "skill_tags":  ["content creation", "video editing", "canva", "content planning", "script writing", "capcut"],
@@ -374,7 +374,7 @@ PEKERJAAN_DATABASE = {
         "skill_advanced": ["SEO Automation Scripts", "Core Update Recovery"],
         "soft_skill":  ["Analytical Thinking", "Patience", "Continuous Learning", "Communication"],
         "tools":       ["Google Search Console", "Ahrefs", "Google Analytics", "Screaming Frog"],
-        "sertifikasi": ["SEO Certification (HubSpot Academy — Gratis)", "SEO Specialist Dasar (Skillhub Kemnaker — Gratis)"],
+        "sertifikasi": ["SEO Certification (HubSpot Academy - Gratis)", "SEO Specialist Dasar (Skillhub Kemnaker - Gratis)"],
         "lokasi":      ["Jakarta", "Bandung", "Surabaya", "Remote"],
         "growth":      "Traffic organik gratis dari search engine tetap strategi jangka panjang utama startup dan media online Indonesia",
         "skill_tags":  ["seo", "keyword research", "google analytics", "on-page optimization", "technical seo", "link building"],
@@ -390,7 +390,7 @@ PEKERJAAN_DATABASE = {
         "skill_advanced": ["Creative Campaign Ideation", "Conversion Rate Copywriting"],
         "soft_skill":  ["Empathy", "Creativity", "Attention to Detail", "Receptive to Feedback"],
         "tools":       ["Google Docs", "Grammarly", "Canva", "Notion"],
-        "sertifikasi": ["Copywriting untuk Pemula (Skillhub Kemnaker — Gratis)", "HubSpot Content Marketing (HubSpot Academy — Gratis)"],
+        "sertifikasi": ["Copywriting untuk Pemula (Skillhub Kemnaker - Gratis)", "HubSpot Content Marketing (HubSpot Academy - Gratis)"],
         "lokasi":      ["Jakarta", "Bandung", "Surabaya", "Remote"],
         "growth":      "Di era distraksi digital, kemampuan tulis pesan persuasif yang picu konversi pembeli adalah aset emas tim marketing",
         "skill_tags":  ["copywriting", "seo writing", "content marketing", "digital marketing", "persuasive writing"],
@@ -406,7 +406,7 @@ PEKERJAAN_DATABASE = {
         "skill_advanced": ["E-Commerce Marketing Strategy", "Supply Chain Analytics"],
         "soft_skill":  ["Communication", "Accuracy", "Stress Tolerance", "Time Management"],
         "tools":       ["Shopee Seller Center", "Tokopedia Seller", "Microsoft Excel", "Canva"],
-        "sertifikasi": ["Administrasi E-Commerce (Skillhub Kemnaker — Gratis)", "Learn E-Commerce Marketing (HubSpot Academy — Gratis)"],
+        "sertifikasi": ["Administrasi E-Commerce (Skillhub Kemnaker - Gratis)", "Learn E-Commerce Marketing (HubSpot Academy - Gratis)"],
         "lokasi":      ["Jakarta", "Surabaya", "Bandung", "Tangerang"],
         "growth":      "Ribuan brand lokal baru di ekosistem belanja online Indonesia butuh admin handal untuk kelola operasional toko digital",
         "skill_tags":  ["e-commerce", "shopee", "tokopedia", "customer service", "excel", "product listing", "inventory"],
@@ -475,34 +475,34 @@ KURSUS_GRATIS = [
 # ── ROADMAP ────────────────────────────────────────────────────────────────
 ROADMAP = {
     "Data Analyst": [
-        {"fase": "Bulan 1-2", "nama": "Fondasi",     "skill": ["Excel", "SQL Dasar", "Statistik Dasar"], "kursus": "SQL untuk Pemula (Dicoding — Gratis)",          "milestone": "Bisa query database dan buat laporan sederhana"},
-        {"fase": "Bulan 3-4", "nama": "Core Skills", "skill": ["Python Pandas", "Visualisasi Data"],     "kursus": "Google Data Analytics (Coursera — audit gratis atau Skillhub Kemnaker)",     "milestone": "Bisa analisis dataset dan buat dashboard interaktif"},
-        {"fase": "Bulan 5-6", "nama": "Portofolio",  "skill": ["Tableau/Power BI", "Kaggle Project"],    "kursus": "Microsoft Power BI (Microsoft Learn — Gratis)", "milestone": "3 project portofolio di GitHub — ini yang paling penting!"},
+        {"fase": "Bulan 1-2", "nama": "Fondasi",     "skill": ["Excel", "SQL Dasar", "Statistik Dasar"], "kursus": "SQL untuk Pemula (Dicoding - Gratis)",          "milestone": "Bisa query database dan buat laporan sederhana"},
+        {"fase": "Bulan 3-4", "nama": "Core Skills", "skill": ["Python Pandas", "Visualisasi Data"],     "kursus": "Google Data Analytics (Coursera - audit gratis atau Skillhub Kemnaker)",     "milestone": "Bisa analisis dataset dan buat dashboard interaktif"},
+        {"fase": "Bulan 5-6", "nama": "Portofolio",  "skill": ["Tableau/Power BI", "Kaggle Project"],    "kursus": "Microsoft Power BI (Microsoft Learn - Gratis)", "milestone": "3 project portofolio di GitHub - ini yang paling penting!"},
     ],
     "Data Scientist": [
-        {"fase": "Bulan 1-3", "nama": "Fondasi",       "skill": ["Python", "Statistik & Math", "SQL"],    "kursus": "Belajar Python (Dicoding — Gratis)",                 "milestone": "Paham konsep ML dan bisa implementasi model dasar"},
-        {"fase": "Bulan 4-6", "nama": "Machine Learning","skill": ["Scikit-learn", "Feature Engineering"], "kursus": "Machine Learning Terapan (Dicoding — Gratis)",       "milestone": "Selesaikan 2-3 Kaggle competition"},
-        {"fase": "Bulan 7-9", "nama": "Spesialisasi",  "skill": ["Deep Learning", "NLP atau CV"],         "kursus": "Deep Learning Specialization (Coursera — audit gratis)","milestone": "Project end-to-end yang di-deploy online"},
+        {"fase": "Bulan 1-3", "nama": "Fondasi",       "skill": ["Python", "Statistik & Math", "SQL"],    "kursus": "Belajar Python (Dicoding - Gratis)",                 "milestone": "Paham konsep ML dan bisa implementasi model dasar"},
+        {"fase": "Bulan 4-6", "nama": "Machine Learning","skill": ["Scikit-learn", "Feature Engineering"], "kursus": "Machine Learning Terapan (Dicoding - Gratis)",       "milestone": "Selesaikan 2-3 Kaggle competition"},
+        {"fase": "Bulan 7-9", "nama": "Spesialisasi",  "skill": ["Deep Learning", "NLP atau CV"],         "kursus": "Deep Learning Specialization (Coursera - audit gratis)","milestone": "Project end-to-end yang di-deploy online"},
     ],
     "Backend Developer": [
-        {"fase": "Bulan 1-2", "nama": "Fondasi",    "skill": ["Python/Node.js", "Git", "SQL"],               "kursus": "Belajar Python (Dicoding — Gratis)",         "milestone": "Bisa buat REST API sederhana"},
-        {"fase": "Bulan 3-4", "nama": "Framework",  "skill": ["FastAPI/Express", "PostgreSQL", "JWT Auth"],  "kursus": "Backend Developer (Dicoding — Gratis)",     "milestone": "CRUD API lengkap dengan autentikasi"},
-        {"fase": "Bulan 5-6", "nama": "Production", "skill": ["Docker", "Cloud Deployment", "Testing"],      "kursus": "AWS Cloud Practitioner (AWS Skill Builder — Gratis)", "milestone": "Deploy aplikasi ke production"},
+        {"fase": "Bulan 1-2", "nama": "Fondasi",    "skill": ["Python/Node.js", "Git", "SQL"],               "kursus": "Belajar Python (Dicoding - Gratis)",         "milestone": "Bisa buat REST API sederhana"},
+        {"fase": "Bulan 3-4", "nama": "Framework",  "skill": ["FastAPI/Express", "PostgreSQL", "JWT Auth"],  "kursus": "Backend Developer (Dicoding - Gratis)",     "milestone": "CRUD API lengkap dengan autentikasi"},
+        {"fase": "Bulan 5-6", "nama": "Production", "skill": ["Docker", "Cloud Deployment", "Testing"],      "kursus": "AWS Cloud Practitioner (AWS Skill Builder - Gratis)", "milestone": "Deploy aplikasi ke production"},
     ],
     "Frontend Developer": [
-        {"fase": "Bulan 1-2", "nama": "Web Dasar", "skill": ["HTML5", "CSS3", "JavaScript ES6+"],     "kursus": "Frontend Developer (Dicoding — Gratis)", "milestone": "Rebuild halaman website dari nol"},
-        {"fase": "Bulan 3-4", "nama": "React",     "skill": ["React", "State Management", "API"],    "kursus": "React Developer (Dicoding — Gratis)",    "milestone": "Buat Single Page App yang connect ke API"},
-        {"fase": "Bulan 5-6", "nama": "Modern Stack","skill": ["TypeScript", "Next.js", "Testing"],  "kursus": "TypeScript (Microsoft Learn — Gratis)",  "milestone": "3 project di GitHub, deploy ke Vercel"},
+        {"fase": "Bulan 1-2", "nama": "Web Dasar", "skill": ["HTML5", "CSS3", "JavaScript ES6+"],     "kursus": "Frontend Developer (Dicoding - Gratis)", "milestone": "Rebuild halaman website dari nol"},
+        {"fase": "Bulan 3-4", "nama": "React",     "skill": ["React", "State Management", "API"],    "kursus": "React Developer (Dicoding - Gratis)",    "milestone": "Buat Single Page App yang connect ke API"},
+        {"fase": "Bulan 5-6", "nama": "Modern Stack","skill": ["TypeScript", "Next.js", "Testing"],  "kursus": "TypeScript (Microsoft Learn - Gratis)",  "milestone": "3 project di GitHub, deploy ke Vercel"},
     ],
     "UI/UX Designer": [
-        {"fase": "Bulan 1-2", "nama": "Fondasi Design", "skill": ["Figma", "Design Principles", "Typography"],   "kursus": "Google UX Design (Coursera — audit gratis)", "milestone": "Bisa buat wireframe dan mockup di Figma"},
+        {"fase": "Bulan 1-2", "nama": "Fondasi Design", "skill": ["Figma", "Design Principles", "Typography"],   "kursus": "Google UX Design (Coursera - audit gratis)", "milestone": "Bisa buat wireframe dan mockup di Figma"},
         {"fase": "Bulan 3-4", "nama": "UX Process",     "skill": ["User Research", "Usability Testing"],         "kursus": "Interaction Design Foundation (IDF)",  "milestone": "1 full UX case study dari research ke prototype"},
-        {"fase": "Bulan 5-6", "nama": "Portofolio",     "skill": ["Case Studies", "Portfolio Website"],           "kursus": "Behance + Dribbble Community",         "milestone": "3 case study di Behance — kualitas > kuantitas"},
+        {"fase": "Bulan 5-6", "nama": "Portofolio",     "skill": ["Case Studies", "Portfolio Website"],           "kursus": "Behance + Dribbble Community",         "milestone": "3 case study di Behance - kualitas > kuantitas"},
     ],
     "Mobile Developer": [
-        {"fase": "Bulan 1-2", "nama": "Fondasi",    "skill": ["Dart Dasar", "Flutter Widgets", "Git"],    "kursus": "Flutter Developer (Dicoding — Gratis)", "milestone": "Bisa buat UI sederhana dengan Flutter"},
+        {"fase": "Bulan 1-2", "nama": "Fondasi",    "skill": ["Dart Dasar", "Flutter Widgets", "Git"],    "kursus": "Flutter Developer (Dicoding - Gratis)", "milestone": "Bisa buat UI sederhana dengan Flutter"},
         {"fase": "Bulan 3-4", "nama": "Core Flutter","skill": ["State Management", "API Integration"],   "kursus": "Flutter Advanced (YouTube/dokumentasi)", "milestone": "App yang connect ke REST API"},
-        {"fase": "Bulan 5-6", "nama": "Production", "skill": ["Firebase", "App Store Submission"],        "kursus": "Firebase (dokumentasi resmi — Gratis)",  "milestone": "Publish 1 app ke Play Store"},
+        {"fase": "Bulan 5-6", "nama": "Production", "skill": ["Firebase", "App Store Submission"],        "kursus": "Firebase (dokumentasi resmi - Gratis)",  "milestone": "Publish 1 app ke Play Store"},
     ],
 }
 
@@ -514,12 +514,12 @@ STATISTIK = {
     "upah_sma":                "Rp 3,15 juta rata-rata (BPS Agustus 2025)",
     "upah_smk":                "Rp 3,26 juta rata-rata (BPS Agustus 2025)",
     "upah_sektor_tertinggi":   "Informasi & Komunikasi Rp 5,28 juta (BPS Agustus 2025)",
-    # BPS Sakernas Agustus 2024 — ketenagakerjaan
+    # BPS Sakernas Agustus 2024 - ketenagakerjaan
     "pengangguran_terbuka":    "7,47 juta (BPS Agustus 2024)",
     "tpt_agustus_2024":        "4,91% Tingkat Pengangguran Terbuka (BPS Agustus 2024)",
     "rata_lama_cari_kerja":    "6-12 bulan untuk fresh grad",
-    "sumber_gaji": "BPS Sakernas Agustus 2025, BRS No.103/11/Th.XXVIII, 5 November 2025 — https://www.bps.go.id",
-    "sumber_naker": "BPS Sakernas Agustus 2024, BRS No.64/11/Th.XXVII, 5 November 2024 — https://www.bps.go.id",
+    "sumber_gaji": "BPS Sakernas Agustus 2025, BRS No.103/11/Th.XXVIII, 5 November 2025 - https://www.bps.go.id",
+    "sumber_naker": "BPS Sakernas Agustus 2024, BRS No.64/11/Th.XXVII, 5 November 2024 - https://www.bps.go.id",
 }
 
 # ── UNIFIED SKILL SYNONYMS ─────────────────────────────────────────────
@@ -592,7 +592,7 @@ def skills_match(user_skill: str, target_skill: str) -> bool:
     if u in t or t in u:
         return True
 
-    # 3. Synonym match — cek apakah keduanya ada di grup sinonim yang sama
+    # 3. Synonym match - cek apakah keduanya ada di grup sinonim yang sama
     for canon, synonyms in SKILL_SYNONYMS.items():
         all_terms = [canon] + synonyms
         u_in = any(u == term or u in term or term in u for term in all_terms)
@@ -656,7 +656,7 @@ def get_system_prompt(profil: dict = None, lang: str = "id") -> str:
 
 === HASIL ANALISIS GAP (KONTEKS CHAT) ===
 Skill yang SUDAH dimiliki user: {', '.join(skill_list) if skill_list else 'belum ada'}
-Skill yang MASIH KURANG (ini yang harus jadi fokus chat): {', '.join(skill_kurang) if skill_kurang else 'tidak ada — sudah siap!'}
+Skill yang MASIH KURANG (ini yang harus jadi fokus chat): {', '.join(skill_kurang) if skill_kurang else 'tidak ada - sudah siap!'}
 
 INGAT: Saat menjawab pertanyaan apapun, selalu merujuk ke konteks di atas.
 Jangan sebut skill lain di luar yang kurang kecuali user minta lebih luas.
@@ -672,7 +672,7 @@ Jangan sebut skill lain di luar yang kurang kecuali user minta lebih luas.
             seen = set()
             for k in kursus_relevan:
                 if k['nama'] not in seen:
-                    kursus_str += f"- {k['nama']} ({k['platform']}) — {k['biaya']}\n"
+                    kursus_str += f"- {k['nama']} ({k['platform']}) - {k['biaya']}\n"
                     seen.add(k['nama'])
 
     lang_instruction = "CRITICAL: YOU MUST SPEAK AND RESPOND ENTIRELY IN ENGLISH. All your advice must be translated to English." if lang == "en" else "Jawablah dalam bahasa Indonesia yang ramah dan suportif."
@@ -708,24 +708,24 @@ Untuk analisis karir: mulai dengan penilaian jujur skill yang sudah dimiliki,
 lalu sebutkan 2-3 skill spesifik yang paling perlu dipelajari (pakai nama asli toolsnya),
 rekomendasikan 1-2 kursus gratis yang konkret, dan estimasi waktu realistis.
 
-JANGAN pakai header bold seperti "**Gap Utama:**" — tulis mengalir seperti ngobrol.
+JANGAN pakai header bold seperti "**Gap Utama:**" - tulis mengalir seperti ngobrol.
 Untuk pertanyaan casual/general → jawab natural, singkat, langsung.
 
 === PENGETAHUAN (SUMBER VALID) ===
-Data Gaji — BPS Sakernas Agustus 2025 (sumber resmi, verifiable):
+Data Gaji - BPS Sakernas Agustus 2025 (sumber resmi, verifiable):
 - Rata-rata upah nasional: Rp 3,33 juta/bulan
 - Lulusan S1/S2/S3: rata-rata Rp 4,80 juta/bulan
 - Lulusan Diploma: rata-rata Rp 4,50 juta/bulan
 - Sektor tertinggi: Informasi & Komunikasi Rp 5,28 juta
 - Artinya: fresh grad S1 IT bisa expect Rp 4-7 juta, bukan langsung Rp 10 juta+
 
-Data Ketenagakerjaan — BPS Sakernas Agustus 2024:
+Data Ketenagakerjaan - BPS Sakernas Agustus 2024:
 - TPT (Tingkat Pengangguran Terbuka): 4,91% = sekitar 7,47 juta orang
 - Sumber: https://www.bps.go.id
 
 Fakta karir Indonesia:
-- Dicoding adalah platform kursus tech Indonesia terbaik — GRATIS dan bersertifikat
-- Skillhub Kemnaker (skillhub.kemnaker.go.id) — e-training resmi gratis dari Kemnaker
+- Dicoding adalah platform kursus tech Indonesia terbaik - GRATIS dan bersertifikat
+- Skillhub Kemnaker (skillhub.kemnaker.go.id) - e-training resmi gratis dari Kemnaker
 - Coursera bisa diaudit gratis tanpa sertifikat
 - Soft skill (komunikasi, problem solving, teamwork) sama pentingnya dengan hard skill
 - Portofolio GitHub > sertifikat untuk fresh grad tech
@@ -734,10 +734,10 @@ Fakta karir Indonesia:
 === GAYA BAHASA ===
 - Ngobrol kayak temen senior yang peduli, bukan HR formal
 - Pakai "kamu" bukan "Anda"
-- Sebut tools dengan nama aslinya: "Hootsuite", "Buffer", "Canva", "Meta Business Suite" — BUKAN "alat bantu media sosial"
+- Sebut tools dengan nama aslinya: "Hootsuite", "Buffer", "Canva", "Meta Business Suite" - BUKAN "alat bantu media sosial"
 - Kalau ada istilah teknis, sebut langsung jangan diterjemahin aneh-aneh
 - Boleh pakai analogi yang relatable buat fresh grad
-- Jujur kalau memang butuh waktu lama — jangan terlalu hype
+- Jujur kalau memang butuh waktu lama - jangan terlalu hype
 - Max 3 paragraf, padat dan to the point
 - JANGAN gunakan format bold/italic berlebihan di jawaban casual
 - Hindari kalimat klise seperti: jangan khawatir, semangat terus, perjalanan seribu mil"""
@@ -745,33 +745,33 @@ Fakta karir Indonesia:
 # ── ROADMAP TAMBAHAN  ───────────────────────────
 _ROADMAP_EXTRA = {
     "Full Stack Developer": [
-        {"fase": "Bulan 1-2", "nama": "Fondasi Web", "skill": ["HTML", "CSS", "JavaScript ES6+", "Git"], "kursus": "Frontend Developer (Dicoding — Gratis)", "milestone": "Buat halaman web responsif dari nol"},
-        {"fase": "Bulan 3-4", "nama": "Backend + Database", "skill": ["Node.js/Python", "REST API", "SQL", "PostgreSQL"], "kursus": "Backend Developer (Dicoding — Gratis)", "milestone": "CRUD API lengkap yang terkoneksi ke frontend"},
-        {"fase": "Bulan 5-6", "nama": "Full Stack Project", "skill": ["React", "Docker", "Deploy ke Cloud"], "kursus": "AWS Cloud Practitioner (AWS Skill Builder — Gratis)", "milestone": "1 aplikasi full stack live di internet"},
+        {"fase": "Bulan 1-2", "nama": "Fondasi Web", "skill": ["HTML", "CSS", "JavaScript ES6+", "Git"], "kursus": "Frontend Developer (Dicoding - Gratis)", "milestone": "Buat halaman web responsif dari nol"},
+        {"fase": "Bulan 3-4", "nama": "Backend + Database", "skill": ["Node.js/Python", "REST API", "SQL", "PostgreSQL"], "kursus": "Backend Developer (Dicoding - Gratis)", "milestone": "CRUD API lengkap yang terkoneksi ke frontend"},
+        {"fase": "Bulan 5-6", "nama": "Full Stack Project", "skill": ["React", "Docker", "Deploy ke Cloud"], "kursus": "AWS Cloud Practitioner (AWS Skill Builder - Gratis)", "milestone": "1 aplikasi full stack live di internet"},
     ],
     "Data Engineer": [
-        {"fase": "Bulan 1-2", "nama": "Fondasi", "skill": ["Python", "SQL Advanced", "Linux Dasar"], "kursus": "Belajar Python (Dicoding — Gratis)", "milestone": "Bisa buat ETL pipeline sederhana"},
-        {"fase": "Bulan 3-4", "nama": "Data Pipeline", "skill": ["Apache Spark", "Airflow", "Cloud Storage"], "kursus": "GCP Professional Data Engineer (Coursera — Audit Gratis)", "milestone": "Pipeline otomatis yang jalan terjadwal"},
-        {"fase": "Bulan 5-6", "nama": "Production", "skill": ["dbt", "BigQuery/Redshift", "Data Warehouse"], "kursus": "dbt Fundamentals (dbt Learn — Gratis)", "milestone": "Data warehouse yang siap dipakai tim analyst"},
+        {"fase": "Bulan 1-2", "nama": "Fondasi", "skill": ["Python", "SQL Advanced", "Linux Dasar"], "kursus": "Belajar Python (Dicoding - Gratis)", "milestone": "Bisa buat ETL pipeline sederhana"},
+        {"fase": "Bulan 3-4", "nama": "Data Pipeline", "skill": ["Apache Spark", "Airflow", "Cloud Storage"], "kursus": "GCP Professional Data Engineer (Coursera - Audit Gratis)", "milestone": "Pipeline otomatis yang jalan terjadwal"},
+        {"fase": "Bulan 5-6", "nama": "Production", "skill": ["dbt", "BigQuery/Redshift", "Data Warehouse"], "kursus": "dbt Fundamentals (dbt Learn - Gratis)", "milestone": "Data warehouse yang siap dipakai tim analyst"},
     ],
     "Machine Learning Engineer": [
-        {"fase": "Bulan 1-3", "nama": "Fondasi ML", "skill": ["Python", "Scikit-learn", "SQL", "Git"], "kursus": "Machine Learning Terapan (Dicoding — Gratis)", "milestone": "Deploy model ML sederhana ke API"},
-        {"fase": "Bulan 4-6", "nama": "Deep Learning", "skill": ["TensorFlow/PyTorch", "Feature Engineering", "MLflow"], "kursus": "Deep Learning Specialization (Coursera — Audit Gratis)", "milestone": "Model DL yang tertrack dengan MLflow"},
+        {"fase": "Bulan 1-3", "nama": "Fondasi ML", "skill": ["Python", "Scikit-learn", "SQL", "Git"], "kursus": "Machine Learning Terapan (Dicoding - Gratis)", "milestone": "Deploy model ML sederhana ke API"},
+        {"fase": "Bulan 4-6", "nama": "Deep Learning", "skill": ["TensorFlow/PyTorch", "Feature Engineering", "MLflow"], "kursus": "Deep Learning Specialization (Coursera - Audit Gratis)", "milestone": "Model DL yang tertrack dengan MLflow"},
         {"fase": "Bulan 7-9", "nama": "MLOps", "skill": ["Docker", "FastAPI", "CI/CD untuk ML", "Cloud Deploy"], "kursus": "GCP ML Engineer (Coursera/Skillhub Kemnaker)", "milestone": "Model production yang auto-retrain"},
     ],
     "Cloud Engineer": [
-        {"fase": "Bulan 1-2", "nama": "Cloud Dasar", "skill": ["Linux", "Networking Dasar", "AWS/GCP Dasar"], "kursus": "AWS Cloud Practitioner (AWS Skill Builder — Gratis)", "milestone": "Deploy aplikasi sederhana ke cloud"},
-        {"fase": "Bulan 3-4", "nama": "Infrastructure", "skill": ["Docker", "Terraform", "IAM & Security"], "kursus": "HashiCorp Terraform Associate (Terraform Learn — Gratis)", "milestone": "Infra as Code yang reproducible"},
+        {"fase": "Bulan 1-2", "nama": "Cloud Dasar", "skill": ["Linux", "Networking Dasar", "AWS/GCP Dasar"], "kursus": "AWS Cloud Practitioner (AWS Skill Builder - Gratis)", "milestone": "Deploy aplikasi sederhana ke cloud"},
+        {"fase": "Bulan 3-4", "nama": "Infrastructure", "skill": ["Docker", "Terraform", "IAM & Security"], "kursus": "HashiCorp Terraform Associate (Terraform Learn - Gratis)", "milestone": "Infra as Code yang reproducible"},
         {"fase": "Bulan 5-6", "nama": "Advanced", "skill": ["Kubernetes", "Monitoring", "Cost Optimization"], "kursus": "CKA Preparation (killer.sh)", "milestone": "Certified & portofolio infra di GitHub"},
     ],
     "DevOps Engineer": [
-        {"fase": "Bulan 1-2", "nama": "Fondasi", "skill": ["Linux", "Git", "Bash Scripting", "Docker"], "kursus": "Linux & Bash (freeCodeCamp — Gratis)", "milestone": "Bisa automate task server dengan script"},
-        {"fase": "Bulan 3-4", "nama": "CI/CD", "skill": ["GitHub Actions", "Jenkins", "Docker Compose"], "kursus": "GitHub Actions (dokumentasi resmi — Gratis)", "milestone": "Pipeline CI/CD yang jalan otomatis"},
+        {"fase": "Bulan 1-2", "nama": "Fondasi", "skill": ["Linux", "Git", "Bash Scripting", "Docker"], "kursus": "Linux & Bash (freeCodeCamp - Gratis)", "milestone": "Bisa automate task server dengan script"},
+        {"fase": "Bulan 3-4", "nama": "CI/CD", "skill": ["GitHub Actions", "Jenkins", "Docker Compose"], "kursus": "GitHub Actions (dokumentasi resmi - Gratis)", "milestone": "Pipeline CI/CD yang jalan otomatis"},
         {"fase": "Bulan 5-6", "nama": "Production", "skill": ["Kubernetes", "Monitoring (Prometheus/Grafana)", "Cloud"], "kursus": "AWS SysOps Administrator (Skillhub Kemnaker)", "milestone": "Cluster K8s yang termanage dengan baik"},
     ],
     "Cybersecurity Analyst": [
-        {"fase": "Bulan 1-2", "nama": "Fondasi", "skill": ["Linux", "Networking", "Python Scripting"], "kursus": "TryHackMe Free Path (tryhackme.com — Gratis)", "milestone": "Bisa analisis traffic jaringan dasar"},
-        {"fase": "Bulan 3-4", "nama": "Security Tools", "skill": ["Wireshark", "Nmap", "Kali Linux", "OWASP Top 10"], "kursus": "CompTIA Security+ Prep (Professor Messer — Gratis)", "milestone": "Bisa identifikasi vulnerability dasar"},
+        {"fase": "Bulan 1-2", "nama": "Fondasi", "skill": ["Linux", "Networking", "Python Scripting"], "kursus": "TryHackMe Free Path (tryhackme.com - Gratis)", "milestone": "Bisa analisis traffic jaringan dasar"},
+        {"fase": "Bulan 3-4", "nama": "Security Tools", "skill": ["Wireshark", "Nmap", "Kali Linux", "OWASP Top 10"], "kursus": "CompTIA Security+ Prep (Professor Messer - Gratis)", "milestone": "Bisa identifikasi vulnerability dasar"},
         {"fase": "Bulan 5-6", "nama": "Sertifikasi", "skill": ["Penetration Testing", "Incident Response", "SIEM"], "kursus": "CompTIA Security+ (exam)", "milestone": "Certified + 1 CTF writeup di blog"},
     ],
     "QA Engineer": [
@@ -780,64 +780,64 @@ _ROADMAP_EXTRA = {
         {"fase": "Bulan 5-6", "nama": "Advanced", "skill": ["Performance Testing (JMeter)", "BDD", "Test Strategy"], "kursus": "ISTQB Foundation Exam", "milestone": "ISTQB certified + portofolio automation"},
     ],
     "Business Analyst": [
-        {"fase": "Bulan 1-2", "nama": "Fondasi", "skill": ["Excel Advanced", "SQL Dasar", "Requirement Gathering"], "kursus": "Google Data Analytics (Coursera — Audit Gratis)", "milestone": "Bisa buat BRD (Business Requirements Document)"},
-        {"fase": "Bulan 3-4", "nama": "Data & Process", "skill": ["Power BI/Tableau", "BPMN", "User Story"], "kursus": "Microsoft Power BI (Microsoft Learn — Gratis)", "milestone": "Dashboard bisnis yang bisa dipresentasikan ke stakeholder"},
-        {"fase": "Bulan 5-6", "nama": "Portofolio", "skill": ["Agile/Scrum", "Market Research", "Presentasi Data"], "kursus": "Professional Scrum Master (Scrum.org — trial gratis)", "milestone": "1 studi kasus analisis bisnis lengkap"},
+        {"fase": "Bulan 1-2", "nama": "Fondasi", "skill": ["Excel Advanced", "SQL Dasar", "Requirement Gathering"], "kursus": "Google Data Analytics (Coursera - Audit Gratis)", "milestone": "Bisa buat BRD (Business Requirements Document)"},
+        {"fase": "Bulan 3-4", "nama": "Data & Process", "skill": ["Power BI/Tableau", "BPMN", "User Story"], "kursus": "Microsoft Power BI (Microsoft Learn - Gratis)", "milestone": "Dashboard bisnis yang bisa dipresentasikan ke stakeholder"},
+        {"fase": "Bulan 5-6", "nama": "Portofolio", "skill": ["Agile/Scrum", "Market Research", "Presentasi Data"], "kursus": "Professional Scrum Master (Scrum.org - trial gratis)", "milestone": "1 studi kasus analisis bisnis lengkap"},
     ],
     "System Analyst": [
-        {"fase": "Bulan 1-2", "nama": "Fondasi", "skill": ["SQL", "UML Dasar", "SDLC", "Flowchart"], "kursus": "SQL untuk Pemula (Dicoding — Gratis)", "milestone": "Bisa buat ERD dan use case diagram"},
-        {"fase": "Bulan 3-4", "nama": "Analisis Sistem", "skill": ["Figma Dasar", "API Documentation", "Postman"], "kursus": "Google UX Design (Coursera — Audit Gratis)", "milestone": "SRS dokumen yang bisa dipakai developer"},
+        {"fase": "Bulan 1-2", "nama": "Fondasi", "skill": ["SQL", "UML Dasar", "SDLC", "Flowchart"], "kursus": "SQL untuk Pemula (Dicoding - Gratis)", "milestone": "Bisa buat ERD dan use case diagram"},
+        {"fase": "Bulan 3-4", "nama": "Analisis Sistem", "skill": ["Figma Dasar", "API Documentation", "Postman"], "kursus": "Google UX Design (Coursera - Audit Gratis)", "milestone": "SRS dokumen yang bisa dipakai developer"},
         {"fase": "Bulan 5-6", "nama": "Implementation", "skill": ["Agile/Scrum", "ITIL Dasar", "Enterprise Architecture"], "kursus": "ITIL Foundation (axelos.com)", "milestone": "1 proyek analisis sistem dari awal sampai dokumentasi"},
     ],
     "Product Manager": [
-        {"fase": "Bulan 1-2", "nama": "PM Mindset", "skill": ["Product Thinking", "User Research", "Competitor Analysis"], "kursus": "Google Project Management (Coursera — Audit Gratis)", "milestone": "Bisa buat PRD (Product Requirements Document)"},
-        {"fase": "Bulan 3-4", "nama": "Data & Design", "skill": ["SQL Dasar", "Figma Dasar", "A/B Testing", "Analytics"], "kursus": "SQL untuk Pemula (Dicoding — Gratis)", "milestone": "Analisis produk berbasis data yang konkret"},
+        {"fase": "Bulan 1-2", "nama": "PM Mindset", "skill": ["Product Thinking", "User Research", "Competitor Analysis"], "kursus": "Google Project Management (Coursera - Audit Gratis)", "milestone": "Bisa buat PRD (Product Requirements Document)"},
+        {"fase": "Bulan 3-4", "nama": "Data & Design", "skill": ["SQL Dasar", "Figma Dasar", "A/B Testing", "Analytics"], "kursus": "SQL untuk Pemula (Dicoding - Gratis)", "milestone": "Analisis produk berbasis data yang konkret"},
         {"fase": "Bulan 5-6", "nama": "Roadmap & Launch", "skill": ["Agile/Scrum", "OKR", "Go-to-Market Strategy"], "kursus": "Product School Free Resources (productschool.com)", "milestone": "1 product case study yang bisa dipresentasikan"},
     ],
     "Digital Marketing": [
-        {"fase": "Bulan 1-2", "nama": "Fondasi", "skill": ["Google Analytics", "SEO Dasar", "Content Planning"], "kursus": "Google Digital Marketing (Skillhub Kemnaker — Gratis)", "milestone": "Bisa buat dan eksekusi content calendar"},
-        {"fase": "Bulan 3-4", "nama": "Paid Ads", "skill": ["Google Ads", "Meta Ads", "Email Marketing"], "kursus": "Meta Blueprint (Meta — Gratis)", "milestone": "Campaign iklan pertama dengan ROAS positif"},
-        {"fase": "Bulan 5-6", "nama": "Data-Driven", "skill": ["Google Analytics 4", "A/B Testing", "Marketing Automation"], "kursus": "Google Analytics Certification (Google — Gratis)", "milestone": "Certified Google Analytics + laporan performa campaign"},
+        {"fase": "Bulan 1-2", "nama": "Fondasi", "skill": ["Google Analytics", "SEO Dasar", "Content Planning"], "kursus": "Google Digital Marketing (Skillhub Kemnaker - Gratis)", "milestone": "Bisa buat dan eksekusi content calendar"},
+        {"fase": "Bulan 3-4", "nama": "Paid Ads", "skill": ["Google Ads", "Meta Ads", "Email Marketing"], "kursus": "Meta Blueprint (Meta - Gratis)", "milestone": "Campaign iklan pertama dengan ROAS positif"},
+        {"fase": "Bulan 5-6", "nama": "Data-Driven", "skill": ["Google Analytics 4", "A/B Testing", "Marketing Automation"], "kursus": "Google Analytics Certification (Google - Gratis)", "milestone": "Certified Google Analytics + laporan performa campaign"},
     ],
     "Social Media Specialist": [
-        {"fase": "Bulan 1-2", "nama": "Fondasi", "skill": ["Canva", "Copywriting", "Content Planning", "Instagram/TikTok"], "kursus": "HubSpot Social Media Marketing (HubSpot — Gratis)", "milestone": "Buat konten plan 1 bulan + eksekusi"},
-        {"fase": "Bulan 3-4", "nama": "Analytics & Growth", "skill": ["Meta Business Suite", "Instagram Insights", "Hootsuite"], "kursus": "Meta Blueprint — Social Media Marketing (Meta — Gratis)", "milestone": "Analisis performa konten dan tumbuhkan followers organik"},
+        {"fase": "Bulan 1-2", "nama": "Fondasi", "skill": ["Canva", "Copywriting", "Content Planning", "Instagram/TikTok"], "kursus": "HubSpot Social Media Marketing (HubSpot - Gratis)", "milestone": "Buat konten plan 1 bulan + eksekusi"},
+        {"fase": "Bulan 3-4", "nama": "Analytics & Growth", "skill": ["Meta Business Suite", "Instagram Insights", "Hootsuite"], "kursus": "Meta Blueprint - Social Media Marketing (Meta - Gratis)", "milestone": "Analisis performa konten dan tumbuhkan followers organik"},
         {"fase": "Bulan 5-6", "nama": "Strategy", "skill": ["Paid Social", "Influencer Outreach", "Crisis Management"], "kursus": "Meta Blueprint Certified (Meta)", "milestone": "Portofolio kelola akun brand dengan data pertumbuhan"},
     ],
     "Content Creator": [
-        {"fase": "Bulan 1-2", "nama": "Fondasi Konten", "skill": ["CapCut/Premiere", "Storytelling", "Canva", "Scripting"], "kursus": "YouTube Creator Academy (YouTube — Gratis)", "milestone": "10 video pertama dengan engagement rate positif"},
-        {"fase": "Bulan 3-4", "nama": "Growth", "skill": ["SEO YouTube/TikTok", "Thumbnail Design", "Analytics"], "kursus": "TikTok Creator Academy (TikTok — Gratis)", "milestone": "1.000 subscriber/follower pertama"},
+        {"fase": "Bulan 1-2", "nama": "Fondasi Konten", "skill": ["CapCut/Premiere", "Storytelling", "Canva", "Scripting"], "kursus": "YouTube Creator Academy (YouTube - Gratis)", "milestone": "10 video pertama dengan engagement rate positif"},
+        {"fase": "Bulan 3-4", "nama": "Growth", "skill": ["SEO YouTube/TikTok", "Thumbnail Design", "Analytics"], "kursus": "TikTok Creator Academy (TikTok - Gratis)", "milestone": "1.000 subscriber/follower pertama"},
         {"fase": "Bulan 5-6", "nama": "Monetisasi", "skill": ["Brand Collaboration", "Personal Branding", "Content Strategy"], "kursus": "Creator Economy Resources (komunitas + mentoring)", "milestone": "Kolaborasi brand pertama atau monetisasi aktif"},
     ],
     "SEO Specialist": [
-        {"fase": "Bulan 1-2", "nama": "SEO Dasar", "skill": ["Keyword Research", "On-Page SEO", "Google Search Console"], "kursus": "HubSpot SEO Certification (HubSpot — Gratis)", "milestone": "Optimasi 10 halaman website dan lihat kenaikan traffic"},
-        {"fase": "Bulan 3-4", "nama": "Technical & Off-Page", "skill": ["Technical SEO", "Backlink Building", "Ahrefs/Semrush"], "kursus": "Ahrefs SEO Course (Ahrefs — Gratis)", "milestone": "Domain Authority naik dan ranking keyword target masuk halaman 1"},
-        {"fase": "Bulan 5-6", "nama": "Advanced", "skill": ["SEO Strategy", "Programmatic SEO", "Local SEO"], "kursus": "Google Analytics Certification (Google — Gratis)", "milestone": "Case study SEO dengan data traffic sebelum-sesudah"},
+        {"fase": "Bulan 1-2", "nama": "SEO Dasar", "skill": ["Keyword Research", "On-Page SEO", "Google Search Console"], "kursus": "HubSpot SEO Certification (HubSpot - Gratis)", "milestone": "Optimasi 10 halaman website dan lihat kenaikan traffic"},
+        {"fase": "Bulan 3-4", "nama": "Technical & Off-Page", "skill": ["Technical SEO", "Backlink Building", "Ahrefs/Semrush"], "kursus": "Ahrefs SEO Course (Ahrefs - Gratis)", "milestone": "Domain Authority naik dan ranking keyword target masuk halaman 1"},
+        {"fase": "Bulan 5-6", "nama": "Advanced", "skill": ["SEO Strategy", "Programmatic SEO", "Local SEO"], "kursus": "Google Analytics Certification (Google - Gratis)", "milestone": "Case study SEO dengan data traffic sebelum-sesudah"},
     ],
     "Copywriter": [
-        {"fase": "Bulan 1-2", "nama": "Fondasi", "skill": ["Copywriting Dasar", "Tata Bahasa", "Riset Target Audiens"], "kursus": "HubSpot Content Marketing (HubSpot — Gratis)", "milestone": "10 tulisan konten yang published di blog/medium"},
+        {"fase": "Bulan 1-2", "nama": "Fondasi", "skill": ["Copywriting Dasar", "Tata Bahasa", "Riset Target Audiens"], "kursus": "HubSpot Content Marketing (HubSpot - Gratis)", "milestone": "10 tulisan konten yang published di blog/medium"},
         {"fase": "Bulan 3-4", "nama": "Spesialisasi", "skill": ["SEO Writing", "Email Copywriting", "UX Writing"], "kursus": "Copyblogger Free Resources (copyblogger.com)", "milestone": "1 email campaign dengan open rate di atas rata-rata industri"},
-        {"fase": "Bulan 5-6", "nama": "Portofolio", "skill": ["Brand Voice", "CRO Copywriting", "Long-form Content"], "kursus": "Google UX Design — Writing Module (Coursera)", "milestone": "Portofolio 20+ tulisan di berbagai format"},
+        {"fase": "Bulan 5-6", "nama": "Portofolio", "skill": ["Brand Voice", "CRO Copywriting", "Long-form Content"], "kursus": "Google UX Design - Writing Module (Coursera)", "milestone": "Portofolio 20+ tulisan di berbagai format"},
     ],
     "Graphic Designer": [
-        {"fase": "Bulan 1-2", "nama": "Fondasi Desain", "skill": ["Prinsip Desain", "Adobe Illustrator Dasar", "Canva Pro"], "kursus": "Canva Design School (Canva — Gratis)", "milestone": "10 karya desain di Behance"},
-        {"fase": "Bulan 3-4", "nama": "Adobe Suite", "skill": ["Adobe Photoshop", "Illustrator Advanced", "Typography"], "kursus": "Adobe Creative Cloud Tutorials (Adobe — Gratis)", "milestone": "Brand identity lengkap (logo, guideline, mockup)"},
+        {"fase": "Bulan 1-2", "nama": "Fondasi Desain", "skill": ["Prinsip Desain", "Adobe Illustrator Dasar", "Canva Pro"], "kursus": "Canva Design School (Canva - Gratis)", "milestone": "10 karya desain di Behance"},
+        {"fase": "Bulan 3-4", "nama": "Adobe Suite", "skill": ["Adobe Photoshop", "Illustrator Advanced", "Typography"], "kursus": "Adobe Creative Cloud Tutorials (Adobe - Gratis)", "milestone": "Brand identity lengkap (logo, guideline, mockup)"},
         {"fase": "Bulan 5-6", "nama": "Portfolio", "skill": ["Figma", "Motion Graphic Dasar", "Brand Identity"], "kursus": "Adobe Certified Professional (exam)", "milestone": "Portofolio Behance 20+ karya + first freelance client"},
     ],
     "Financial Analyst": [
         {"fase": "Bulan 1-2", "nama": "Fondasi", "skill": ["Excel Advanced", "Laporan Keuangan", "Akuntansi Dasar"], "kursus": "CFI Free Courses (corporatefinanceinstitute.com)", "milestone": "Bisa baca dan analisis laporan keuangan perusahaan publik"},
-        {"fase": "Bulan 3-4", "nama": "Analisis Lanjut", "skill": ["Financial Modeling", "Valuasi DCF", "Power BI/Tableau"], "kursus": "Financial Modeling (CFI — beberapa modul gratis)", "milestone": "Financial model sederhana untuk 1 perusahaan"},
+        {"fase": "Bulan 3-4", "nama": "Analisis Lanjut", "skill": ["Financial Modeling", "Valuasi DCF", "Power BI/Tableau"], "kursus": "Financial Modeling (CFI - beberapa modul gratis)", "milestone": "Financial model sederhana untuk 1 perusahaan"},
         {"fase": "Bulan 5-6", "nama": "Sertifikasi", "skill": ["CFA Level 1", "SQL Dasar", "Presentasi Data"], "kursus": "CFA Institute Free Resources (cfainstitute.org)", "milestone": "CFA Level 1 terdaftar + 1 investment thesis yang terdokumentasi"},
     ],
     "Admin E-Commerce": [
-        {"fase": "Bulan 1-2", "nama": "Fondasi E-Commerce", "skill": ["Seller Center (Shopee/Tokopedia)", "Pengelolaan Pesanan", "Customer Chat"], "kursus": "Shopee Campus Program (Shopee — Gratis)", "milestone": "Bisa kelola toko online dengan response rate 100%"},
-        {"fase": "Bulan 3-4", "nama": "Optimasi", "skill": ["Foto Produk Dasar", "Copywriting Produk", "Analisis Penjualan"], "kursus": "Tokopedia Academy (Tokopedia — Gratis)", "milestone": "Peningkatan conversion rate toko yang terukur"},
-        {"fase": "Bulan 5-6", "nama": "Growth", "skill": ["Iklan Marketplace", "Multi-platform Management", "Data-driven Decisions"], "kursus": "Google Analytics (Google — Gratis)", "milestone": "Kelola 3+ marketplace dengan rating 4.8+ dan growth terdokumentasi"},
+        {"fase": "Bulan 1-2", "nama": "Fondasi E-Commerce", "skill": ["Seller Center (Shopee/Tokopedia)", "Pengelolaan Pesanan", "Customer Chat"], "kursus": "Shopee Campus Program (Shopee - Gratis)", "milestone": "Bisa kelola toko online dengan response rate 100%"},
+        {"fase": "Bulan 3-4", "nama": "Optimasi", "skill": ["Foto Produk Dasar", "Copywriting Produk", "Analisis Penjualan"], "kursus": "Tokopedia Academy (Tokopedia - Gratis)", "milestone": "Peningkatan conversion rate toko yang terukur"},
+        {"fase": "Bulan 5-6", "nama": "Growth", "skill": ["Iklan Marketplace", "Multi-platform Management", "Data-driven Decisions"], "kursus": "Google Analytics (Google - Gratis)", "milestone": "Kelola 3+ marketplace dengan rating 4.8+ dan growth terdokumentasi"},
     ],
     "IT Support": [
-        {"fase": "Bulan 1-2", "nama": "Fondasi Hardware & OS", "skill": ["Hardware Troubleshooting", "Windows/macOS Administration", "Printer Config"], "kursus": "Pelatihan Skillhub Kemnaker — e-training resmi gratis", "milestone": "Bisa merakit PC, install OS, dan troubleshooting hardware dasar"},
+        {"fase": "Bulan 1-2", "nama": "Fondasi Hardware & OS", "skill": ["Hardware Troubleshooting", "Windows/macOS Administration", "Printer Config"], "kursus": "Pelatihan Skillhub Kemnaker - e-training resmi gratis", "milestone": "Bisa merakit PC, install OS, dan troubleshooting hardware dasar"},
         {"fase": "Bulan 3-4", "nama": "Networking & Server", "skill": ["LAN/WLAN Setup", "IP Addressing", "DNS", "Active Directory"], "kursus": "Cisco Networking Basics (NetAcad)", "milestone": "Bisa setup jaringan lokal dan manage user di Active Directory"},
-        {"fase": "Bulan 5-6", "nama": "IT Service Management", "skill": ["Ticketing System", "Customer Handling", "File Sharing"], "kursus": "Customer Service Training (HubSpot Academy — Gratis)", "milestone": "Simulasi penanganan tiket komplain dengan SLA yang baik"},
+        {"fase": "Bulan 5-6", "nama": "IT Service Management", "skill": ["Ticketing System", "Customer Handling", "File Sharing"], "kursus": "Customer Service Training (HubSpot Academy - Gratis)", "milestone": "Simulasi penanganan tiket komplain dengan SLA yang baik"},
     ],
 }
 

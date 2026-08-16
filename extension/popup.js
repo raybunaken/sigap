@@ -233,7 +233,7 @@ function renderResult(data, jobData) {
     }
   }
 
-  // ATS keywords — click to copy
+  // ATS keywords - click to copy
   const atsEl = document.getElementById('result-ats');
   atsEl.innerHTML = '';
   if (data.ats_keywords && data.ats_keywords.length) {
@@ -324,7 +324,7 @@ async function renderHistory() {
     card.innerHTML = `
       <div class="history-job-info">
         <div class="history-job-title">${entry.job_title}</div>
-        <div class="history-job-company">${entry.company || '—'}</div>
+        <div class="history-job-company">${entry.company || '-'}</div>
         <div class="history-job-bar">
           <div class="history-job-bar-fill" style="width:${entry.readiness_score}%; background:${barColor};"></div>
         </div>
@@ -389,7 +389,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     card.innerHTML = `
       <div class="history-job-info">
         <div class="history-job-title">${last.job_title}</div>
-        <div class="history-job-company">${last.company || '—'}</div>
+        <div class="history-job-company">${last.company || '-'}</div>
         <div class="history-job-bar">
           <div class="history-job-bar-fill" style="width:${last.readiness_score}%; background:${barColor};"></div>
         </div>

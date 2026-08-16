@@ -4,14 +4,14 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Skillsy Copilot | Intelligent Career Engine</title>
-  <meta name="description" content="Skillsy Copilot analyzes job postings on LinkedIn & JobStreet against your CV in seconds — instant ATS score, missing skills detection, and AI cover letters. Free Chrome extension.">
+  <meta name="description" content="Skillsy Copilot analyzes job postings on LinkedIn & JobStreet against your CV in seconds: instant ATS score, missing skills detection, and AI cover letters. Free Chrome extension.">
   <link rel="icon" type="image/svg+xml" href="logo.svg">
 
   <!-- Open Graph / Social Sharing -->
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://skillsy.my.id/">
   <meta property="og:title" content="Skillsy Copilot | Intelligent Career Engine">
-  <meta property="og:description" content="Stop guessing what recruiters want. Get an instant match score and skill gap analysis for any LinkedIn or JobStreet job posting — right in your browser.">
+  <meta property="og:description" content="Stop guessing what recruiters want. Get an instant match score and skill gap analysis for any LinkedIn or JobStreet job posting, right in your browser.">
   <meta property="og:image" content="https://skillsy.my.id/screenshot.png">
   <meta property="og:site_name" content="Skillsy">
   <meta name="twitter:card" content="summary_large_image">
@@ -260,6 +260,23 @@
       height: auto;
       min-height: auto;
       padding: 40px 60px;
+    }
+    .stats-header {
+      text-align: center;
+      max-width: 640px;
+      margin: 0 auto 40px auto;
+    }
+    .stats-title {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 32px;
+      font-weight: 800;
+      margin-bottom: 16px;
+      letter-spacing: -0.02em;
+    }
+    .stats-subtitle {
+      font-size: 15px;
+      line-height: 1.6;
+      color: rgba(255, 255, 255, 0.65);
     }
     .stats-grid {
       display: grid;
@@ -629,18 +646,22 @@
 
   <!-- Stats Strip (BPS data) -->
   <div class="glass-wrapper stats-wrapper">
+    <div class="stats-header">
+      <h2 class="stats-title" data-en="Why We Built Skillsy" data-id="Kenapa Kami Membangun Skillsy">Why We Built Skillsy</h2>
+      <p class="stats-subtitle" data-en="The job market in Indonesia is brutal. Here are the real numbers behind it, sourced from Badan Pusat Statistik (BPS), Indonesia's official statistics agency." data-id="Pasar kerja di Indonesia itu berat. Ini angka aslinya, bersumber dari Badan Pusat Statistik (BPS), lembaga statistik resmi Indonesia.">The job market in Indonesia is brutal. Here are the real numbers behind it, sourced from Badan Pusat Statistik (BPS), Indonesia's official statistics agency.</p>
+    </div>
     <div class="stats-grid">
       <div class="stat-item">
         <div class="stat-value">7.47M</div>
         <div class="stat-label" data-en="Openly unemployed Indonesians competing for the same jobs (BPS, Aug 2024)" data-id="Penganggur terbuka di Indonesia yang bersaing memperebutkan pekerjaan yang sama (BPS, Agustus 2024)">Openly unemployed Indonesians competing for the same jobs (BPS, Aug 2024)</div>
       </div>
       <div class="stat-item">
-        <div class="stat-value">6–12</div>
-        <div class="stat-label" data-en="Months the average fresh graduate spends job hunting — Skillsy cuts the guessing game" data-id="Bulan yang dihabiskan fresh graduate rata-rata untuk mencari kerja — Skillsy memangkas bertebaran menebak">Months the average fresh graduate spends job hunting — Skillsy cuts the guessing game</div>
+        <div class="stat-value">6-12</div>
+        <div class="stat-label" data-en="Months the average fresh graduate spends job hunting. Skillsy cuts the guessing game." data-id="Bulan yang dihabiskan fresh graduate rata-rata untuk mencari kerja. Skillsy memangkas menebak-menebaknya.">Months the average fresh graduate spends job hunting. Skillsy cuts the guessing game.</div>
       </div>
       <div class="stat-item">
-        <div class="stat-value">75%</div>
-        <div class="stat-label" data-en="Of resumes are rejected by ATS filters before a human ever sees them" data-id="Resume ditolak oleh filter ATS bahkan sebelum dibaca manusia">Of resumes are rejected by ATS filters before a human ever sees them</div>
+        <div class="stat-value">4.91%</div>
+        <div class="stat-label" data-en="National open unemployment rate (BPS, Aug 2024). Every application you send has to count." data-id="Tingkat Pengangguran Terbuka nasional (BPS, Agustus 2024). Setiap lamaran yang kamu kirim harus tepat sasaran.">National open unemployment rate (BPS, Aug 2024). Every application you send has to count.</div>
       </div>
       <div class="stat-item">
         <div class="stat-value">Rp 5.28M</div>
@@ -683,15 +704,15 @@
     <div class="faq-list">
       <details class="faq-item">
         <summary data-en="Is my CV safe? Where is my data stored?" data-id="Apakah CV saya aman? Di mana data saya disimpan?">Is my CV safe? Where is my data stored?</summary>
-        <p data-en="Your CV PDF is parsed entirely inside your browser — the file itself never leaves your device. For analysis, the extracted text (plus the job posting you're viewing) is sent securely to our server, processed by our AI engine, and never stored or shared." data-id="PDF CV kamu diproses sepenuhnya di dalam browser kamu — file-nya tidak pernah meninggalkan perangkatmu. Untuk analisis, teks hasil ekstraksi (beserta lowongan yang kamu lihat) dikirim aman ke server kami, diproses oleh mesin AI kami, dan tidak pernah disimpan atau dibagikan.">Your CV PDF is parsed entirely inside your browser — the file itself never leaves your device. For analysis, the extracted text (plus the job posting you're viewing) is sent securely to our server, processed by our AI engine, and never stored or shared.</p>
+        <p data-en="Your CV PDF is parsed entirely inside your browser; the file itself never leaves your device. For analysis, the extracted text (plus the job posting you're viewing) is sent securely to our server, processed by our AI engine, and never stored or shared." data-id="PDF CV kamu diproses sepenuhnya di dalam browser kamu; file-nya tidak pernah meninggalkan perangkatmu. Untuk analisis, teks hasil ekstraksi (beserta lowongan yang kamu lihat) dikirim aman ke server kami, diproses oleh mesin AI kami, dan tidak pernah disimpan atau dibagikan.">Your CV PDF is parsed entirely inside your browser; the file itself never leaves your device. For analysis, the extracted text (plus the job posting you're viewing) is sent securely to our server, processed by our AI engine, and never stored or shared.</p>
       </details>
       <details class="faq-item">
         <summary data-en="Is Skillsy free to use?" data-id="Apakah Skillsy gratis?">Is Skillsy free to use?</summary>
-        <p data-en="Yes. The core extension — ATS score, skill gap analysis, and keyword suggestions — is free during beta. Pro features (like AI cover letters at scale) may be paid in the future, but early waitlist members get privileged pricing." data-id="Ya. Ekstensi intinya — skor ATS, analisis skill gap, dan saran keyword — gratis selama masa beta. Fitur Pro (seperti surat lamaran AI skala besar) mungkin berbayar di masa depan, tetapi member waitlist awal mendapat harga istimewa.">Yes. The core extension — ATS score, skill gap analysis, and keyword suggestions — is free during beta. Pro features (like AI cover letters at scale) may be paid in the future, but early waitlist members get privileged pricing.</p>
+        <p data-en="Yes. The core features (ATS score, skill gap analysis, and keyword suggestions) are free during beta. Pro features (like AI cover letters at scale) may be paid in the future, but early waitlist members get privileged pricing." data-id="Ya. Fitur intinya (skor ATS, analisis skill gap, dan saran keyword) gratis selama masa beta. Fitur Pro (seperti surat lamaran AI skala besar) mungkin berbayar di masa depan, tetapi member waitlist awal mendapat harga istimewa.">Yes. The core features (ATS score, skill gap analysis, and keyword suggestions) are free during beta. Pro features (like AI cover letters at scale) may be paid in the future, but early waitlist members get privileged pricing.</p>
       </details>
       <details class="faq-item">
         <summary data-en="Which job sites are supported?" data-id="Situs lowongan apa saja yang didukung?">Which job sites are supported?</summary>
-        <p data-en="LinkedIn, JobStreet, Glints, Kalibrr, Tech in Asia, Kintsugi, and MyCareersFuture — with smart fallback extraction that works on most other job boards too." data-id="LinkedIn, JobStreet, Glints, Kalibrr, Tech in Asia, Kintsugi, dan MyCareersFuture — dengan ekstraksi fallback pintar yang juga bekerja di sebagian besar job board lainnya.">LinkedIn, JobStreet, Glints, Kalibrr, Tech in Asia, Kintsugi, and MyCareersFuture — with smart fallback extraction that works on most other job boards too.</p>
+        <p data-en="LinkedIn, JobStreet, Glints, Kalibrr, Tech in Asia, Kintsugi, and MyCareersFuture, with smart fallback extraction that works on most other job boards too." data-id="LinkedIn, JobStreet, Glints, Kalibrr, Tech in Asia, Kintsugi, dan MyCareersFuture, dengan ekstraksi fallback pintar yang juga bekerja di sebagian besar job board lainnya.">LinkedIn, JobStreet, Glints, Kalibrr, Tech in Asia, Kintsugi, and MyCareersFuture, with smart fallback extraction that works on most other job boards too.</p>
       </details>
       <details class="faq-item">
         <summary data-en="How accurate is the match score?" data-id="Seberapa akurat skor kecocokannya?">How accurate is the match score?</summary>
