@@ -464,3 +464,46 @@ body {
 .nav-btn.active { color: var(--accent-neon); background: rgba(212, 255, 50, 0.08); box-shadow: inset 0 0 0 1px rgba(212, 255, 50, 0.15); }
 .nav-btn.active svg { stroke: var(--accent-neon); filter: drop-shadow(0 0 8px rgba(212, 255, 50, 0.4)); }
 .nav-btn svg { stroke: currentColor; transition: all 0.2s; width: 22px; height: 22px; stroke-width: 1.5px; }
+
+/* ── HARD FILTER BANNER & SCORE BREAKDOWN (v2) ─────────────────────────── */
+.hard-filter-banner {
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.35);
+  border-radius: 14px;
+  padding: 12px 14px;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.5;
+  color: #fca5a5;
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  flex-shrink: 0;
+}
+.hard-filter-banner svg { flex-shrink: 0; margin-top: 1px; stroke: #ef4444; }
+
+.score-breakdown {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 16px;
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  flex-shrink: 0;
+}
+.score-breakdown-title {
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+}
+.breakdown-row { display: flex; flex-direction: column; gap: 4px; }
+.breakdown-row-top { display: flex; justify-content: space-between; align-items: center; font-size: 12px; }
+.breakdown-row-label { font-weight: 600; color: var(--text-muted); }
+.breakdown-row-vals { font-weight: 800; }
+.breakdown-row-vals .pct { color: #fff; }
+.breakdown-row-vals .w { color: var(--text-faint); font-size: 10px; font-weight: 600; margin-left: 4px; }
+.breakdown-track { height: 4px; background: rgba(255,255,255,0.07); border-radius: 2px; overflow: hidden; }
+.breakdown-fill { height: 100%; border-radius: 2px; transition: width 0.9s cubic-bezier(.4,0,.2,1); }

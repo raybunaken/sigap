@@ -4,11 +4,11 @@ Backend: FastAPI + Groq (Llama 3.3)
 Jalankan: python api.py
 """
 
-import os, json, logging, asyncio, re, pathlib
+import os, json, logging, asyncio, re, pathlib, time
 from fastapi import FastAPI, HTTPException, UploadFile, File, APIRouter, Request
 from fastapi.responses import FileResponse, JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from typing import Optional, List
 from contextlib import asynccontextmanager
 from dotenv import load_dotenv
@@ -98,6 +98,56 @@ app.add_middleware(
     allow_origins=["*"], allow_methods=["*"], allow_headers=["*"],
 )
 
+# ── RATE LIMIT (best-effort, in-memory per serverless instance) ───────────
+# Target: matikan penyalahgunaan murahan (skrip membakar kuota Groq), bukan
+# mengalahkan penyerang deterministik. Counter konsisten antar instance
+# menyusul begitu Supabase dipasang.
+_RATE_BUCKETS: dict = {}
+RATE_LIMIT_HOURLY = 40   # per IP / per install-ID per jam
+RATE_LIMIT_MINUTE = 8    # burst limit
+
+@app.middleware("http")
+async def rate_limit_middleware(request: Request, call_next):
+    path = request.url.path
+    is_costly = any(
+        p in path
+        for p in ("/analyze-job", "/generate-cover-letter", "/parse-cv", "/chat")
+    )
+    if is_costly and request.method == "POST":
+        client_ip = (
+            request.headers.get("x-forwarded-for", "").split(",")[0].strip()
+            or (request.client.host if request.client else "unknown")
+        )
+        client_id = request.headers.get("x-skillsy-client", "")
+        keys = [f"ip:{client_ip}"] + ([f"cid:{client_id}"] if client_id else [])
+
+        now = time.time()
+        allowed = True
+        for k in keys:
+            bucket = _RATE_BUCKETS.setdefault(k, [])
+            bucket[:] = [t for t in bucket if now - t < 3600]
+            recent = [t for t in bucket if now - t < 60]
+            if len(bucket) >= RATE_LIMIT_HOURLY or len(recent) >= RATE_LIMIT_MINUTE:
+                allowed = False
+
+        if not allowed:
+            return JSONResponse(
+                status_code=429,
+                content={"detail": "Terlalu banyak permintaan. Tunggu sebentar lalu coba lagi."},
+                headers={"Retry-After": "60"},
+            )
+        for k in keys:
+            _RATE_BUCKETS[k].append(now)
+
+        # prune sesekali biar memori tidak bocor
+        if len(_RATE_BUCKETS) > 5000:
+            for k in list(_RATE_BUCKETS.keys()):
+                if not _RATE_BUCKETS[k] or now - _RATE_BUCKETS[k][-1] > 3600:
+                    _RATE_BUCKETS.pop(k, None)
+
+    response = await call_next(request)
+    return response
+
 # ── SCHEMAS ───────────────────────────────────────────────────────────────
 class ProfilUser(BaseModel):
     language: Optional[str] = "id"
@@ -134,9 +184,9 @@ class AdvisoryRequest(BaseModel):
     target_job: str
 
 class AnalyzeJobRequest(BaseModel):
-    cv_text: str
-    job_title: str
-    job_description: str
+    cv_text: str = Field(..., min_length=50, max_length=40000)
+    job_title: str = Field(..., min_length=1, max_length=300)
+    job_description: str = Field(..., min_length=30, max_length=20000)
 
 
 # ── GROQ API (satu entry point untuk semua panggilan) ─────────────────────
@@ -236,7 +286,7 @@ def is_transferable(user_skill: str, target_skill: str) -> bool:
     t = normalize_skill(target_skill)
     for group in TRANSFERABLE_GROUPS:
         u_in = any(u == g or u in g or g in u for g in group)
-        t_in = any(t == g or t in g or g in u for g in group)  # intentional: match broad
+        t_in = any(t == g or t in g or g in t for g in group)
         t_in = any(t == g or t in g or g in t for g in group)
         if u_in and t_in:
             return True
@@ -1083,14 +1133,323 @@ async def parse_cv(file: UploadFile = File(...)):
         "method": result["method"],
     }
 
-@app.post("/analyze-job", tags=["Extension"])
-@api_router.post("/analyze-job", tags=["Extension"])
-@api_router_index.post("/analyze-job", tags=["Extension"])
-async def analyze_job(req: AnalyzeJobRequest):
-    cv = req.cv_text[:6000]
-    job_title = req.job_title[:200]
-    job_desc = req.job_description[:4000]
-    
+# ── ANALYZE JOB v2: LLM menilai per-item, KODE yang menghitung skor ───────
+# Filosofi: skor yang konsisten dan bisa dijelaskan tidak boleh lahir dari
+# kreatifitas LLM. LLM hanya boleh: (A) ekstrak struktur lowongan,
+# (B) nilai tiap requirement dengan bukti dari CV. Angka final dihitung
+# formula deterministik di bawah, termasuk aturan hard filter.
+
+def _extract_json(raw: Optional[str]) -> Optional[dict]:
+    if not raw:
+        return None
+    cleaned = raw.replace("```json", "").replace("```", "").strip()
+    try:
+        return json.loads(cleaned)
+    except Exception:
+        start, end = cleaned.find("{"), cleaned.rfind("}")
+        if start >= 0 and end > start:
+            try:
+                return json.loads(cleaned[start:end + 1])
+            except Exception:
+                return None
+    return None
+
+
+async def _groq_json(messages: list, max_tokens: int = 1200) -> Optional[dict]:
+    """Groq call dengan response_format JSON + 1x retry parsing."""
+    for _ in range(2):
+        raw = await groq_request(
+            messages,
+            response_format={"type": "json_object"},
+            max_tokens=max_tokens,
+            temperature=0.1,
+            timeout=30,
+        )
+        parsed = _extract_json(raw)
+        if parsed:
+            return parsed
+    return None
+
+
+def _strict_skills_match(user_skill: str, target_skill: str) -> bool:
+    """
+    Match skill tanpa false positive substring pendek.
+    skills_match() umum memakai substring dua arah, sehingga 'java' cocok dengan
+    'javascript' dan 'go' cocok dengan 'mongodb'. Untuk penilaian skor yang
+    dikredit ke user, kecocokan harus exact, sinonim, atau substring panjang.
+    """
+    u, t = normalize_skill(user_skill), normalize_skill(target_skill)
+    if u == t:
+        return True
+    if min(len(u), len(t)) >= 5 and (u in t or t in u):
+        return True
+    for canon, synonyms in SKILL_SYNONYMS.items():
+        all_terms = [canon] + synonyms
+
+        def hit(s: str) -> bool:
+            return any(
+                x == s or (len(x) >= 5 and len(s) >= 5 and (x in s or s in x))
+                for x in all_terms
+            )
+
+        if hit(u) and hit(t):
+            return True
+    return False
+
+
+def _machine_skill_status(skill: str, cv_skill_pool: list) -> str:
+    """Penilaian skill deterministik: sinonim -> met, transferable -> partial."""
+    for cs in cv_skill_pool:
+        if _strict_skills_match(cs, skill):
+            return "met"
+    for cs in cv_skill_pool:
+        if is_transferable(cs, skill):
+            return "partial"
+    return "missing"
+
+
+def _years_ratio_score(years: Optional[float], min_years: Optional[float]) -> Optional[float]:
+    """Band pengalaman: penuh / 0.6 / 0.3 / 0. None kalau tidak bisa dinilai."""
+    if min_years is None or min_years <= 0:
+        return 1.0   # tidak ada syarat pengalaman -> netral penuh
+    if years is None:
+        return None  # akan fallback ke penilaian LLM
+    ratio = years / min_years
+    if ratio >= 1.0:
+        return 1.0
+    if ratio >= 0.7:
+        return 0.6
+    if ratio >= 0.4:
+        return 0.3
+    return 0.0
+
+
+def _items_pct(statuses: list) -> Optional[float]:
+    """Persentase item: met=1.0, partial=0.5. None kalau kosong (netral)."""
+    if not statuses:
+        return None
+    return sum(1.0 if s == "met" else 0.5 if s == "partial" else 0.0 for s in statuses) / len(statuses)
+
+
+async def analyze_job_v2(cv: str, job_title: str, job_desc: str) -> Optional[dict]:
+    # ── STAGE A: ekstraksi struktur lowongan ───────────────────────────────
+    stage_a_prompt = f"""You are a strict requirement extractor for job postings.
+Extract ONLY what is explicitly stated. Never invent or infer.
+
+Job title: {job_title}
+
+Job description:
+{job_desc}
+
+Return ONLY valid JSON with this exact shape:
+{{
+  "seniority": "junior|mid|senior|lead|any",
+  "min_years": 3,
+  "must_skills": ["concrete hard skills/tools explicitly required, 3-10 items, each 1-3 words (e.g. 'Go', 'Kubernetes', 'PostgreSQL'), never full sentences"],
+  "plus_skills": ["nice-to-have items, 0-8 items, same format"],
+  "education_requirements": ["explicit education/major requirements, empty list if none"],
+  "industry_requirement": "specific industry background if required, else null",
+  "other_requirements": ["language, certification, on-site, or other hard conditions, 0-5 items"],
+  "ats_keywords": ["5-8 exact searchable phrases appearing in the posting"]
+}}
+min_years must be a number or null (null if not stated)."""
+
+    stage_a = await _groq_json([
+        {"role": "system", "content": "Reply ONLY with valid JSON. No other text."},
+        {"role": "user", "content": stage_a_prompt},
+    ], max_tokens=700)
+    if not stage_a:
+        return None
+
+    must_skills = [s for s in stage_a.get("must_skills", []) if isinstance(s, str)][:10]
+    plus_skills = [s for s in stage_a.get("plus_skills", []) if isinstance(s, str)][:8]
+    education_reqs = [s for s in stage_a.get("education_requirements", []) if isinstance(s, str)][:4]
+    other_reqs = [s for s in stage_a.get("other_requirements", []) if isinstance(s, str)][:5]
+    industry_req = stage_a.get("industry_requirement") or None
+    min_years = stage_a.get("min_years")
+    if not isinstance(min_years, (int, float)) or min_years < 0:
+        min_years = None
+    ats_keywords = [k for k in stage_a.get("ats_keywords", []) if isinstance(k, str)][:8]
+
+    # ── STAGE B: penilaian per-item oleh LLM (non-skill; skill dinilai mesin) ──
+    items_to_judge = []
+    if min_years:
+        items_to_judge.append({
+            "req": f"Minimal {min_years} tahun pengalaman kerja relevan",
+            "type": "experience",
+        })
+    for e in education_reqs:
+        items_to_judge.append({"req": e, "type": "education"})
+    if industry_req:
+        items_to_judge.append({"req": f"Pengalaman industri {industry_req}", "type": "industry"})
+    for o in other_reqs:
+        items_to_judge.append({"req": o, "type": "other"})
+
+    stage_b_prompt = f"""You are a strict but fair CV auditor.
+You receive a CV and non-skill requirements extracted from a job posting.
+Technical SKILLS are scored separately by machine, do NOT judge them here.
+
+Tasks:
+1. Estimate the candidate's total years of professional experience from the CV (decimal allowed, 0 if fresh graduate).
+2. List ALL concrete skills evidenced in the CV, including skills clearly implied by stated tools (Laravel implies PHP, React implies JavaScript). 5-20 items.
+3. Judge each item in "items_to_judge": status met/partial/missing based on CV evidence.
+   - "req": quote or translate the requirement into natural Indonesian, keep it specific (never generic).
+   - "detail": ONE sentence in Bahasa Indonesia citing concrete evidence from the CV.
+
+CV:
+{cv}
+
+items_to_judge:
+{json.dumps(items_to_judge, ensure_ascii=False)}
+
+Return ONLY valid JSON:
+{{
+  "cv_years_estimate": 1.5,
+  "cv_skills": ["SQL", "Excel"],
+  "seniority_level": "Entry Level|Mid Level|Senior|Lead",
+  "seniority_fit": "satu kalimat Bahasa Indonesia membandingkan pengalaman CV dengan syarat lowongan",
+  "items": [
+    {{"req": "...", "type": "experience|education|industry|other", "status": "met|partial|missing", "detail": "..."}}
+  ]
+}}
+If items_to_judge is empty, return an empty "items" list."""
+
+    stage_b = await _groq_json([
+        {"role": "system", "content": "Reply ONLY with valid JSON. No other text."},
+        {"role": "user", "content": stage_b_prompt},
+    ], max_tokens=1400)
+    if not stage_b:
+        return None
+
+    cv_years = stage_b.get("cv_years_estimate")
+    if not isinstance(cv_years, (int, float)) or cv_years < 0:
+        cv_years = None
+    cv_skill_pool = list(dict.fromkeys(
+        [s for s in stage_b.get("cv_skills", []) if isinstance(s, str)]
+        + regex_extract_skills(cv)
+    ))
+
+    # ── STAGE C: skor dihitung kode (deterministik) ────────────────────────
+    must_status = {s: _machine_skill_status(s, cv_skill_pool) for s in must_skills}
+    plus_status = {s: _machine_skill_status(s, cv_skill_pool) for s in plus_skills}
+
+    # pengalaman: pakai band tahun bila angka tersedia, else status LLM
+    b_items = [i for i in stage_b.get("items", []) if isinstance(i, dict)]
+    exp_items = [i for i in b_items if i.get("type") == "experience"]
+    exp_score = _years_ratio_score(cv_years, min_years)
+    if exp_score is None and exp_items:
+        exp_score = {"met": 1.0, "partial": 0.5}.get(exp_items[0].get("status"), 0.0)
+    if exp_score is None:
+        exp_score = 0.5  # tidak ada data -> netral konservatif
+
+    edu_items = [i for i in b_items if i.get("type") == "education"]
+    edu_score = _items_pct([i.get("status") for i in edu_items])
+    if edu_score is None:
+        edu_score = 1.0  # tidak ada syarat edukasi -> netral penuh
+
+    must_score = _items_pct(list(must_status.values()))
+    if must_score is None:
+        must_score = 1.0
+    plus_score = _items_pct(list(plus_status.values()))
+    if plus_score is None:
+        plus_score = 1.0
+
+    combined = 0.25 * exp_score + 0.45 * must_score + 0.15 * plus_score + 0.15 * edu_score
+    readiness = round(combined * 100)
+
+    # hard filter: requirement keras yang jelas-jelas tidak terpenuhi
+    hard_messages = []
+    if (
+        min_years and cv_years is not None
+        and cv_years < 0.5 * float(min_years)
+    ):
+        readiness = min(readiness, 55)
+        hard_messages.append(
+            f"Syarat {min_years} tahun pengalaman belum terpenuhi (terbaca sekitar {cv_years:g} tahun di CV)."
+        )
+    if education_reqs and edu_items and all(i.get("status") == "missing" for i in edu_items):
+        readiness = min(readiness, 60)
+        hard_messages.append("Syarat pendidikan tidak terpenuhi.")
+
+    # ── rakit requirements_check (skill dari mesin, lainnya dari LLM) ──────
+    requirements_check = []
+
+    def skill_item(skill: str, status: str, is_plus: bool) -> dict:
+        label = f"{skill} (nilai plus)" if is_plus else skill
+        if status == "met":
+            detail = f"'{skill}' terbukti ada di CV kamu."
+        elif status == "partial":
+            detail = f"'{skill}' belum ada di CV, tapi skill terkait yang kamu punya bisa jadi modal transisi."
+        else:
+            detail = f"'{skill}' tidak ditemukan di CV kamu."
+        return {"req": label, "status": status, "detail": detail}
+
+    for i in b_items:
+        if i.get("type") in ("experience", "education", "industry", "other"):
+            requirements_check.append({
+                "req": i.get("req", ""),
+                "status": i.get("status", "missing"),
+                "detail": i.get("detail", ""),
+            })
+    for s in must_skills:
+        requirements_check.append(skill_item(s, must_status[s], is_plus=False))
+    for s in plus_skills:
+        requirements_check.append(skill_item(s, plus_status[s], is_plus=True))
+    requirements_check = requirements_check[:12]
+
+    matched = [s for s, st in {**must_status, **plus_status}.items() if st == "met"][:12]
+    missing_must = [s for s, st in must_status.items() if st != "met"]
+    missing = (missing_must + [s for s, st in plus_status.items() if st == "missing"])[:8]
+
+    # advice: dirakit dari data, bukan karangan LLM
+    if hard_messages:
+        verdict = "Belum layak apply dulu. " + " ".join(hard_messages)
+        action = f"Prioritaskan menutup gap: {', '.join(missing_must[:3])}." if missing_must else "Bangun pengalaman yang diminta lowongan ini dulu."
+    elif readiness >= 70:
+        verdict = "Kamu cukup siap apply ke posisi ini."
+        action = (
+            f"Sebelum kirim, sisipkan keyword ATS: {', '.join(ats_keywords[:5])}."
+            if ats_keywords else "Perkuat bagian CV yang paling relevan dengan lowongan ini."
+        )
+    elif readiness >= 45:
+        verdict = "Layak dicoba, tapi perbaiki dulu sebelum apply."
+        action = (
+            f"Fokus tutup gap: {', '.join(missing_must[:3])}. " if missing_must else ""
+        ) + (f"Sisipkan keyword ATS: {', '.join(ats_keywords[:5])}." if ats_keywords else "")
+    else:
+        verdict = "Jarak kamu dengan lowongan ini masih besar."
+        action = (
+            f"Prioritaskan belajar: {', '.join(missing_must[:3])}. " if missing_must else ""
+        ) + "Pertimbangkan juga posisi serupa dengan level lebih junior."
+    advice = f"{verdict} {action}".strip()
+
+    return {
+        "readiness_score": readiness,
+        "seniority_level": stage_b.get("seniority_level", ""),
+        "seniority_fit": stage_b.get("seniority_fit", ""),
+        "requirements_check": requirements_check,
+        "matched_skills": matched,
+        "missing_skills": missing,
+        "ats_keywords": ats_keywords,
+        "advice": advice,
+        "score_breakdown": {
+            "experience": {"score": round(exp_score * 100), "weight": 25},
+            "must_skills": {"score": round(must_score * 100), "weight": 45},
+            "plus_skills": {"score": round(plus_score * 100), "weight": 15},
+            "education": {"score": round(edu_score * 100), "weight": 15},
+        },
+        "hard_filter": {
+            "triggered": bool(hard_messages),
+            "message": " ".join(hard_messages) if hard_messages else None,
+        },
+        "cv_years_estimate": cv_years,
+        "min_years_required": min_years,
+        "scoring_version": 2,
+    }
+
+
+async def analyze_job_legacy(cv: str, job_title: str, job_desc: str) -> Optional[dict]:
+    """Fallback satu-panggilan (arsitektur lama) kalau Stage A/B gagal."""
     prompt = f"""You are an AI Career Copilot. Analyze how well this candidate fits the job.
 
 Job Title: {job_title}
@@ -1114,11 +1473,11 @@ Return JSON with these fields:
 
 1. "_thought_process": A brief string where you list the exact hard requirements you found in the text.
 2. "readiness_score" (0-100): Overall honest fit score. Be harsh. If they lack the required years of experience, the score should be low (<60).
-3. "seniority_level": A very short label indicating the seniority of the role (e.g. "Entry Level", "Mid Level", "Senior", "Lead"). 
+3. "seniority_level": A very short label indicating the seniority of the role (e.g. "Entry Level", "Mid Level", "Senior", "Lead").
 4. "seniority_fit": ONE short sentence evaluating their years of experience vs the exact requirement. Use "Lowongan ini", DO NOT use the acronym "JD".
 5. "requirements_check": Array of 5-7 MOST IMPORTANT HARD REQUIREMENTS.
    - "req": MUST BE A DIRECT TRANSLATION/QUOTE. (e.g., "3-5 tahun pengalaman financial analytics"). NEVER use generic words.
-   - "status": "missing", "met", or "partial". 
+   - "status": "missing", "met", or "partial".
    - "detail": ONE sentence in Bahasa Indonesia explaining WHY based on the CV. Use "Lowongan ini" instead of "JD".
 
 6. "matched_skills": Array of concrete technical tools (e.g., "SQL") EXPLICITLY MENTIONED that are ALSO in the CV.
@@ -1128,7 +1487,7 @@ Return JSON with these fields:
 
 CRITICAL RULES:
 - DO NOT use the acronym "JD" in your Indonesian response. Use "Lowongan ini" or "Posisi ini".
-- If a tool/skill is in the CV but NOT requested, DO NOT put it in matched_skills. 
+- If a tool/skill is in the CV but NOT requested, DO NOT put it in matched_skills.
 - If a tool/skill is NOT in the JD, DO NOT put it in missing_skills.
 - "req" MUST be literal requirements from the JD. Do not generalize (e.g., write "Credit scoring development" instead of "Pengalaman Data Analyst").
 
@@ -1150,26 +1509,40 @@ Reply ONLY in valid JSON:
   "advice": "..."
 }}"""
 
-    messages = [
-        {"role": "system", "content": "Reply ONLY with valid JSON. No other text."},
-        {"role": "user", "content": prompt}
-    ]
-    
-    ai_resp = await groq_request(messages, response_format={"type": "json_object"}, max_tokens=1200)
+    ai_resp = await groq_request(
+        [{"role": "system", "content": "Reply ONLY with valid JSON. No other text."},
+         {"role": "user", "content": prompt}],
+        response_format={"type": "json_object"}, max_tokens=1200,
+    )
     if not ai_resp:
-        return {"error": "Gagal menghubungi AI Server."}
-        
-    try:
-        parsed = json.loads(ai_resp)
-        return parsed
-    except Exception as e:
-        logger.error(f"Failed to parse JSON analyze_job: {e}")
-        return {"error": "Gagal parsing respons AI."}
+        return None
+    parsed = _extract_json(ai_resp)
+    if not parsed:
+        logger.error("analyze_job_legacy: gagal parsing JSON")
+        return None
+    return parsed
+
+
+@app.post("/analyze-job", tags=["Extension"])
+@api_router.post("/analyze-job", tags=["Extension"])
+@api_router_index.post("/analyze-job", tags=["Extension"])
+async def analyze_job(req: AnalyzeJobRequest):
+    cv = req.cv_text[:8000]
+    job_title = req.job_title[:200]
+    job_desc = req.job_description[:8000]
+
+    result = await analyze_job_v2(cv, job_title, job_desc)
+    if result is None:
+        logger.warning("analyze-job v2 gagal, fallback ke legacy prompt")
+        result = await analyze_job_legacy(cv, job_title, job_desc)
+    if result is None:
+        return {"error": "Gagal menghubungi AI Server. Coba lagi."}
+    return result
 
 class CoverLetterRequest(BaseModel):
-    cv_text: str
-    job_title: str
-    job_description: str
+    cv_text: str = Field(..., min_length=50, max_length=40000)
+    job_title: str = Field(..., min_length=1, max_length=300)
+    job_description: str = Field(..., min_length=30, max_length=20000)
     company_name: str = ""
 
 @app.post("/generate-cover-letter", tags=["Extension"])

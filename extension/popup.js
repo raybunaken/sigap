@@ -6,6 +6,52 @@ let activeJobData = null;    // job info (title, description) for cover letter
 
 const API_URL = 'https://skillsy.my.id';
 
+/* ── INSTALL ID (dipakai server untuk rate limit per-install) ──────────── */
+async function getInstallId() {
+  return new Promise(res => {
+    chrome.storage.local.get(['installId'], r => {
+      if (r.installId) return res(r.installId);
+      const id = (self.crypto && crypto.randomUUID)
+        ? crypto.randomUUID()
+        : 'id-' + Date.now() + '-' + Math.random().toString(36).slice(2);
+      chrome.storage.local.set({ installId: id }, () => res(id));
+    });
+  });
+}
+
+/* ── ANALYSIS CACHE (input sama = hasil identik, instan, hemat kuota) ──── */
+function strHash(s) {
+  let h = 5381;
+  for (let i = 0; i < s.length; i++) h = ((h << 5) + h + s.charCodeAt(i)) | 0;
+  return (h >>> 0).toString(36);
+}
+function analysisCacheKey(cv, title, desc) {
+  return strHash(cv + '||' + title + '||' + desc);
+}
+async function cacheGet(key) {
+  return new Promise(res => {
+    chrome.storage.local.get(['analysisCache'], r => {
+      const entry = (r.analysisCache || {})[key];
+      res(entry ? entry.result : null);
+    });
+  });
+}
+async function cacheSet(key, result) {
+  return new Promise(res => {
+    chrome.storage.local.get(['analysisCache'], r => {
+      const cache = r.analysisCache || {};
+      cache[key] = { result, ts: Date.now() };
+      const keys = Object.keys(cache);
+      if (keys.length > 30) {
+        keys.sort((a, b) => cache[a].ts - cache[b].ts)
+            .slice(0, keys.length - 30)
+            .forEach(k => delete cache[k]);
+      }
+      chrome.storage.local.set({ analysisCache: cache }, res);
+    });
+  });
+}
+
 /* ── HELPERS ────────────────────────────────────────────────────────────── */
 function showView(id) {
   document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
@@ -91,6 +137,49 @@ function renderResult(data, jobData) {
 
   document.getElementById('result-seniority').textContent = data.seniority_level || 'Semua Level';
   document.getElementById('result-level').innerHTML = scoreLabel(score);
+
+  // Hard filter banner (v2)
+  const hfEl = document.getElementById('hard-filter-banner');
+  if (hfEl) {
+    if (data.hard_filter && data.hard_filter.triggered && data.hard_filter.message) {
+      hfEl.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg><span>${data.hard_filter.message}</span>`;
+      hfEl.style.display = 'flex';
+    } else {
+      hfEl.style.display = 'none';
+      hfEl.innerHTML = '';
+    }
+  }
+
+  // Score breakdown (v2): dari mana angka skor berasal
+  const bdEl = document.getElementById('score-breakdown');
+  if (bdEl) {
+    const bd = data.score_breakdown;
+    if (bd) {
+      const labels = {
+        experience: 'Pengalaman',
+        must_skills: 'Skill Wajib',
+        plus_skills: 'Skill Plus',
+        education: 'Edukasi'
+      };
+      const rows = Object.entries(bd).map(([k, v]) => {
+        const pct = Math.max(0, Math.min(100, v.score || 0));
+        const color = pct >= 70 ? '#22c55e' : pct >= 45 ? '#f59e0b' : '#ef4444';
+        return `
+          <div class="breakdown-row">
+            <div class="breakdown-row-top">
+              <span class="breakdown-row-label">${labels[k] || k}</span>
+              <span class="breakdown-row-vals"><span class="pct">${pct}</span><span class="w">bobot ${v.weight}%</span></span>
+            </div>
+            <div class="breakdown-track"><div class="breakdown-fill" style="width:${pct}%; background:${color};"></div></div>
+          </div>`;
+      }).join('');
+      bdEl.innerHTML = `<div class="breakdown-title">Dari Mana Skor Ini?</div>${rows}`;
+      bdEl.style.display = 'flex';
+    } else {
+      bdEl.style.display = 'none';
+      bdEl.innerHTML = '';
+    }
+  }
 
   // Advice
   const adviceEl = document.getElementById('result-advice');
@@ -533,21 +622,47 @@ document.addEventListener('DOMContentLoaded', async () => {
       document.getElementById('loading-sub').textContent = 'Membandingkan CV dengan Job Description';
 
       try {
+        // Cache: input sama -> hasil identik, instan, tanpa panggilan API
+        const cacheKey = analysisCacheKey(cvText, jobData.title, jobData.description);
+        const cached = await cacheGet(cacheKey);
+        if (cached && cached.readiness_score !== undefined) {
+          activeResultData = cached;
+          activeJobData = jobData;
+          renderResult(cached, jobData);
+          analyzeBtn.disabled = false;
+          return;
+        }
+
+        const installId = await getInstallId();
         const res = await fetch(`${API_URL}/api/analyze-job`, {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers: {
+            'Content-Type': 'application/json',
+            'X-Skillsy-Client': installId
+          },
           body: JSON.stringify({
             cv_text: cvText,
             job_title: jobData.title,
             job_description: jobData.description
           })
         });
+
+        if (res.status === 429) {
+          const d = await res.json().catch(() => ({}));
+          throw new Error(d.detail || 'Terlalu banyak scan. Tunggu sebentar lalu coba lagi.');
+        }
+        if (res.status === 422) {
+          throw new Error('Data CV atau lowongan belum valid untuk dianalisis.');
+        }
+
         const data = await res.json();
 
         if (data.error) throw new Error(data.error);
 
         activeResultData = data;
         activeJobData = jobData;
+
+        await cacheSet(cacheKey, data);
 
         // Only save if title is meaningful
         if (jobData.title !== 'Lowongan yang Dianalisis') {
@@ -592,9 +707,13 @@ document.addEventListener('DOMContentLoaded', async () => {
     document.getElementById('cl-content').style.display = 'none';
 
     try {
+      const installId = await getInstallId();
       const res = await fetch(`${API_URL}/api/generate-cover-letter`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Skillsy-Client': installId
+        },
         body: JSON.stringify({
           cv_text: cvText,
           job_title: activeJobData.title,
