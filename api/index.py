@@ -6,7 +6,7 @@ Jalankan: python api.py
 
 import os, json, logging, asyncio, re, pathlib
 from fastapi import FastAPI, HTTPException, UploadFile, File, APIRouter, Request
-from fastapi.responses import FileResponse
+from fastapi.responses import FileResponse, JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from typing import Optional, List
@@ -1227,6 +1227,20 @@ async def serve_investor():
         return FileResponse(file_path)
     return {"detail": "investor.html not found on disk"}
 
+@app.get("/privacy.html")
+async def serve_privacy():
+    file_path = pathlib.Path(__file__).parent.parent / "privacy.html"
+    if file_path.exists():
+        return FileResponse(file_path)
+    return {"detail": "privacy.html not found on disk"}
+
+@app.get("/logo.svg")
+def serve_logo():
+    file_path = pathlib.Path(__file__).parent.parent / "logo.svg"
+    if file_path.exists():
+        return FileResponse(file_path, media_type="image/svg+xml")
+    return {"detail": "logo.svg not found"}
+
 # Catch-all route to debug Vercel path issues
 @app.get("/")
 def serve_index():
@@ -1256,7 +1270,10 @@ async def join_waitlist(req: WaitlistRequest):
 
 @app.api_route("/{path_name:path}", methods=["GET", "POST", "PUT", "DELETE", "OPTIONS", "HEAD", "PATCH", "TRACE"])
 async def catch_all(path_name: str):
-    return {"detail": f"Not Found in catch_all. Path received: {path_name}"}
+    return JSONResponse(
+        status_code=404,
+        content={"detail": f"Not Found in catch_all. Path received: {path_name}"},
+    )
 
 if __name__ == "__main__":
     import uvicorn
