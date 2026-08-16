@@ -4,8 +4,5 @@
       "source": "/api/(.*)",
       "destination": "/api/index.py?vpath=$1"
     }
-  ],
-  "analytics": {
-    "enabled": true
-  }
+  ]
 }
