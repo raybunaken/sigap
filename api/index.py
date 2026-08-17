@@ -184,9 +184,9 @@ class AdvisoryRequest(BaseModel):
     target_job: str
 
 class AnalyzeJobRequest(BaseModel):
-    cv_text: str = Field(..., min_length=50, max_length=40000)
-    job_title: str = Field(..., min_length=1, max_length=300)
-    job_description: str = Field(..., min_length=30, max_length=20000)
+    cv_text: str = Field(..., min_length=50, max_length=150000)
+    job_title: str = Field(..., min_length=1, max_length=1000)
+    job_description: str = Field(..., min_length=30, max_length=150000)
 
 
 # ── GROQ API (satu entry point untuk semua panggilan) ─────────────────────
@@ -1683,9 +1683,9 @@ async def analyze_job(req: AnalyzeJobRequest):
     return result
 
 class CoverLetterRequest(BaseModel):
-    cv_text: str = Field(..., min_length=50, max_length=40000)
-    job_title: str = Field(..., min_length=1, max_length=300)
-    job_description: str = Field(..., min_length=30, max_length=20000)
+    cv_text: str = Field(..., min_length=50, max_length=150000)
+    job_title: str = Field(..., min_length=1, max_length=1000)
+    job_description: str = Field(..., min_length=30, max_length=150000)
     company_name: str = ""
 
 @app.post("/generate-cover-letter", tags=["Extension"])
