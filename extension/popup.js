@@ -140,7 +140,7 @@ function renderResult(data, jobData) {
   document.getElementById('result-seniority').textContent = data.seniority_level || 'Semua Level';
   document.getElementById('result-level').innerHTML = scoreLabel(score);
 
-  // Pembahasan naratif (synthesis): langsung di bawah skor
+  // ── Kartu Analisis: Pembahasan + hard filter + breakdown dalam satu wadah ──
   const synEl = document.getElementById('synthesis-section');
   if (synEl) {
     if (data.synthesis) {
@@ -195,6 +195,17 @@ function renderResult(data, jobData) {
     }
   }
 
+  // Tampilkan kartu Analisis hanya kalau ada isinya
+  const analisisCard = document.getElementById('analisis-card');
+  if (analisisCard) {
+    const hasContent = Boolean(
+      data.synthesis
+      || (data.hard_filter && data.hard_filter.triggered && data.hard_filter.message)
+      || data.score_breakdown
+    );
+    analisisCard.style.display = hasContent ? 'flex' : 'none';
+  }
+
   // Advice
   const adviceEl = document.getElementById('result-advice');
   // ── Build Structured Advice Card ──
@@ -223,7 +234,8 @@ function renderResult(data, jobData) {
     </div>
   `;
 
-  if (data.seniority_fit) {
+  // Ringkasan Profil hanya sebagai fallback kalau Pembahasan tidak tersedia
+  if (data.seniority_fit && !data.synthesis) {
     let cleanSummary = data.seniority_fit.replace(/Kesimpulan Pengalaman:\s*/i, '');
     html += `
       <div class="advice-section advice-summary">

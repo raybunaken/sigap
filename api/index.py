@@ -1163,7 +1163,7 @@ async def _groq_json(messages: list, max_tokens: int = 1200) -> Optional[dict]:
             response_format={"type": "json_object"},
             max_tokens=max_tokens,
             temperature=0.1,
-            timeout=30,
+            timeout=20,
         )
         parsed = _extract_json(raw)
         if parsed:
@@ -1676,7 +1676,10 @@ async def analyze_job(req: AnalyzeJobRequest):
         logger.warning("analyze-job v2 gagal, fallback ke legacy prompt")
         result = await analyze_job_legacy(cv, job_title, job_desc)
     if result is None:
-        return {"error": "Gagal menghubungi AI Server. Coba lagi."}
+        return {
+            "error": "Server AI sedang sibuk (kemungkinan kena limit sesaat). "
+                     "Tunggu sekitar 30 detik lalu coba lagi."
+        }
     return result
 
 class CoverLetterRequest(BaseModel):
