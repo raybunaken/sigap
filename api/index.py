@@ -1667,9 +1667,9 @@ Reply ONLY in valid JSON:
 @api_router.post("/analyze-job", tags=["Extension"])
 @api_router_index.post("/analyze-job", tags=["Extension"])
 async def analyze_job(req: AnalyzeJobRequest):
-    cv = req.cv_text[:8000]
+    cv = req.cv_text[:4000]
     job_title = req.job_title[:200]
-    job_desc = req.job_description[:8000]
+    job_desc = req.job_description[:4000]
 
     result = await analyze_job_v2(cv, job_title, job_desc)
     if result is None:
