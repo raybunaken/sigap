@@ -322,18 +322,24 @@ function renderResult(data, jobData) {
     matchedEl.innerHTML = '';
     const mustMet = data.matched_skills || [];
     const plusMet = data.matched_plus_skills || [];
+
+    const checkSvg = '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>';
+    const plusSvg = '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>';
+
     if (mustMet.length || plusMet.length) {
       mustMet.forEach(s => {
         const chip = document.createElement('span');
         chip.className = 'chip green';
-        chip.textContent = s;
+        chip.innerHTML = checkSvg + '<span></span>';
+        chip.querySelector('span').textContent = s;
         matchedEl.appendChild(chip);
       });
       plusMet.forEach(s => {
         const chip = document.createElement('span');
         chip.className = 'chip green plus';
-        chip.textContent = s + ' +';
         chip.title = 'Bukan syarat wajib, tapi jadi nilai plus';
+        chip.innerHTML = plusSvg + '<span></span>';
+        chip.querySelector('span').textContent = s;
         matchedEl.appendChild(chip);
       });
     } else {
@@ -346,10 +352,12 @@ function renderResult(data, jobData) {
   if (missingEl) {
     missingEl.innerHTML = '';
     if (data.missing_skills && data.missing_skills.length) {
+      const xSvg = '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>';
       data.missing_skills.forEach(s => {
         const chip = document.createElement('span');
         chip.className = 'chip red';
-        chip.textContent = s;
+        chip.innerHTML = xSvg + '<span></span>';
+        chip.querySelector('span').textContent = s;
         missingEl.appendChild(chip);
       });
     } else {
