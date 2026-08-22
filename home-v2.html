@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Skillsy Copilot | Tahu peluangmu sebelum apply [PROTOTYPE v2]</title>
+  <title>Skillsy Copilot | Know your odds before you apply [PROTOTYPE v2]</title>
   <meta name="robots" content="noindex">
   <link rel="icon" type="image/svg+xml" href="logo.svg">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -35,7 +35,6 @@
       line-height: 1.6;
     }
 
-    /* ── ambient background: glow + grid ── */
     .bg-fx { position: fixed; inset: 0; z-index: -1; pointer-events: none; }
     .bg-fx::before {
       content: '';
@@ -75,6 +74,14 @@
     .nav-links { display: flex; gap: 22px; }
     .nav-links a { color: var(--muted); text-decoration: none; font-size: 13.5px; font-weight: 500; transition: color .2s; }
     .nav-links a:hover { color: var(--text); }
+    .lang-toggle {
+      background: rgba(255,255,255,0.06); border: 1px solid var(--border);
+      color: var(--text); font-family: var(--font-body);
+      font-size: 12px; font-weight: 700; cursor: pointer;
+      padding: 7px 13px; border-radius: 100px;
+      transition: all .2s;
+    }
+    .lang-toggle:hover { background: var(--lime); color: #0d1210; border-color: var(--lime); }
     .nav-cta {
       background: var(--lime); color: #0d1210;
       font-size: 13.5px; font-weight: 700; text-decoration: none;
@@ -203,33 +210,30 @@
     .sec-head h2 { font-family: var(--font-display); font-size: clamp(28px, 3.6vw, 40px); font-weight: 800; letter-spacing: -0.02em; line-height: 1.15; margin-bottom: 14px; }
     .sec-head p { color: var(--muted); font-size: 15.5px; }
 
-    /* ── BENTO ── */
-    .bento { display: grid; grid-template-columns: repeat(6, 1fr); gap: 16px; }
-    .b-card {
+    /* ── FEATURES (grid seragam, rapi) ── */
+    .features { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+    .f-card {
       background: var(--glass); border: 1px solid var(--border);
-      border-radius: var(--radius); padding: 26px;
+      border-radius: var(--radius); padding: 28px 26px;
+      display: flex; flex-direction: column; gap: 0;
       transition: transform .25s, border-color .25s, background .25s;
-      position: relative; overflow: hidden;
     }
-    .b-card:hover { transform: translateY(-4px); border-color: rgba(212,255,50,0.28); background: var(--glass-2); }
-    .b-card.wide { grid-column: span 4; }
-    .b-card.big  { grid-column: span 2; grid-row: span 2; }
-    .b-card.mid  { grid-column: span 2; }
-    .b-icon {
-      width: 42px; height: 42px; border-radius: 12px;
+    .f-card:hover { transform: translateY(-4px); border-color: rgba(212,255,50,0.28); background: var(--glass-2); }
+    .f-icon {
+      width: 42px; height: 42px; border-radius: 12px; flex-shrink: 0;
       background: var(--lime-dim); border: 1px solid rgba(212,255,50,0.2);
       display: flex; align-items: center; justify-content: center;
-      color: var(--lime); margin-bottom: 16px;
+      color: var(--lime); margin-bottom: 18px;
     }
-    .b-icon svg { width: 20px; height: 20px; stroke: currentColor; }
-    .b-card h3 { font-family: var(--font-display); font-size: 17px; font-weight: 700; margin-bottom: 8px; }
-    .b-card p { font-size: 13.5px; color: var(--muted); }
-    .b-card .b-visual { margin-top: 18px; }
+    .f-icon svg { width: 20px; height: 20px; stroke: currentColor; }
+    .f-card h3 { font-family: var(--font-display); font-size: 16.5px; font-weight: 700; margin-bottom: 8px; }
+    .f-card p { font-size: 13.5px; color: var(--muted); }
+    .f-card .f-visual { margin-top: auto; padding-top: 18px; }
 
-    .b-score-demo { display: flex; align-items: center; gap: 14px; }
-    .b-score-demo .mini-ring { --sz: 62px; }
-    .b-score-demo .mini-ring b { font-size: 16px; }
-    .b-score-demo p { font-size: 12px; }
+    .f-score-demo { display: flex; align-items: center; gap: 14px; }
+    .f-score-demo .mini-ring { --sz: 62px; }
+    .f-score-demo .mini-ring b { font-size: 16px; }
+    .f-score-demo p { font-size: 12px; }
 
     /* ── STATS ── */
     .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
@@ -293,23 +297,19 @@
     .foot .logo { font-family: var(--font-display); font-weight: 800; color: var(--text); }
     .foot .logo span { color: var(--lime); }
 
-    /* ── reveal on scroll ── */
     .reveal { opacity: 0; transform: translateY(24px); transition: opacity .7s ease, transform .7s ease; }
     .reveal.visible { opacity: 1; transform: none; }
 
-    /* ── RESPONSIVE ── */
     @media (max-width: 920px) {
       .hero { grid-template-columns: 1fr; padding-top: 60px; gap: 44px; }
       .mockup { transform: none; max-width: 420px; margin: 0 auto; }
-      .bento { grid-template-columns: repeat(2, 1fr); }
-      .b-card.wide, .b-card.big, .b-card.mid { grid-column: span 2; }
+      .features { grid-template-columns: repeat(2, 1fr); }
       .stats-grid { grid-template-columns: repeat(2, 1fr); }
       .hiw { grid-template-columns: 1fr; }
       .nav-links { display: none; }
     }
     @media (max-width: 560px) {
-      .bento { grid-template-columns: 1fr; }
-      .b-card.wide, .b-card.big, .b-card.mid { grid-column: span 1; }
+      .features { grid-template-columns: 1fr; }
       .stats-grid { grid-template-columns: 1fr; }
     }
   </style>
@@ -321,28 +321,26 @@
 <nav>
   <a class="nav-logo" href="#">Skillsy<span>.</span></a>
   <div class="nav-links">
-    <a href="#fitur">Fitur</a>
-    <a href="#cara-kerja">Cara Kerja</a>
-    <a href="#faq">FAQ</a>
+    <a href="#fitur" data-en="Features" data-id="Fitur">Features</a>
+    <a href="#cara-kerja" data-en="How it Works" data-id="Cara Kerja">How it Works</a>
+    <a href="#faq" data-en="FAQ" data-id="FAQ">FAQ</a>
   </div>
-  <a class="nav-cta" href="#gabung">Gabung Waitlist</a>
+  <button class="lang-toggle" id="langToggle">EN</button>
+  <a class="nav-cta" href="#gabung" data-en="Join Waitlist" data-id="Gabung Waitlist">Join Waitlist</a>
 </nav>
 
 <div class="container">
 
-  <!-- HERO -->
   <header class="hero">
     <div>
-      <div class="hero-badge"><span class="dot"></span> Early Beta, September 2026</div>
-      <h1>Tahu peluangmu, <em>sebelum</em> kamu apply.</h1>
-      <p class="sub">Skillsy membaca lowongan di LinkedIn dan JobStreet, membandingkannya dengan CV kamu, lalu memberi tahu apa yang kurang. Semua dari browser kamu, dalam hitungan detik.</p>
+      <div class="hero-badge"><span class="dot"></span> <span data-en="Early Beta, September 2026" data-id="Early Beta, September 2026">Early Beta, September 2026</span></div>
+      <h1 data-en="Know your odds, <em>before</em> you apply." data-id="Tahu peluangmu, <em>sebelum</em> kamu apply.">Know your odds, <em>before</em> you apply.</h1>
+      <p class="sub" data-en="Skillsy reads job postings on LinkedIn and JobStreet, compares them with your CV, and tells you exactly what is missing. All from your browser, in seconds." data-id="Skillsy membaca lowongan di LinkedIn dan JobStreet, membandingkannya dengan CV kamu, lalu memberi tahu apa yang kurang. Semua dari browser kamu, dalam hitungan detik.">Skillsy reads job postings on LinkedIn and JobStreet, compares them with your CV, and tells you exactly what is missing. All from your browser, in seconds.</p>
       <div class="hero-ctas">
-        <a class="btn-primary" href="#gabung">Gabung Waitlist
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-        </a>
-        <a class="btn-ghost" href="#cara-kerja">Lihat cara kerja</a>
+        <a class="btn-primary" href="#gabung" data-en="Join Waitlist" data-id="Gabung Waitlist">Join Waitlist</a>
+        <a class="btn-ghost" href="#cara-kerja" data-en="See how it works" data-id="Lihat cara kerja">See how it works</a>
       </div>
-      <p class="hero-note"><strong>Gratis</strong> selama beta. CV kamu diproses di browser, bukan di server kami.</p>
+      <p class="hero-note"><strong data-en="Free" data-id="Gratis">Free</strong> <span data-en="during beta. Your CV is processed in your browser, never on our servers." data-id="selama beta. CV kamu diproses di browser, bukan di server kami.">during beta. Your CV is processed in your browser, never on our servers.</span></p>
     </div>
 
     <div class="mockup-wrap reveal">
@@ -356,11 +354,11 @@
           <div class="mock-score-row">
             <div class="ring"><b>78%</b><label>Match</label></div>
             <div class="mock-score-info">
-              <span class="mock-tag">Layak dicoba, perbaiki 2 hal</span>
+              <span class="mock-tag" data-en="Worth trying, fix 2 things first" data-id="Layak dicoba, perbaiki 2 hal">Worth trying, fix 2 things first</span>
               <div class="mock-bars">
-                <div class="mbar"><span>Pengalaman</span><div class="track"><div class="fill" style="--w:85%; background:#22c55e;"></div></div><b>85</b></div>
-                <div class="mbar"><span>Skill Wajib</span><div class="track"><div class="fill" style="--w:71%; background:#22c55e;"></div></div><b>71</b></div>
-                <div class="mbar"><span>Edukasi</span><div class="track"><div class="fill" style="--w:100%; background:#22c55e;"></div></div><b>100</b></div>
+                <div class="mbar"><span data-en="Experience" data-id="Pengalaman">Experience</span><div class="track"><div class="fill" style="--w:85%; background:#22c55e;"></div></div><b>85</b></div>
+                <div class="mbar"><span data-en="Core skills" data-id="Skill Wajib">Core skills</span><div class="track"><div class="fill" style="--w:71%; background:#22c55e;"></div></div><b>71</b></div>
+                <div class="mbar"><span data-en="Education" data-id="Edukasi">Education</span><div class="track"><div class="fill" style="--w:100%; background:#22c55e;"></div></div><b>100</b></div>
               </div>
             </div>
           </div>
@@ -377,171 +375,172 @@
   </header>
 </div>
 
-<!-- MARQUEE -->
 <div class="marquee-section reveal">
-  <div class="marquee-label">Bekerja di lowongan favoritmu</div>
+  <div class="marquee-label" data-en="Works on your favorite job boards" data-id="Bekerja di lowongan favoritmu">Works on your favorite job boards</div>
   <div class="marquee">
     <div class="marquee-track">
-      <span class="mq-item">LinkedIn</span>
-      <span class="mq-item">JobStreet</span>
-      <span class="mq-item">Glints</span>
-      <span class="mq-item">Kalibrr</span>
-      <span class="mq-item">Tech in Asia</span>
-      <span class="mq-item">Kintsugi</span>
-      <span class="mq-item">MyCareersFuture</span>
-      <span class="mq-item">LinkedIn</span>
-      <span class="mq-item">JobStreet</span>
-      <span class="mq-item">Glints</span>
-      <span class="mq-item">Kalibrr</span>
-      <span class="mq-item">Tech in Asia</span>
-      <span class="mq-item">Kintsugi</span>
-      <span class="mq-item">MyCareersFuture</span>
+      <span class="mq-item">LinkedIn</span><span class="mq-item">JobStreet</span><span class="mq-item">Glints</span><span class="mq-item">Kalibrr</span><span class="mq-item">Tech in Asia</span><span class="mq-item">Kintsugi</span><span class="mq-item">MyCareersFuture</span>
+      <span class="mq-item">LinkedIn</span><span class="mq-item">JobStreet</span><span class="mq-item">Glints</span><span class="mq-item">Kalibrr</span><span class="mq-item">Tech in Asia</span><span class="mq-item">Kintsugi</span><span class="mq-item">MyCareersFuture</span>
     </div>
   </div>
 </div>
 
 <div class="container">
 
-  <!-- STATS -->
   <section id="kenapa">
     <div class="sec-head reveal">
-      <div class="sec-eyebrow">Kenapa perlu</div>
-      <h2>Pasar kerja itu berat. Angkanya nyata.</h2>
-      <p>Data resmi dari Badan Pusat Statistik (BPS), lembaga statistik Indonesia.</p>
+      <div class="sec-eyebrow" data-en="Why it matters" data-id="Kenapa perlu">Why it matters</div>
+      <h2 data-en="The job market is brutal. The numbers are real." data-id="Pasar kerja itu berat. Angkanya nyata.">The job market is brutal. The numbers are real.</h2>
+      <p data-en="Official data from Badan Pusat Statistik (BPS), Indonesia's statistics agency." data-id="Data resmi dari Badan Pusat Statistik (BPS), lembaga statistik Indonesia.">Official data from Badan Pusat Statistik (BPS), Indonesia's statistics agency.</p>
     </div>
     <div class="stats-grid">
-      <div class="stat reveal"><b>7.47Jt</b><span>Penganggur terbuka yang bersaing memperebutkan pekerjaan yang sama (BPS, Agustus 2024)</span></div>
-      <div class="stat reveal"><b>4.91%</b><span>Tingkat Pengangguran Terbuka nasional (BPS, Agustus 2024). Setiap lamaran harus tepat sasaran.</span></div>
-      <div class="stat reveal"><b>6-12</b><span>Bulan yang dihabiskan fresh graduate rata-rata untuk mencari kerja. Skillsy memangkas menebak-menebaknya.</span></div>
-      <div class="stat reveal"><b>Rp 5.28jt</b><span>Rata-rata gaji sektor tertinggi di Indonesia: Informasi dan Komunikasi (BPS, Agustus 2025)</span></div>
+      <div class="stat reveal"><b>7.47M</b><span data-en="Openly unemployed Indonesians competing for the same jobs (BPS, Aug 2024)" data-id="Penganggur terbuka yang bersaing memperebutkan pekerjaan yang sama (BPS, Agustus 2024)">Openly unemployed Indonesians competing for the same jobs (BPS, Aug 2024)</span></div>
+      <div class="stat reveal"><b>4.91%</b><span data-en="National open unemployment rate (BPS, Aug 2024). Every application has to count." data-id="Tingkat Pengangguran Terbuka nasional (BPS, Agustus 2024). Setiap lamaran harus tepat sasaran.">National open unemployment rate (BPS, Aug 2024). Every application has to count.</span></div>
+      <div class="stat reveal"><b>6-12</b><span data-en="Months the average fresh graduate spends job hunting. Skillsy cuts the guessing." data-id="Bulan yang dihabiskan fresh graduate rata-rata untuk mencari kerja. Skillsy memangkas menebak-menebaknya.">Months the average fresh graduate spends job hunting. Skillsy cuts the guessing.</span></div>
+      <div class="stat reveal"><b>Rp 5.28M</b><span data-en="Average salary in Indonesia's highest-paying sector: Information & Communication (BPS, Aug 2025)" data-id="Rata-rata gaji sektor tertinggi di Indonesia: Informasi dan Komunikasi (BPS, Agustus 2025)">Average salary in Indonesia's highest-paying sector: Information & Communication (BPS, Aug 2025)</span></div>
     </div>
   </section>
 
-  <!-- BENTO FEATURES -->
   <section id="fitur">
     <div class="sec-head reveal">
-      <div class="sec-eyebrow">Fitur</div>
-      <h2>Semua yang kamu butuhkan untuk apply dengan percaya diri</h2>
-      <p>Dari skor kecocokan sampai surat lamaran, dalam satu panel di samping lowongan yang sedang kamu baca.</p>
+      <div class="sec-eyebrow" data-en="Features" data-id="Fitur">Features</div>
+      <h2 data-en="Everything you need to apply with confidence" data-id="Semua yang kamu butuhkan untuk apply dengan percaya diri">Everything you need to apply with confidence</h2>
+      <p data-en="From match score to cover letter, in one panel next to the job you are reading." data-id="Dari skor kecocokan sampai surat lamaran, dalam satu panel di samping lowongan yang sedang kamu baca.">From match score to cover letter, in one panel next to the job you are reading.</p>
     </div>
-    <div class="bento">
-      <div class="b-card wide reveal">
-        <div class="b-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
-        <h3>Skor kecocokan yang bisa dipertanggungjawabkan</h3>
-        <p>Bukan sekadar angka. Setiap skor punya rincian: pengalaman, skill wajib, plus, dan edukasi. Kamu tahu persis dari mana angka itu berasal.</p>
-        <div class="b-visual b-score-demo">
+    <div class="features">
+      <div class="f-card reveal">
+        <div class="f-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
+        <h3 data-en="A score you can trust" data-id="Skor yang bisa dipercaya">A score you can trust</h3>
+        <p data-en="Not just a number. Every score shows its breakdown: experience, core skills, plus skills, education. You know exactly where it came from." data-id="Bukan sekadar angka. Setiap skor punya rincian: pengalaman, skill wajib, plus, dan edukasi. Kamu tahu persis dari mana angka itu berasal.">Not just a number. Every score shows its breakdown: experience, core skills, plus skills, education. You know exactly where it came from.</p>
+        <div class="f-visual f-score-demo">
           <div class="ring mini-ring"><b>82%</b><label>Match</label></div>
-          <p>"Layak dicoba, tapi benahi dulu 3 hal ini sebelum apply."</p>
+          <p data-en="&quot;Worth applying, but fix these 3 things first.&quot;" data-id="&quot;Layak dicoba, tapi benahi 3 hal ini dulu.&quot;">"Worth applying, but fix these 3 things first."</p>
         </div>
       </div>
-      <div class="b-card big reveal">
-        <div class="b-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></div>
-        <h3>Deteksi skill gap</h3>
-        <p>Requirement lowongan dibedah satu per satu: yang sudah kamu punya, yang kurang, dan yang bisa dijembatani dari skill terkait. Ada bukti dari CV kamu sendiri.</p>
-        <div class="b-visual mock-chips">
+      <div class="f-card reveal">
+        <div class="f-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></div>
+        <h3 data-en="Skill gap detection" data-id="Deteksi skill gap">Skill gap detection</h3>
+        <p data-en="Every requirement dissected one by one: what you have, what is missing, and what can be bridged from related skills, with evidence from your own CV." data-id="Requirement lowongan dibedah satu per satu: yang sudah kamu punya, yang kurang, dan yang bisa dijembatani dari skill terkait. Ada bukti dari CV kamu sendiri.">Every requirement dissected one by one: what you have, what is missing, and what can be bridged from related skills, with evidence from your own CV.</p>
+        <div class="f-visual mock-chips">
           <span class="mchip"><svg viewBox="0 0 24 24" fill="none"><polyline points="20 6 9 17 4 12"/></svg>SQL</span>
           <span class="mchip miss"><svg viewBox="0 0 24 24" fill="none"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>Kubernetes</span>
           <span class="mchip miss"><svg viewBox="0 0 24 24" fill="none"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>Docker</span>
         </div>
       </div>
-      <div class="b-card mid reveal">
-        <div class="b-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg></div>
-        <h3>Keyword ATS siap salin</h3>
-        <p>Kata kunci yang dicari sistem ATS di lowongan ini. Klik untuk menyalin, tempel ke CV kamu.</p>
+      <div class="f-card reveal">
+        <div class="f-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg></div>
+        <h3 data-en="ATS keywords, ready to copy" data-id="Keyword ATS siap salin">ATS keywords, ready to copy</h3>
+        <p data-en="The exact keywords ATS systems look for in this posting. Click to copy, paste into your CV." data-id="Kata kunci yang dicari sistem ATS di lowongan ini. Klik untuk menyalin, tempel ke CV kamu.">The exact keywords ATS systems look for in this posting. Click to copy, paste into your CV.</p>
       </div>
-      <div class="b-card mid reveal">
-        <div class="b-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></div>
-        <h3>Surat lamaran otomatis</h3>
-        <p>Dirakit dari skill dan pengalaman asli kamu, disesuaikan untuk posisi ini. Edit, salin, kirim.</p>
+      <div class="f-card reveal">
+        <div class="f-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></div>
+        <h3 data-en="Automatic cover letters" data-id="Surat lamaran otomatis">Automatic cover letters</h3>
+        <p data-en="Built from your real skills and experience, tailored to this position. Edit, copy, send." data-id="Dirakit dari skill dan pengalaman asli kamu, disesuaikan untuk posisi ini. Edit, salin, kirim.">Built from your real skills and experience, tailored to this position. Edit, copy, send.</p>
       </div>
-      <div class="b-card mid reveal">
-        <div class="b-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
-        <h3>Privat by design</h3>
-        <p>File CV kamu diproses di dalam browser, tidak pernah diunggah. Tidak perlu akun.</p>
+      <div class="f-card reveal">
+        <div class="f-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+        <h3 data-en="Private by design" data-id="Privat by design">Private by design</h3>
+        <p data-en="Your CV file is parsed inside your browser, never uploaded. No account needed." data-id="File CV kamu diproses di dalam browser, tidak pernah diunggah. Tidak perlu akun.">Your CV file is parsed inside your browser, never uploaded. No account needed.</p>
       </div>
-      <div class="b-card mid reveal">
-        <div class="b-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
-        <h3>Riwayat + insight</h3>
-        <p>50 analisis terakhir tersimpan lokal, plus insight skill yang paling sering kamu kurangi.</p>
+      <div class="f-card reveal">
+        <div class="f-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
+        <h3 data-en="History + insights" data-id="Riwayat + insight">History + insights</h3>
+        <p data-en="Your last 50 analyses stored locally, plus insight into the skills you lack most often." data-id="50 analisis terakhir tersimpan lokal, plus insight skill yang paling sering kamu kurangi.">Your last 50 analyses stored locally, plus insight into the skills you lack most often.</p>
       </div>
     </div>
   </section>
 
-  <!-- HOW IT WORKS -->
   <section id="cara-kerja">
     <div class="sec-head reveal">
-      <div class="sec-eyebrow">Cara kerja</div>
-      <h2>Tiga langkah, sepuluh detik</h2>
+      <div class="sec-eyebrow" data-en="How it works" data-id="Cara kerja">How it works</div>
+      <h2 data-en="Three steps, ten seconds" data-id="Tiga langkah, sepuluh detik">Three steps, ten seconds</h2>
     </div>
     <div class="hiw">
       <div class="hiw-card reveal">
         <div class="hiw-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></div>
-        <h3>Buka lowongan</h3>
-        <p>Browse lowongan di LinkedIn, JobStreet, Glints, atau Kalibrr seperti biasa. Nggak ada yang berubah di alur kerjamu.</p>
+        <h3 data-en="Open a job posting" data-id="Buka lowongan">Open a job posting</h3>
+        <p data-en="Browse jobs on LinkedIn, JobStreet, Glints, or Kalibrr as usual. Nothing changes in your workflow." data-id="Browse lowongan di LinkedIn, JobStreet, Glints, atau Kalibrr seperti biasa. Nggak ada yang berubah di alur kerjamu.">Browse jobs on LinkedIn, JobStreet, Glints, or Kalibrr as usual. Nothing changes in your workflow.</p>
       </div>
       <div class="hiw-card reveal">
         <div class="hiw-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
-        <h3>Upload CV sekali</h3>
-        <p>PDF CV kamu dibaca langsung di browser dan disimpan di perangkatmu. Cukup sekali, untuk semua lowongan berikutnya.</p>
+        <h3 data-en="Upload your CV once" data-id="Upload CV sekali">Upload your CV once</h3>
+        <p data-en="Your PDF is read directly in the browser and stored on your device. Once, for every job after that." data-id="PDF CV kamu dibaca langsung di browser dan disimpan di perangkatmu. Cukup sekali, untuk semua lowongan berikutnya.">Your PDF is read directly in the browser and stored on your device. Once, for every job after that.</p>
       </div>
       <div class="hiw-card reveal">
         <div class="hiw-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
-        <h3>Dapat analisis instan</h3>
-        <p>Skor kecocokan, daftar kekurangan, keyword ATS, sampai surat lamaran. Tahu posisimu sebelum menghabiskan tenaga apply.</p>
+        <h3 data-en="Get instant analysis" data-id="Dapat analisis instan">Get instant analysis</h3>
+        <p data-en="Match score, missing skills, ATS keywords, even a cover letter. Know where you stand before spending effort applying." data-id="Skor kecocokan, daftar kekurangan, keyword ATS, sampai surat lamaran. Tahu posisimu sebelum menghabiskan tenaga apply.">Match score, missing skills, ATS keywords, even a cover letter. Know where you stand before spending effort applying.</p>
       </div>
     </div>
   </section>
 
-  <!-- FAQ -->
   <section id="faq">
     <div class="sec-head reveal">
       <div class="sec-eyebrow">FAQ</div>
-      <h2>Pertanyaan yang sering muncul</h2>
+      <h2 data-en="Questions people ask" data-id="Pertanyaan yang sering muncul">Questions people ask</h2>
     </div>
     <div class="faq-list">
       <details class="faq-item reveal">
-        <summary>Apakah CV saya aman?</summary>
-        <p>PDF CV kamu diproses sepenuhnya di dalam browser. File-nya tidak pernah meninggalkan perangkatmu. Untuk analisis, teks hasil ekstraksi dikirim aman ke server kami, diproses oleh mesin AI, dan tidak pernah disimpan.</p>
+        <summary data-en="Is my CV safe?" data-id="Apakah CV saya aman?">Is my CV safe?</summary>
+        <p data-en="Your CV PDF is parsed entirely inside your browser. The file never leaves your device. For analysis, the extracted text is sent securely to our server, processed by our AI engine, and never stored." data-id="PDF CV kamu diproses sepenuhnya di dalam browser. File-nya tidak pernah meninggalkan perangkatmu. Untuk analisis, teks hasil ekstraksi dikirim aman ke server kami, diproses oleh mesin AI, dan tidak pernah disimpan.">Your CV PDF is parsed entirely inside your browser. The file never leaves your device. For analysis, the extracted text is sent securely to our server, processed by our AI engine, and never stored.</p>
       </details>
       <details class="faq-item reveal">
-        <summary>Apakah Skillsy gratis?</summary>
-        <p>Ya. Fitur inti (skor, analisis gap, keyword ATS, surat lamaran) gratis selama masa beta. Member waitlist awal mendapat akses lebih dulu.</p>
+        <summary data-en="Is Skillsy free?" data-id="Apakah Skillsy gratis?">Is Skillsy free?</summary>
+        <p data-en="Yes. Core features (score, gap analysis, ATS keywords, cover letters) are free during beta. Early waitlist members get access first." data-id="Ya. Fitur inti (skor, analisis gap, keyword ATS, surat lamaran) gratis selama masa beta. Member waitlist awal mendapat akses lebih dulu.">Yes. Core features (score, gap analysis, ATS keywords, cover letters) are free during beta. Early waitlist members get access first.</p>
       </details>
       <details class="faq-item reveal">
-        <summary>Situs lowongan apa saja yang didukung?</summary>
-        <p>LinkedIn, JobStreet, Glints, Kalibrr, Tech in Asia, Kintsugi, dan MyCareersFuture, dengan fallback pintar yang juga bekerja di sebagian besar job board lain.</p>
+        <summary data-en="Which job boards are supported?" data-id="Situs lowongan apa saja yang didukung?">Which job boards are supported?</summary>
+        <p data-en="LinkedIn, JobStreet, Glints, Kalibrr, Tech in Asia, Kintsugi, and MyCareersFuture, with a smart fallback that works on most other job boards too." data-id="LinkedIn, JobStreet, Glints, Kalibrr, Tech in Asia, Kintsugi, dan MyCareersFuture, dengan fallback pintar yang juga bekerja di sebagian besar job board lain.">LinkedIn, JobStreet, Glints, Kalibrr, Tech in Asia, Kintsugi, and MyCareersFuture, with a smart fallback that works on most other job boards too.</p>
       </details>
       <details class="faq-item reveal">
-        <summary>Seberapa akurat skornya?</summary>
-        <p>Skor dihitung dari formula tetap di atas penilaian per-requirement, bukan karangan bebas AI. Skill dinilai mesin pencocok sinonim, pengalaman dihitung dari tahun, dan hasil yang sama selalu konsisten untuk input yang sama.</p>
+        <summary data-en="How accurate is the score?" data-id="Seberapa akurat skornya?">How accurate is the score?</summary>
+        <p data-en="Scores are computed by a fixed formula over per-requirement judgments, not free-form AI guesses. Skills are matched by a synonym engine, experience is counted in years, and identical inputs always produce identical scores." data-id="Skor dihitung dari formula tetap di atas penilaian per-requirement, bukan karangan bebas AI. Skill dinilai mesin pencocok sinonim, pengalaman dihitung dari tahun, dan hasil yang sama selalu konsisten untuk input yang sama.">Scores are computed by a fixed formula over per-requirement judgments, not free-form AI guesses. Skills are matched by a synonym engine, experience is counted in years, and identical inputs always produce identical scores.</p>
       </details>
     </div>
   </section>
 
-  <!-- FINAL CTA -->
   <section id="gabung">
     <div class="final-cta reveal">
-      <h2>Berhenti menebak. Mulai tahu.</h2>
-      <p>Early Beta dibuka September 2026. Member waitlist dapat akses lebih dulu, sesuai urutan.</p>
-      <a class="btn-primary" href="#">Gabung Waitlist
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-      </a>
+      <h2 data-en="Stop guessing. Start knowing." data-id="Berhenti menebak. Mulai tahu.">Stop guessing. Start knowing.</h2>
+      <p data-en="Early Beta opens September 2026. Waitlist members get access first, in order." data-id="Early Beta dibuka September 2026. Member waitlist dapat akses lebih dulu, sesuai urutan.">Early Beta opens September 2026. Waitlist members get access first, in order.</p>
+      <a class="btn-primary" href="#" data-en="Join Waitlist" data-id="Gabung Waitlist">Join Waitlist</a>
     </div>
   </section>
 </div>
 
 <footer>
   <div class="container foot">
-    <div><span class="logo">Skillsy<span>.</span></span> &copy; 2026. Semua hak dilindungi.</div>
+    <div><span class="logo">Skillsy<span>.</span></span> <span data-en="&copy; 2026. All rights reserved." data-id="&copy; 2026. Semua hak dilindungi.">&copy; 2026. All rights reserved.</span></div>
     <div>
-      <a href="privacy.html">Privasi</a>
-      <a href="mailto:raybunaken@gmail.com">Kontak</a>
-      <a href="investor.html">Investor</a>
+      <a href="privacy.html" data-en="Privacy" data-id="Privasi">Privacy</a>
+      <a href="mailto:raybunaken@gmail.com" data-en="Contact" data-id="Kontak">Contact</a>
+      <a href="investor.html" data-en="Investors" data-id="Investor">Investors</a>
     </div>
   </div>
 </footer>
 
 <script>
+  const langToggle = document.getElementById('langToggle');
+  const saved = localStorage.getItem('skillsy-lang');
+  let currentLang = saved === 'id' ? 'id' : 'en';
+
+  function applyLang(lang) {
+    currentLang = lang;
+    document.documentElement.lang = lang;
+    langToggle.innerText = lang === 'en' ? 'EN' : 'ID';
+    document.querySelectorAll('[data-en]').forEach(el => {
+      el.innerHTML = el.getAttribute('data-' + lang);
+    });
+  }
+
+  langToggle.addEventListener('click', () => {
+    const next = currentLang === 'en' ? 'id' : 'en';
+    localStorage.setItem('skillsy-lang', next);
+    applyLang(next);
+  });
+
+  applyLang(currentLang);
+
   const io = new IntersectionObserver((entries) => {
     entries.forEach(e => {
       if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); }
