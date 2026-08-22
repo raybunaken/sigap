@@ -559,13 +559,13 @@ body {
 
 /* chip skill plus (bukan wajib, nilai tambah) */
 .chip.green.plus {
-  background: rgba(74, 222, 128, 0.1);
-  border: 1px dashed rgba(74, 222, 128, 0.35);
-  color: #86efac;
-  opacity: 0.9;
+  border-style: dashed;
+  color: var(--text-muted);
 }
+.chip.green.plus svg { stroke: #86efac; opacity: 0.75; }
 
 /* ── SKILL CHIPS SECTIONS (Relevan / Belum Dimiliki) ────────────────────── */
+/* Netral senada ats-chip: kaca + teks putih; warna status hanya di ikon. */
 .skill-section {
   background: var(--glass-bg);
   border: 1px solid var(--glass-border);
@@ -578,39 +578,34 @@ body {
   align-items: center;
   gap: 7px;
   font-size: 11px;
-  font-weight: 800;
+  font-weight: 700;
   letter-spacing: 0.05em;
   text-transform: uppercase;
   margin: 0 0 10px 0;
+  color: var(--text-muted);
 }
 .skill-section h5 svg { stroke: currentColor; flex-shrink: 0; }
-.skill-section h5.green { color: #4ade80; }
-.skill-section h5.red   { color: #f87171; }
+.skill-section h5.green svg { stroke: #4ade80; }
+.skill-section h5.red   svg { stroke: #f87171; }
 
 .skill-chips { display: flex; flex-wrap: wrap; gap: 8px; }
 
 .chip {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
+  gap: 7px;
   padding: 7px 13px;
   border-radius: 100px;
   font-size: 12px;
   font-weight: 600;
   line-height: 1;
-  border: 1px solid transparent;
-  transition: transform 0.15s ease, background 0.15s ease;
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  color: var(--text);
+  transition: border-color 0.15s ease, background 0.15s ease;
 }
 .chip svg { stroke: currentColor; flex-shrink: 0; }
-.chip.green {
-  background: rgba(74, 222, 128, 0.08);
-  border-color: rgba(74, 222, 128, 0.28);
-  color: #86efac;
-}
-.chip.green:hover { background: rgba(74, 222, 128, 0.14); transform: translateY(-1px); }
-.chip.red {
-  background: rgba(248, 113, 113, 0.07);
-  border-color: rgba(248, 113, 113, 0.25);
-  color: #fca5a5;
-}
+.chip:hover { border-color: rgba(255, 255, 255, 0.2); background: var(--glass-bg-strong); }
+.chip.green svg { stroke: #4ade80; }
+.chip.red   svg { stroke: #f87171; }
 .empty-chips { font-size: 12px; color: var(--text-muted); font-style: italic; }
