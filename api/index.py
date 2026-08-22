@@ -48,6 +48,14 @@ from api.knowledge_base import (
 # ── CONFIG ────────────────────────────────────────────────────────────────
 GROQ_API_KEY = os.getenv("GROQ_API_KEY", "")
 GROQ_MODEL   = "openai/gpt-oss-120b"
+# Kuota gratis Groq 8k token/menit PER MODEL. Satu scan membakar ~10-13k
+# token, jadi pipeline dipecah ke beberapa model supaya tiap stage punya
+# kuota sendiri. Semua gpt-oss: reasoning_effort low + retry content kosong.
+# qwen3.6-27b DILARANG dipakai: json mode selalu 400, dan tanpa json mode
+# thinking-nya memakan seluruh budget token tanpa bisa dimatikan.
+MODEL_EXTRACT = "openai/gpt-oss-20b"
+MODEL_JUDGE   = "openai/gpt-oss-120b"
+MODEL_NARRATE = "openai/gpt-oss-20b"
 GROQ_URL     = "https://api.groq.com/openai/v1/chat/completions"
 
 # ── SKILL PATTERNS (satu sumber, untuk regex fallback CV parsing) ─────────
@@ -195,18 +203,22 @@ async def groq_request(
     max_tokens: int = 1024,
     temperature: float = 0.7,
     timeout: int = 20,
-    response_format: Optional[dict] = None
+    response_format: Optional[dict] = None,
+    model: Optional[str] = None,
 ) -> Optional[str]:
     """
     Satu-satunya fungsi yang panggil Groq API.
     Return content string, atau None kalau gagal.
-    Retry otomatis untuk 429 rate limit dan untuk model reasoning (gpt-oss)
-    yang menolak response_format json_object pada prompt kompleks:
-    panggilan diulang sekali tanpa json mode, parser _extract_json yang
-    membersihkan sisanya.
+    - Retry 429 dengan menunggu sesuai header x-ratelimit-reset-tokens
+      (jendela kuota gratis cuma ~12-30 detik, jadi tunggu yang benar,
+      bukan backoff 1-2 detik yang pasti gagal).
+    - Model reasoning (gpt-oss) kadang menolak response_format json_object
+      pada prompt kompleks: panggilan diulang tanpa json mode, parser
+      _extract_json yang membersihkan sisanya.
     """
     if not GROQ_API_KEY:
         return None
+    use_model = model or GROQ_MODEL
     headers = {"Authorization": f"Bearer {GROQ_API_KEY}", "Content-Type": "application/json"}
 
     async def _post(payload: dict) -> httpx.Response:
@@ -214,23 +226,33 @@ async def groq_request(
             return await client.post(GROQ_URL, headers=headers, json=payload)
 
     base_payload = {
-        "model": GROQ_MODEL,
+        "model": use_model,
         "messages": messages,
         "max_tokens": max_tokens,
         "temperature": temperature,
     }
+    # Model reasoning (gpt-oss) memakan max_tokens untuk berpikir duluan;
+    # reasoning_effort low menjaga token tetap untuk jawaban sebenarnya.
+    if use_model.startswith("openai/gpt-oss"):
+        base_payload["reasoning_effort"] = "low"
     use_json_mode = bool(response_format)
 
-    for attempt in range(3):
+    for attempt in range(4):
         payload = dict(base_payload)
         if response_format and use_json_mode:
             payload["response_format"] = response_format
         try:
             res = await _post(payload)
             if res.status_code == 429:
-                wait = 2 ** attempt
-                logger.warning(f"Groq 429, retry {attempt+1} after {wait}s...")
-                await asyncio.sleep(wait)
+                reset = res.headers.get("x-ratelimit-reset-tokens", "")
+                wait_s = 2.0
+                try:
+                    # format "12.33s"
+                    wait_s = min(float(str(reset).rstrip("s")) + 0.5, 20.0)
+                except ValueError:
+                    pass
+                logger.warning(f"Groq 429 ({use_model}), tunggu {wait_s:.1f}s lalu retry...")
+                await asyncio.sleep(wait_s)
                 continue
             if res.status_code == 400 and use_json_mode:
                 # model reasoning kadang gagal validasi json_object:
@@ -242,10 +264,19 @@ async def groq_request(
             if "choices" not in data:
                 logger.error(f"Groq no choices: {data}")
                 return None
-            return data["choices"][0]["message"]["content"].strip()
+            content = data["choices"][0]["message"]["content"]
+            if content and content.strip():
+                return content.strip()
+            # content kosong = reasoning menghabiskan budget token;
+            # ulangi dengan budget lebih besar
+            logger.warning(
+                f"Groq content kosong ({use_model}), retry dengan max_tokens lebih besar..."
+            )
+            base_payload["max_tokens"] = min(base_payload["max_tokens"] * 2, 6000)
+            continue
         except Exception as e:
             logger.error(f"Groq error (attempt {attempt+1}): {e}")
-            if attempt < 2:
+            if attempt < 3:
                 await asyncio.sleep(1)
     return None
 
@@ -1158,6 +1189,8 @@ def _extract_json(raw: Optional[str]) -> Optional[dict]:
     if not raw:
         return None
     cleaned = raw.replace("```json", "").replace("```", "").strip()
+    # qwen3.x "thinking mode" menyembur blok <think>...</think> sebelum jawaban
+    cleaned = re.sub(r"<think(?:ing)?>.*?</think(?:ing)?>", "", cleaned, flags=re.DOTALL | re.IGNORECASE).strip()
     try:
         return json.loads(cleaned)
     except Exception:
@@ -1170,7 +1203,7 @@ def _extract_json(raw: Optional[str]) -> Optional[dict]:
     return None
 
 
-async def _groq_json(messages: list, max_tokens: int = 1200) -> Optional[dict]:
+async def _groq_json(messages: list, max_tokens: int = 1200, model: Optional[str] = None) -> Optional[dict]:
     """Groq call dengan response_format JSON + 1x retry parsing."""
     for _ in range(2):
         raw = await groq_request(
@@ -1178,7 +1211,8 @@ async def _groq_json(messages: list, max_tokens: int = 1200) -> Optional[dict]:
             response_format={"type": "json_object"},
             max_tokens=max_tokens,
             temperature=0.1,
-            timeout=20,
+            timeout=25,
+            model=model,
         )
         parsed = _extract_json(raw)
         if parsed:
@@ -1352,7 +1386,7 @@ min_years must be a number or null (null if not stated)."""
     stage_a = await _groq_json([
         {"role": "system", "content": "Reply ONLY with valid JSON. No other text."},
         {"role": "user", "content": stage_a_prompt},
-    ], max_tokens=700)
+    ], max_tokens=700, model=MODEL_EXTRACT)
     if not stage_a:
         return None
 
@@ -1397,7 +1431,7 @@ Tasks:
    - "detail": ONE sentence in Bahasa Indonesia citing concrete evidence from the CV.
 
 CV:
-{cv}
+{cv[:6000]}
 
 items_to_judge:
 {json.dumps(items_to_judge, ensure_ascii=False)}
@@ -1417,7 +1451,7 @@ If items_to_judge is empty, return an empty "items" list."""
     stage_b = await _groq_json([
         {"role": "system", "content": "Reply ONLY with valid JSON. No other text."},
         {"role": "user", "content": stage_b_prompt},
-    ], max_tokens=1400)
+    ], max_tokens=2000, model=MODEL_JUDGE)
     if not stage_b:
         return None
 
@@ -1579,7 +1613,7 @@ Return ONLY valid JSON:
         stage_d = await _groq_json([
             {"role": "system", "content": "Reply ONLY with valid JSON. No other text."},
             {"role": "user", "content": stage_d_prompt},
-        ], max_tokens=1600)
+        ], max_tokens=1600, model=MODEL_NARRATE)
         if stage_d:
             details = [d for d in stage_d.get("details", []) if isinstance(d, str)]
             if len(details) == len(requirements_check):
@@ -1682,6 +1716,7 @@ Reply ONLY in valid JSON:
         [{"role": "system", "content": "Reply ONLY with valid JSON. No other text."},
          {"role": "user", "content": prompt}],
         response_format={"type": "json_object"}, max_tokens=1200,
+        model=MODEL_EXTRACT,
     )
     if not ai_resp:
         return None
