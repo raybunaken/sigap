@@ -5,7 +5,8 @@ Jalankan: python api.py
 """
 
 import os, json, logging, asyncio, re, pathlib, time
-from fastapi import FastAPI, HTTPException, UploadFile, File, APIRouter, Request
+from datetime import datetime, timezone
+from fastapi import FastAPI, HTTPException, UploadFile, File, APIRouter, Request, Response
 from fastapi.responses import FileResponse, JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
@@ -1801,42 +1802,55 @@ Tulis HANYA teks cover letter-nya langsung. Tidak ada label, tidak ada markdown.
 app.include_router(api_router)
 app.include_router(api_router_index)
 
-# Explicitly serve investor.html to bypass Vercel routing quirks
-@app.get("/investor.html")
-async def serve_investor():
-    file_path = pathlib.Path(__file__).parent.parent / "investor.html"
+# ── STATIC PAGES ──────────────────────────────────────────────────────────
+# Semua route statis WAJIB methods GET+HEAD: crawler (Googlebot dsb.) mengirim
+# HEAD dulu sebelum GET; @app.get saja tidak menerima HEAD di FastAPI, dan
+# request jatuh ke catch-all 404 yang merusak indeksasi SEO.
+def _serve_static(file_name: str, media_type: str = None):
+    file_path = pathlib.Path(__file__).parent.parent / file_name
     if file_path.exists():
-        return FileResponse(file_path)
-    return {"detail": "investor.html not found on disk"}
+        return FileResponse(file_path, media_type=media_type) if media_type else FileResponse(file_path)
+    return JSONResponse(status_code=404, content={"detail": f"{file_name} not found on disk"})
 
-@app.get("/privacy.html")
-async def serve_privacy():
-    file_path = pathlib.Path(__file__).parent.parent / "privacy.html"
-    if file_path.exists():
-        return FileResponse(file_path)
-    return {"detail": "privacy.html not found on disk"}
-
-@app.get("/logo.svg")
-def serve_logo():
-    file_path = pathlib.Path(__file__).parent.parent / "logo.svg"
-    if file_path.exists():
-        return FileResponse(file_path, media_type="image/svg+xml")
-    return {"detail": "logo.svg not found"}
-
-# Catch-all route to debug Vercel path issues
-@app.get("/")
+@app.api_route("/", methods=["GET", "HEAD"])
 def serve_index():
-    file_path = pathlib.Path(__file__).parent.parent / "index.html"
-    if file_path.exists():
-        return FileResponse(file_path)
-    return {"detail": "index.html not found"}
+    return _serve_static("index.html", media_type="text/html")
 
-@app.get("/screenshot.png")
+@app.api_route("/investor.html", methods=["GET", "HEAD"])
+async def serve_investor():
+    return _serve_static("investor.html", media_type="text/html")
+
+@app.api_route("/privacy.html", methods=["GET", "HEAD"])
+async def serve_privacy():
+    return _serve_static("privacy.html", media_type="text/html")
+
+@app.api_route("/logo.svg", methods=["GET", "HEAD"])
+def serve_logo():
+    return _serve_static("logo.svg", media_type="image/svg+xml")
+
+@app.api_route("/screenshot.png", methods=["GET", "HEAD"])
 def serve_screenshot():
-    file_path = pathlib.Path(__file__).parent.parent / "screenshot.png"
-    if file_path.exists():
-        return FileResponse(file_path)
-    return {"detail": "screenshot.png not found"}
+    return _serve_static("screenshot.png", media_type="image/png")
+
+@app.api_route("/robots.txt", methods=["GET", "HEAD"])
+def serve_robots():
+    content = (
+        "User-agent: *\n"
+        "Allow: /\n"
+        "Disallow: /api/\n"
+        "Sitemap: https://skillsy.my.id/sitemap.xml\n"
+    )
+    return Response(content=content, media_type="text/plain")
+
+@app.api_route("/sitemap.xml", methods=["GET", "HEAD"])
+def serve_sitemap():
+    today = datetime.now(timezone.utc).strftime("%Y-%m-%d")
+    xml = f"""<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url><loc>https://skillsy.my.id/</loc><lastmod>{today}</lastmod><changefreq>weekly</changefreq><priority>1.0</priority></url>
+  <url><loc>https://skillsy.my.id/investor.html</loc><lastmod>{today}</lastmod><changefreq>monthly</changefreq><priority>0.3</priority></url>
+</urlset>"""
+    return Response(content=xml, media_type="application/xml")
 
 class WaitlistRequest(BaseModel):
     email: str
