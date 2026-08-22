@@ -77,6 +77,7 @@
 
     const descTry = [
       '#job-details',
+      'article',
       '.jobs-description-content__text',
       '.jobs-description__content',
       '.jobs-description',
@@ -89,6 +90,19 @@
       const el = document.querySelector(s);
       if (el) { const t = el.innerText.trim(); if (t.length > 80) { description = t; break; } }
     }
+    
+    // Ultimate Fallback: Jika tidak ketemu div spesifik, ambil seluruh teks dari panel utama
+    if (!description || description.length < 30) {
+      if (panel) {
+        description = panel.innerText.trim();
+      } else {
+        description = document.body.innerText.trim();
+      }
+      // Halaman utuh bisa 50rb+ karakter (nav, sidebar, rekomendasi).
+      // Batasi agar payload ke API tetap ringan dan relevan.
+      if (description.length > 20000) description = description.slice(0, 20000);
+    }
+
 
   } else if (isJobStreet) {
     // ── JOBSTREET (SEEK) ──────────────────────────────────────────────────

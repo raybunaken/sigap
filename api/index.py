@@ -47,7 +47,7 @@ from api.knowledge_base import (
 
 # ── CONFIG ────────────────────────────────────────────────────────────────
 GROQ_API_KEY = os.getenv("GROQ_API_KEY", "")
-GROQ_MODEL   = "openai/gpt-oss-20b"
+GROQ_MODEL   = "openai/gpt-oss-120b"
 GROQ_URL     = "https://api.groq.com/openai/v1/chat/completions"
 
 # ── SKILL PATTERNS (satu sumber, untuk regex fallback CV parsing) ─────────
@@ -200,34 +200,49 @@ async def groq_request(
     """
     Satu-satunya fungsi yang panggil Groq API.
     Return content string, atau None kalau gagal.
-    Sudah include retry otomatis untuk 429 rate limit.
+    Retry otomatis untuk 429 rate limit dan untuk model reasoning (gpt-oss)
+    yang menolak response_format json_object pada prompt kompleks:
+    panggilan diulang sekali tanpa json mode, parser _extract_json yang
+    membersihkan sisanya.
     """
     if not GROQ_API_KEY:
         return None
     headers = {"Authorization": f"Bearer {GROQ_API_KEY}", "Content-Type": "application/json"}
-    payload = {
+
+    async def _post(payload: dict) -> httpx.Response:
+        async with httpx.AsyncClient(timeout=timeout) as client:
+            return await client.post(GROQ_URL, headers=headers, json=payload)
+
+    base_payload = {
         "model": GROQ_MODEL,
         "messages": messages,
         "max_tokens": max_tokens,
         "temperature": temperature,
     }
-    if response_format:
-        payload["response_format"] = response_format
+    use_json_mode = bool(response_format)
 
     for attempt in range(3):
+        payload = dict(base_payload)
+        if response_format and use_json_mode:
+            payload["response_format"] = response_format
         try:
-            async with httpx.AsyncClient(timeout=timeout) as client:
-                res = await client.post(GROQ_URL, headers=headers, json=payload)
-                if res.status_code == 429:
-                    wait = 2 ** attempt
-                    logger.warning(f"Groq 429, retry {attempt+1} after {wait}s...")
-                    await asyncio.sleep(wait)
-                    continue
-                data = res.json()
-                if "choices" not in data:
-                    logger.error(f"Groq no choices: {data}")
-                    return None
-                return data["choices"][0]["message"]["content"].strip()
+            res = await _post(payload)
+            if res.status_code == 429:
+                wait = 2 ** attempt
+                logger.warning(f"Groq 429, retry {attempt+1} after {wait}s...")
+                await asyncio.sleep(wait)
+                continue
+            if res.status_code == 400 and use_json_mode:
+                # model reasoning kadang gagal validasi json_object:
+                # ulangi tanpa json mode (output tetap diparse _extract_json)
+                logger.warning("Groq 400 dengan json_object, retry tanpa json mode...")
+                use_json_mode = False
+                continue
+            data = res.json()
+            if "choices" not in data:
+                logger.error(f"Groq no choices: {data}")
+                return None
+            return data["choices"][0]["message"]["content"].strip()
         except Exception as e:
             logger.error(f"Groq error (attempt {attempt+1}): {e}")
             if attempt < 2:
@@ -1296,6 +1311,20 @@ def _items_pct(statuses: list) -> Optional[float]:
     return sum(1.0 if s == "met" else 0.5 if s == "partial" else 0.0 for s in statuses) / len(statuses)
 
 
+def _plain_dashes(s: Optional[str]) -> Optional[str]:
+    """Ganti em-dash/en-dash/non-breaking hyphen dengan tanda hubung biasa.
+    Output LLM tidak boleh mengandung karakter dash mewah."""
+    if not isinstance(s, str):
+        return s
+    return (
+        s.replace("\u2014", " - ")   # em dash
+         .replace("\u2013", "-")     # en dash
+         .replace("\u2012", "-")
+         .replace("\u2011", "-")     # non-breaking hyphen
+         .replace("\u2015", "-")
+    )
+
+
 async def analyze_job_v2(cv: str, job_title: str, job_desc: str) -> Optional[dict]:
     # ── STAGE A: ekstraksi struktur lowongan ───────────────────────────────
     stage_a_prompt = f"""You are a strict requirement extractor for job postings.
@@ -1556,15 +1585,15 @@ Return ONLY valid JSON:
             if len(details) == len(requirements_check):
                 for item, new_detail in zip(requirements_check, details):
                     if new_detail.strip():
-                        item["detail"] = new_detail.strip()[:400]
+                        item["detail"] = _plain_dashes(new_detail.strip())[:400]
             raw_synthesis = stage_d.get("synthesis")
             if isinstance(raw_synthesis, str) and raw_synthesis.strip():
-                synthesis = raw_synthesis.strip()[:600]
+                synthesis = _plain_dashes(raw_synthesis.strip())[:600]
 
     return {
         "readiness_score": readiness,
         "seniority_level": stage_b.get("seniority_level", ""),
-        "seniority_fit": stage_b.get("seniority_fit", ""),
+        "seniority_fit": _plain_dashes(stage_b.get("seniority_fit", "")),
         "requirements_check": requirements_check,
         "matched_skills": matched,
         "matched_plus_skills": matched_plus,
@@ -1667,9 +1696,11 @@ Reply ONLY in valid JSON:
 @api_router.post("/analyze-job", tags=["Extension"])
 @api_router_index.post("/analyze-job", tags=["Extension"])
 async def analyze_job(req: AnalyzeJobRequest):
-    cv = req.cv_text[:4000]
+    # 8000 karakter: LinkedIn sering menaruh section Requirements di akhir
+    # postingan; 4000 memotong syarat lowongan dan merusak ekstraksi Stage A.
+    cv = req.cv_text[:8000]
     job_title = req.job_title[:200]
-    job_desc = req.job_description[:4000]
+    job_desc = req.job_description[:8000]
 
     result = await analyze_job_v2(cv, job_title, job_desc)
     if result is None:

@@ -7,3 +7,5 @@ knowledge_base_scraped.json
 *.pdf
 
 .vercel
+.env.test
+.env.*
