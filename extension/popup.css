@@ -89,8 +89,13 @@ body {
 }
 .brand-logo {
   display: flex; align-items: center; justify-content: center;
-  color: var(--accent-neon);
-  filter: drop-shadow(0 0 8px rgba(212, 255, 50, 0.4));
+  width: 26px; height: 26px;
+  filter: drop-shadow(0 0 8px rgba(212, 255, 50, 0.35));
+}
+.brand-logo img {
+  width: 26px; height: 26px;
+  border-radius: 7px;
+  display: block;
 }
 
 #theme-toggle {
