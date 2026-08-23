@@ -41,29 +41,53 @@
 
   <!-- VIEW: HOME -->
   <div id="view-home" class="view">
-    <div class="cv-chip">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/></svg>
-      <span id="cv-name-home"></span>
-      <button id="change-cv-btn">Ganti</button>
+    <div class="home-header">
+      <div>
+        <p class="home-date" id="home-date"></p>
+        <h2 class="home-greeting" id="home-greeting">Halo, job hunter</h2>
+      </div>
+      <div class="home-mark">S<span>.</span></div>
     </div>
 
-    <div class="analyze-card">
-      <div class="analyze-icon-wrapper">
-        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+    <div class="cv-card">
+      <div class="cv-card-icon">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/></svg>
       </div>
-      <p class="analyze-title">Siap Menganalisis</p>
-      <p class="analyze-hint">Buka lowongan kerja di LinkedIn, lalu klik tombol di bawah untuk membedah kecocokannya dengan CV-mu.</p>
+      <div class="cv-card-info">
+        <span class="cv-card-label">CV Aktif</span>
+        <span class="cv-card-name" id="cv-name-home"></span>
+      </div>
+      <button id="change-cv-btn" class="cv-card-btn">Ganti</button>
+    </div>
+
+    <div class="scan-hero">
+      <h3>Siap membedah lowongan?</h3>
+      <p>Buka lowongan di LinkedIn, JobStreet, atau Glints, lalu klik tombol ini.</p>
       <button id="analyze-btn" class="analyze-btn-super">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m21 21-6-6m6 6v-4.8m0 4.8h-4.8M3 16.2V21m0 0h4.8M3 21l6-6M21 7.8V3m0 0h-4.8M21 3l-6 6M3 7.8V3m0 0h4.8M3 3l6 6"/></svg>
         Pindai Lowongan Ini
       </button>
-      <button id="dev-reset-btn" class="btn-ghost" style="margin-top: 20px; font-size: 10.5px; opacity: 0.4; padding: 7px 14px;">Reset Data</button>
       <div id="analyze-status" class="status-msg"></div>
+      <button id="dev-reset-btn" class="btn-ghost" style="margin-top: 18px; font-size: 10.5px; opacity: 0.35; padding: 7px 14px;">Reset Data</button>
+    </div>
+
+    <div id="home-stats" class="home-stats" style="display:none;">
+      <div class="hs-item"><b id="hs-count">0</b><span>Lowongan dipindai</span></div>
+      <div class="hs-item"><b id="hs-avg">-</b><span>Rata-rata skor</span></div>
+      <div class="hs-item"><b id="hs-best">-</b><span>Skor terbaik</span></div>
     </div>
 
     <div id="last-analysis-wrap" style="display:none;">
       <p class="section-label">Terakhir dianalisis</p>
       <div id="last-analysis-card" class="history-job-card"></div>
+    </div>
+
+    <div class="tip-card">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6"/><path d="M10 22h4"/><path d="M12 2a7 7 0 0 0-4 12.7c.6.5 1 1.4 1 2.3h6c0-.9.4-1.8 1-2.3A7 7 0 0 0 12 2z"/></svg>
+      <div>
+        <span class="tip-label">Tips Hari Ini</span>
+        <p id="tip-text">Scan 3 lowongan sejenis untuk tahu skill yang paling sering diminta pasar.</p>
+      </div>
     </div>
   </div>
 

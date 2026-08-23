@@ -618,3 +618,70 @@ body {
 
 /* section label terakhir dianalisis: napas ekstra dari nav bawah */
 #last-analysis-wrap .section-label { margin-top: 4px; }
+
+/* ── HOME v2: header, cv-card, scan-hero, stats, tips ───────────────────── */
+.home-header { display: flex; justify-content: space-between; align-items: center; padding: 2px 2px 0; }
+.home-date { font-size: 10.5px; font-weight: 700; color: var(--text-faint); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 3px; }
+.home-greeting { font-size: 19px; font-weight: 800; letter-spacing: -0.02em; color: #fff; }
+.home-mark { font-size: 22px; font-weight: 900; color: #fff; letter-spacing: -0.03em; }
+.home-mark span { color: var(--accent-neon); }
+
+.cv-card {
+  display: flex; align-items: center; gap: 12px;
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: 16px; padding: 12px 14px;
+}
+.cv-card-icon {
+  width: 38px; height: 38px; border-radius: 11px; flex-shrink: 0;
+  background: rgba(212, 255, 50, 0.1);
+  border: 1px solid rgba(212, 255, 50, 0.22);
+  display: flex; align-items: center; justify-content: center;
+}
+.cv-card-icon svg { stroke: var(--accent-neon); }
+.cv-card-info { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 1px; }
+.cv-card-label { font-size: 9.5px; font-weight: 800; letter-spacing: 0.09em; text-transform: uppercase; color: var(--text-faint); }
+.cv-card-name { font-size: 12.5px; font-weight: 600; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.cv-card-btn {
+  background: rgba(255,255,255,0.06); border: 1px solid var(--glass-border);
+  color: var(--text-muted); font-size: 11px; font-weight: 700;
+  padding: 7px 12px; border-radius: var(--radius-btn);
+  cursor: pointer; transition: all 0.15s; white-space: nowrap;
+}
+.cv-card-btn:hover { color: #fff; border-color: rgba(255,255,255,0.2); }
+
+.scan-hero {
+  display: flex; flex-direction: column; align-items: center; text-align: center;
+  gap: 8px; position: relative; overflow: hidden;
+  background: linear-gradient(180deg, rgba(212,255,50,0.05), var(--glass-bg));
+  border: 1px solid rgba(212, 255, 50, 0.16);
+  border-radius: 20px; padding: 26px 18px 20px;
+}
+.scan-hero::before {
+  content: '';
+  position: absolute; top: -60px; left: 50%; transform: translateX(-50%);
+  width: 220px; height: 120px;
+  background: radial-gradient(ellipse, rgba(212,255,50,0.14), transparent 70%);
+  pointer-events: none;
+}
+.scan-hero h3 { font-size: 16.5px; font-weight: 800; letter-spacing: -0.01em; color: #fff; }
+.scan-hero p { font-size: 12px; color: var(--text-muted); max-width: 250px; line-height: 1.5; }
+.scan-hero .analyze-btn-super { margin-top: 10px; }
+.scan-hero .status-msg { margin-top: 8px; }
+
+.home-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+.hs-item {
+  background: var(--glass-bg); border: 1px solid var(--glass-border);
+  border-radius: 14px; padding: 12px 8px; text-align: center;
+}
+.hs-item b { display: block; font-size: 19px; font-weight: 800; color: var(--accent-neon); letter-spacing: -0.02em; }
+.hs-item span { font-size: 9px; font-weight: 700; color: var(--text-faint); text-transform: uppercase; letter-spacing: 0.05em; line-height: 1.35; display: block; margin-top: 3px; }
+
+.tip-card {
+  display: flex; gap: 11px; align-items: flex-start;
+  background: var(--glass-bg); border: 1px solid var(--glass-border);
+  border-radius: 14px; padding: 13px 14px;
+}
+.tip-card svg { width: 16px; height: 16px; stroke: var(--accent-neon); flex-shrink: 0; margin-top: 1px; }
+.tip-label { font-size: 9.5px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.09em; color: var(--text-faint); display: block; margin-bottom: 2px; }
+.tip-card p { font-size: 11.5px; color: var(--text-muted); line-height: 1.5; margin: 0; }

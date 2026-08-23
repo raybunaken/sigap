@@ -505,13 +505,37 @@ document.addEventListener('DOMContentLoaded', async () => {
   function activateMain() {
     document.getElementById('cv-name-home').textContent = cvName;
     document.getElementById('bottom-nav').style.display = 'flex';
+    renderHomeMeta();
     showView('view-home');
     setNavActive('home');
     loadLastCard();
   }
 
+  const HOME_TIPS = [
+    'Scan 3 lowongan sejenis untuk tahu skill yang paling sering diminta pasar.',
+    'Sebelum apply, salin 3 keyword ATS dari tab ATS Keys ke CV kamu.',
+    'Skor di bawah 45? Hemat waktumu, cari lowongan yang lebih selaras.',
+    'Skill plus yang kamu punya tetap dihitung loh. Tulis eksplisit di CV biar kelihatan.',
+    'Cover letter terbaik menyebut pencapaian dengan angka, bukan sifat.',
+    'Pengalaman 2.5 tahun untuk syarat 3 tahun itu tetap partial, bukan missing. Tetap layak dicoba.'
+  ];
+
+  function renderHomeMeta() {
+    const now = new Date();
+    const h = now.getHours();
+    const greet = h < 11 ? 'Selamat pagi' : h < 15 ? 'Selamat siang' : h < 19 ? 'Selamat sore' : 'Selamat malam';
+    document.getElementById('home-greeting').textContent = greet + ', job hunter';
+    document.getElementById('home-date').textContent = now.toLocaleDateString('id-ID', {
+      weekday: 'long', day: 'numeric', month: 'long'
+    });
+    // tips berganti tiap hari
+    document.getElementById('tip-text').textContent =
+      HOME_TIPS[Math.floor(Date.now() / 86400000) % HOME_TIPS.length];
+  }
+
   async function loadLastCard() {
     const analyses = await getAnalyses();
+    renderHomeStats(analyses);
     if (analyses.length === 0) return;
     const last = analyses[0];
     const wrap = document.getElementById('last-analysis-wrap');
@@ -534,6 +558,18 @@ document.addEventListener('DOMContentLoaded', async () => {
       renderResult(last, activeJobData);
     });
     wrap.style.display = 'block';
+  }
+
+  function renderHomeStats(analyses) {
+    const el = document.getElementById('home-stats');
+    if (!el || analyses.length === 0) return;
+    const scores = analyses.map(a => a.readiness_score || 0);
+    const avg = Math.round(scores.reduce((s, v) => s + v, 0) / scores.length);
+    const best = Math.max(...scores);
+    document.getElementById('hs-count').textContent = analyses.length;
+    document.getElementById('hs-avg').textContent = avg + '%';
+    document.getElementById('hs-best').textContent = best + '%';
+    el.style.display = 'grid';
   }
 
   // ── CV Upload
