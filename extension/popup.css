@@ -107,6 +107,10 @@ body {
   gap: 12px;
 }
 .view.active { display: flex; }
+/* Anak view TIDAK boleh menyusut: panel flex-column memaksa shrink saat
+   kontennya panjang, dan kartu ber-overflow:hidden akan "menelan" isinya
+   (subtitle & tombol tenggelam di balik kartu scan). Biarkan yang scroll. */
+.view > * { flex-shrink: 0; }
 .view::-webkit-scrollbar { width: 4px; }
 .view::-webkit-scrollbar-track { background: transparent; }
 .view::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 2px; }
