@@ -103,10 +103,14 @@ body {
   flex-direction: column;
   flex: 1;
   overflow-y: auto;
-  padding: 16px;
+  padding: 16px 14px 30px 16px;
   gap: 12px;
 }
 .view.active { display: flex; }
+.view::-webkit-scrollbar { width: 4px; }
+.view::-webkit-scrollbar-track { background: transparent; }
+.view::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 2px; }
+.view::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.2); }
 
 /* ── SETUP ─────────────────────────────────────────────────────────────── */
 .onboarding {
@@ -611,3 +615,6 @@ body {
 .chip.green svg { stroke: #4ade80; }
 .chip.red   svg { stroke: #f87171; }
 .empty-chips { font-size: 12px; color: var(--text-muted); font-style: italic; }
+
+/* section label terakhir dianalisis: napas ekstra dari nav bawah */
+#last-analysis-wrap .section-label { margin-top: 4px; }
