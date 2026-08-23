@@ -3,21 +3,21 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Skillsy Copilot | Intelligent Career Engine</title>
-  <meta name="description" content="Skillsy Copilot analyzes job postings on LinkedIn & JobStreet against your CV in seconds: instant ATS score, missing skills detection, and AI cover letters. Free Chrome extension.">
+  <title>Skillsy Copilot | Know Your Odds Before You Apply</title>
+  <meta name="description" content="Skillsy reads job postings on LinkedIn and JobStreet, compares them with your CV, and tells you exactly what is missing. Instant match score, skill gap analysis, ATS keywords, and cover letters. Free Chrome extension.">
   <link rel="icon" type="image/svg+xml" href="logo.svg">
   <link rel="canonical" href="https://skillsy.my.id/">
 
   <!-- Open Graph / Social Sharing -->
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://skillsy.my.id/">
-  <meta property="og:title" content="Skillsy Copilot | Intelligent Career Engine">
+  <meta property="og:title" content="Skillsy Copilot | Know Your Odds Before You Apply">
   <meta property="og:description" content="Stop guessing what recruiters want. Get an instant match score and skill gap analysis for any LinkedIn or JobStreet job posting, right in your browser.">
   <meta property="og:image" content="https://skillsy.my.id/screenshot.png">
   <meta property="og:site_name" content="Skillsy">
   <meta property="og:locale" content="id_ID">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Skillsy Copilot | Intelligent Career Engine">
+  <meta name="twitter:title" content="Skillsy Copilot | Know Your Odds Before You Apply">
   <meta name="twitter:description" content="Instant ATS score & skill gap analysis for LinkedIn/JobStreet job postings. Free Chrome extension.">
   <meta name="twitter:image" content="https://skillsy.my.id/screenshot.png">
 
@@ -34,753 +34,692 @@
     "offers": { "@type": "Offer", "price": "0", "priceCurrency": "IDR" }
   }
   </script>
-  
-  <!-- Google Fonts: Plus Jakarta Sans & Inter -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Plus+Jakarta+Sans:wght@700;800&display=swap" rel="stylesheet">
-  
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
+    :root {
+      --bg: #0a0e0c;
+      --bg-2: #0d1210;
+      --lime: #d4ff32;
+      --lime-dim: rgba(212, 255, 50, 0.12);
+      --text: #fafafa;
+      --muted: #a1a1aa;
+      --faint: #52525b;
+      --glass: rgba(255, 255, 255, 0.03);
+      --glass-2: rgba(255, 255, 255, 0.06);
+      --border: rgba(255, 255, 255, 0.08);
+      --radius: 20px;
+      --font-display: 'Plus Jakarta Sans', sans-serif;
+      --font-body: 'Inter', sans-serif;
     }
-
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
     body {
-      font-family: 'Inter', sans-serif;
-      min-height: 100vh;
-      background: radial-gradient(circle at top left, #1a2a22 0%, #0d1210 50%, #16101c 100%);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 40px;
-      gap: 60px;
-      color: #ffffff;
+      font-family: var(--font-body);
+      background: var(--bg);
+      color: var(--text);
+      overflow-x: hidden;
+      line-height: 1.6;
     }
 
-    /* Outer wrapper to center the glass pane */
-    .glass-wrapper {
-      width: 100%;
-      max-width: 1200px;
-      height: auto;
-      min-height: 85vh;
-      padding-bottom: 60px;
-      border-radius: 32px;
-      
-      /* Dark Glassmorphism magic */
-      background: rgba(255, 255, 255, 0.03);
-      backdrop-filter: blur(24px);
-      -webkit-backdrop-filter: blur(24px);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      box-shadow: 0 16px 48px rgba(0, 0, 0, 0.8), 0 4px 24px rgba(212, 255, 50, 0.05);
-      
-      display: flex;
-      flex-direction: column;
-      position: relative;
-      overflow: hidden;
-      color: #ffffff;
+    .bg-fx { position: fixed; inset: 0; z-index: -1; pointer-events: none; }
+    .bg-fx::before {
+      content: '';
+      position: absolute; inset: 0;
+      background:
+        radial-gradient(ellipse 60% 40% at 15% 0%, rgba(212,255,50,0.07), transparent 60%),
+        radial-gradient(ellipse 50% 35% at 90% 20%, rgba(192,132,252,0.05), transparent 60%),
+        radial-gradient(ellipse 70% 50% at 50% 100%, rgba(212,255,50,0.04), transparent 65%);
+    }
+    .bg-fx::after {
+      content: '';
+      position: absolute; inset: 0;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+      background-size: 56px 56px;
+      mask-image: radial-gradient(ellipse 90% 60% at 50% 0%, black, transparent 75%);
+      -webkit-mask-image: radial-gradient(ellipse 90% 60% at 50% 0%, black, transparent 75%);
     }
 
-    /* TOP NAVIGATION */
-    header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 40px 60px;
-    }
+    .container { max-width: 1120px; margin: 0 auto; padding: 0 24px; }
 
-    .logo {
-      font-family: 'Plus Jakarta Sans', sans-serif;
-      font-size: 26px;
-      font-weight: 800;
-      letter-spacing: -0.03em;
-      color: #fff;
-    }
-    
-    .logo-accent {
-      color: #d4ff32; /* Neon green accent from extension */
-    }
-
+    /* ── NAV ── */
     nav {
-      display: flex;
-      gap: 40px;
-      align-items: center;
+      position: sticky; top: 16px; z-index: 100;
+      width: max-content; max-width: calc(100% - 32px);
+      margin: 0 auto;
+      display: flex; align-items: center; gap: 28px;
+      padding: 10px 12px 10px 20px;
+      background: rgba(13, 18, 16, 0.7);
+      backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px);
+      border: 1px solid var(--border);
+      border-radius: 100px;
     }
-
-    nav a {
-      color: rgba(255, 255, 255, 0.85);
-      text-decoration: none;
-      font-size: 14px;
-      font-weight: 500;
-      transition: color 0.3s ease;
-    }
-
-    nav a:hover {
-      color: #d4ff32;
-    }
-
+    .nav-logo { font-family: var(--font-display); font-weight: 800; font-size: 19px; letter-spacing: -0.02em; color: var(--text); text-decoration: none; }
+    .nav-logo span { color: var(--lime); }
+    .nav-links { display: flex; gap: 22px; }
+    .nav-links a { color: var(--muted); text-decoration: none; font-size: 13.5px; font-weight: 500; transition: color .2s; }
+    .nav-links a:hover { color: var(--text); }
     .lang-toggle {
-      background: rgba(255, 255, 255, 0.1);
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      color: #fff;
-      padding: 6px 14px;
-      border-radius: 12px;
-      cursor: pointer;
-      font-weight: 600;
-      transition: all 0.3s ease;
+      background: rgba(255,255,255,0.06); border: 1px solid var(--border);
+      color: var(--text); font-family: var(--font-body);
+      font-size: 12px; font-weight: 700; cursor: pointer;
+      padding: 7px 13px; border-radius: 100px;
+      transition: all .2s;
     }
+    .lang-toggle:hover { background: var(--lime); color: #0d1210; border-color: var(--lime); }
+    .nav-cta {
+      background: var(--lime); color: #0d1210;
+      font-size: 13.5px; font-weight: 700; text-decoration: none;
+      padding: 9px 18px; border-radius: 100px;
+      transition: transform .2s, box-shadow .2s;
+    }
+    .nav-cta:hover { transform: translateY(-1px); box-shadow: 0 6px 24px rgba(212,255,50,0.25); }
 
-    .lang-toggle:hover {
-      background: #d4ff32;
-      color: #000;
+    /* ── HERO ── */
+    .hero { padding: 90px 0 40px; display: grid; grid-template-columns: 1.05fr 0.95fr; gap: 56px; align-items: center; }
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-size: 12.5px; font-weight: 600; color: var(--lime);
+      background: var(--lime-dim); border: 1px solid rgba(212,255,50,0.25);
+      padding: 6px 14px; border-radius: 100px; margin-bottom: 22px;
     }
+    .hero-badge .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--lime); box-shadow: 0 0 10px var(--lime); animation: pulse 2s infinite; }
+    @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: .35; } }
+    .hero h1 {
+      font-family: var(--font-display);
+      font-size: clamp(38px, 5vw, 60px);
+      line-height: 1.08; font-weight: 800; letter-spacing: -0.03em;
+      margin-bottom: 20px;
+    }
+    .hero h1 em { font-style: normal; color: var(--lime); }
+    .hero p.sub { font-size: 16.5px; color: var(--muted); max-width: 480px; margin-bottom: 32px; }
+    .hero-ctas { display: flex; gap: 14px; flex-wrap: wrap; margin-bottom: 34px; }
+    .btn-primary {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: var(--lime); color: #0d1210;
+      font-weight: 700; font-size: 15px; text-decoration: none;
+      padding: 15px 30px; border-radius: 100px;
+      box-shadow: 0 4px 30px rgba(212,255,50,0.18);
+      transition: transform .2s, box-shadow .2s;
+    }
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 10px 40px rgba(212,255,50,0.3); }
+    .btn-ghost {
+      display: inline-flex; align-items: center;
+      color: var(--text); font-weight: 600; font-size: 15px; text-decoration: none;
+      padding: 15px 26px; border-radius: 100px;
+      border: 1px solid var(--border); background: var(--glass);
+      transition: border-color .2s, background .2s;
+    }
+    .btn-ghost:hover { border-color: rgba(255,255,255,0.2); background: var(--glass-2); }
+    .hero-note { font-size: 12.5px; color: var(--faint); }
+    .hero-note strong { color: var(--muted); }
 
-    /* MAIN HERO CONTENT */
-    main {
-      flex: 1;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0 60px;
-      gap: 40px;
+    /* ── MOCKUP PANEL ── */
+    .mockup-wrap { position: relative; }
+    .mockup-wrap::before {
+      content: '';
+      position: absolute; inset: -40px;
+      background: radial-gradient(circle at 60% 40%, rgba(212,255,50,0.1), transparent 70%);
+      z-index: -1; filter: blur(20px);
     }
+    .mockup {
+      background: linear-gradient(180deg, #141a17, #0e1210);
+      border: 1px solid var(--border);
+      border-radius: 24px; overflow: hidden;
+      box-shadow: 0 30px 80px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.02) inset;
+      transform: rotate(1.5deg);
+      transition: transform .4s ease;
+    }
+    .mockup:hover { transform: rotate(0deg) scale(1.015); }
+    .mock-topbar {
+      display: flex; align-items: center; gap: 6px;
+      padding: 12px 16px; border-bottom: 1px solid var(--border);
+      background: rgba(255,255,255,0.02);
+    }
+    .mock-topbar i { width: 10px; height: 10px; border-radius: 50%; background: rgba(255,255,255,0.12); }
+    .mock-topbar .title { margin-left: 8px; font-size: 11.5px; color: var(--faint); font-weight: 600; }
+    .mock-body { padding: 20px; display: flex; flex-direction: column; gap: 16px; }
+    .mock-job { display: flex; flex-direction: column; gap: 2px; }
+    .mock-job b { font-family: var(--font-display); font-size: 15px; font-weight: 700; }
+    .mock-job span { font-size: 12px; color: var(--muted); }
 
-    .hero-content {
-      max-width: 520px;
+    .mock-score-row { display: flex; align-items: center; gap: 18px; }
+    .ring {
+      --pct: 78; --sz: 92px;
+      width: var(--sz); height: var(--sz); border-radius: 50%; flex-shrink: 0;
+      background:
+        radial-gradient(closest-side, #0e1210 79%, transparent 80% 100%),
+        conic-gradient(var(--lime) calc(var(--pct) * 1%), rgba(255,255,255,0.07) 0);
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
     }
+    .ring b { font-family: var(--font-display); font-size: 24px; font-weight: 800; letter-spacing: -0.02em; }
+    .ring label { font-size: 8.5px; font-weight: 700; color: var(--faint); letter-spacing: 0.06em; text-transform: uppercase; }
+    .mock-score-info { flex: 1; display: flex; flex-direction: column; gap: 8px; }
+    .mock-tag {
+      align-self: flex-start;
+      font-size: 11px; font-weight: 700; color: var(--lime);
+      background: var(--lime-dim); border: 1px solid rgba(212,255,50,0.25);
+      padding: 4px 10px; border-radius: 100px;
+    }
+    .mock-bars { display: flex; flex-direction: column; gap: 7px; }
+    .mbar { display: grid; grid-template-columns: 86px 1fr 26px; align-items: center; gap: 8px; font-size: 10.5px; color: var(--muted); }
+    .mbar .track { height: 5px; background: rgba(255,255,255,0.07); border-radius: 3px; overflow: hidden; }
+    .mbar .fill { height: 100%; border-radius: 3px; width: 0; animation: growbar 1.2s .3s cubic-bezier(.4,0,.2,1) forwards; }
+    @keyframes growbar { to { width: var(--w); } }
+    .mbar b { color: var(--text); text-align: right; font-size: 10.5px; }
 
-    .hero-image {
-      flex: 1;
-      display: flex;
-      justify-content: center;
-      align-items: center;
+    .mock-chips { display: flex; flex-wrap: wrap; gap: 7px; }
+    .mchip {
+      display: inline-flex; align-items: center; gap: 5px;
+      font-size: 11px; font-weight: 600; color: var(--text);
+      background: var(--glass); border: 1px solid var(--border);
+      padding: 5px 11px; border-radius: 100px;
     }
+    .mchip svg { width: 10px; height: 10px; stroke: #4ade80; stroke-width: 3.5; }
+    .mchip.miss svg { stroke: #f87171; }
 
-    .hero-image img {
-      max-width: 320px; /* Constrain vertical screenshot width */
-      width: 100%;
-      border-radius: 20px;
-      box-shadow: 0 24px 64px rgba(0,0,0,0.8), 0 0 0 1px rgba(255, 255, 255, 0.1);
-      transform: perspective(1000px) rotateY(-5deg); /* Slight 3D tilt for premium feel */
-      transition: transform 0.5s ease;
-    }
-    
-    .hero-image img:hover {
-      transform: perspective(1000px) rotateY(0deg) scale(1.02);
-    }
+    /* ── MARQUEE ── */
+    .marquee-section { padding: 50px 0 30px; }
+    .marquee-label { text-align: center; font-size: 11.5px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--faint); margin-bottom: 22px; }
+    .marquee { overflow: hidden; position: relative; -webkit-mask-image: linear-gradient(90deg, transparent, black 12%, black 88%, transparent); mask-image: linear-gradient(90deg, transparent, black 12%, black 88%, transparent); }
+    .marquee-track { display: flex; gap: 48px; width: max-content; animation: scroll 28s linear infinite; }
+    .marquee:hover .marquee-track { animation-play-state: paused; }
+    @keyframes scroll { to { transform: translateX(-50%); } }
+    .mq-item { font-family: var(--font-display); font-size: 17px; font-weight: 800; color: var(--muted); opacity: .55; white-space: nowrap; transition: opacity .2s, color .2s; }
+    .mq-item:hover { opacity: 1; color: var(--text); }
 
-    h1 {
-      font-family: 'Plus Jakarta Sans', sans-serif;
-      font-size: 56px;
-      line-height: 1.15;
-      font-weight: 800;
-      letter-spacing: -0.02em;
-      margin-bottom: 24px;
-      color: #ffffff;
-    }
+    /* ── SECTION SHELL ── */
+    section { padding: 84px 0; }
+    .sec-head { max-width: 620px; margin: 0 auto 52px; text-align: center; }
+    .sec-eyebrow { font-size: 11.5px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--lime); margin-bottom: 12px; }
+    .sec-head h2 { font-family: var(--font-display); font-size: clamp(28px, 3.6vw, 40px); font-weight: 800; letter-spacing: -0.02em; line-height: 1.15; margin-bottom: 14px; }
+    .sec-head p { color: var(--muted); font-size: 15.5px; }
 
-    p.subtitle {
-      font-size: 17px;
-      line-height: 1.6;
-      color: rgba(255, 255, 255, 0.85);
-      margin-bottom: 28px;
-      max-width: 520px;
-    }
-
-    .hero-features {
-      list-style: none;
-      margin-bottom: 40px;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
-
-    .hero-features li {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      font-size: 15px;
-      font-weight: 500;
-      color: rgba(255, 255, 255, 0.95);
-    }
-
-    .hero-features svg {
-      stroke: #d4ff32;
-      width: 20px;
-      height: 20px;
-      flex-shrink: 0;
-    }
-
-    /* CTA BUTTON */
-    .cta-btn {
-      display: inline-block;
-      background: #d4ff32;
-      color: #0d1210;
-      font-weight: 600;
-      font-size: 15px;
-      padding: 16px 36px;
-      border-radius: 100px; /* Pill shape */
-      text-decoration: none;
-      transition: all 0.3s ease;
-      box-shadow: 0 4px 24px rgba(212, 255, 50, 0.15);
-    }
-
-    .cta-btn:hover {
-      transform: translateY(-3px);
-      background: #e4ff5c;
-      color: #0d1210;
-      box-shadow: 0 12px 40px rgba(212, 255, 50, 0.35);
-    }
-
-    /* POWERED BY + STATS STRIP */
-    .supported-by {
-      margin-top: 56px;
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-    }
-    .supported-text {
-      font-size: 12px;
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      color: rgba(255, 255, 255, 0.4);
-      font-weight: 600;
-    }
-    .supported-logos {
-      display: flex;
-      gap: 32px;
-      align-items: center;
-      opacity: 0.5;
-      transition: all 0.3s ease;
-    }
-    .supported-logos:hover {
-      opacity: 0.9;
-    }
-    .supported-logo {
-      font-family: 'Plus Jakarta Sans', sans-serif;
-      font-weight: 800;
-      font-size: 18px;
-      color: #fff;
-      display: flex;
-      align-items: center;
-      letter-spacing: -0.02em;
-    }
-    .supported-logo span { 
-      font-weight: 500; 
-      margin-left: 4px; 
-    }
-
-    /* STATS STRIP (BPS) */
-    .stats-wrapper {
-      height: auto;
-      min-height: auto;
-      padding: 40px 60px;
-    }
-    .stats-header {
-      text-align: center;
-      max-width: 640px;
-      margin: 0 auto 40px auto;
-    }
-    .stats-title {
-      font-family: 'Plus Jakarta Sans', sans-serif;
-      font-size: 32px;
-      font-weight: 800;
-      margin-bottom: 16px;
-      letter-spacing: -0.02em;
-    }
-    .stats-subtitle {
-      font-size: 15px;
-      line-height: 1.6;
-      color: rgba(255, 255, 255, 0.65);
-    }
-    .stats-grid {
+    /* ── THE FLOW (journey: 3 tahap dengan panah) ── */
+    .journey {
       display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 24px;
-      width: 100%;
+      grid-template-columns: 1fr 28px 1fr 28px 1fr;
+      gap: 12px;
+      align-items: stretch;
     }
-    .stat-item {
-      text-align: center;
-      padding: 24px 16px;
-      background: rgba(255, 255, 255, 0.02);
-      border: 1px solid rgba(255, 255, 255, 0.06);
-      border-radius: 20px;
+    .j-stage { display: flex; flex-direction: column; gap: 12px; }
+    .j-stage-head { display: flex; align-items: center; gap: 12px; }
+    .j-num {
+      width: 34px; height: 34px; flex-shrink: 0;
+      border-radius: 50%;
+      background: var(--lime); color: #0d1210;
+      font-family: var(--font-display); font-size: 15px; font-weight: 800;
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 0 20px rgba(212,255,50,0.25);
     }
-    .stat-value {
-      font-family: 'Plus Jakarta Sans', sans-serif;
-      font-size: 34px;
-      font-weight: 800;
-      color: #d4ff32;
-      margin-bottom: 8px;
-      letter-spacing: -0.02em;
+    .j-stage-label {
+      display: block; font-size: 10.5px; font-weight: 800;
+      letter-spacing: 0.12em; text-transform: uppercase; color: var(--lime);
     }
-    .stat-label {
-      font-size: 13px;
-      line-height: 1.5;
-      color: rgba(255, 255, 255, 0.6);
+    .j-stage-q { display: block; font-size: 13px; font-weight: 600; color: var(--text); line-height: 1.35; }
+    .j-arrow {
+      display: flex; align-items: center; justify-content: center;
+      color: var(--lime); opacity: 0.55;
     }
+    .j-arrow svg { width: 20px; height: 20px; stroke: currentColor; }
+    .j-stack { display: flex; flex-direction: column; gap: 12px; flex: 1; }
+    .j-stack .f-card { flex: 1; }
+    .j-stage .f-card { flex: 1; }
 
-    /* FAQ SECTION */
-    .faq-wrapper {
-      height: auto;
-      min-height: auto;
-      padding: 60px;
-      align-items: center;
-    }
-    .faq-title {
-      font-family: 'Plus Jakarta Sans', sans-serif;
-      font-size: 36px;
-      font-weight: 800;
-      margin-bottom: 48px;
-      text-align: center;
-    }
-    .faq-list {
-      width: 100%;
-      max-width: 760px;
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-    }
-    .faq-item {
-      background: rgba(255, 255, 255, 0.03);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      border-radius: 20px;
-      padding: 24px 28px;
-      transition: border-color 0.3s ease;
-    }
-    .faq-item[open] {
-      border-color: rgba(212, 255, 50, 0.3);
-    }
-    .faq-item summary {
-      cursor: pointer;
-      font-size: 16px;
-      font-weight: 600;
-      list-style: none;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 16px;
-      color: #fff;
-    }
-    .faq-item summary::-webkit-details-marker { display: none; }
-    .faq-item summary::after {
-      content: '+';
-      font-size: 22px;
-      font-weight: 400;
-      color: #d4ff32;
-      flex-shrink: 0;
-      transition: transform 0.3s ease;
-    }
-    .faq-item[open] summary::after {
-      transform: rotate(45deg);
-    }
-    .faq-item p {
+    .evergreen {
       margin-top: 16px;
-      font-size: 14px;
-      line-height: 1.7;
-      color: rgba(255, 255, 255, 0.7);
+      display: grid; grid-template-columns: 1fr 1fr; gap: 16px;
     }
+    .ev-item {
+      display: flex; gap: 14px; align-items: flex-start;
+      background: var(--glass); border: 1px solid var(--border);
+      border-radius: 14px; padding: 16px 18px;
+    }
+    .ev-item svg { width: 20px; height: 20px; stroke: var(--lime); flex-shrink: 0; margin-top: 2px; }
+    .ev-item b { display: block; font-size: 13.5px; font-weight: 700; margin-bottom: 2px; }
+    .ev-item span { font-size: 12.5px; color: var(--muted); line-height: 1.5; }
+    .f-card {
+      background: var(--glass); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 28px 26px;
+      display: flex; flex-direction: column; gap: 0;
+      transition: transform .25s, border-color .25s, background .25s;
+    }
+    .f-card:hover { transform: translateY(-4px); border-color: rgba(212,255,50,0.28); background: var(--glass-2); }
+    .f-icon {
+      width: 42px; height: 42px; border-radius: 12px; flex-shrink: 0;
+      background: var(--lime-dim); border: 1px solid rgba(212,255,50,0.2);
+      display: flex; align-items: center; justify-content: center;
+      color: var(--lime); margin-bottom: 18px;
+    }
+    .f-icon svg { width: 20px; height: 20px; stroke: currentColor; }
+    .f-card h3 { font-family: var(--font-display); font-size: 16.5px; font-weight: 700; margin-bottom: 8px; }
+    .f-card p { font-size: 13.5px; color: var(--muted); }
+    .f-card .f-visual { margin-top: auto; padding-top: 18px; }
 
-    /* FOOTER */
-    .site-footer {
-      width: 100%;
-      max-width: 1200px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 20px;
-      padding: 0 20px;
-      color: rgba(255, 255, 255, 0.5);
-      font-size: 13px;
-    }
-    .site-footer a {
-      color: rgba(255, 255, 255, 0.7);
-      text-decoration: none;
-      transition: color 0.3s ease;
-    }
-    .site-footer a:hover { color: #d4ff32; }
-    .footer-links {
-      display: flex;
-      gap: 24px;
-      align-items: center;
-      flex-wrap: wrap;
-    }
+    .f-score-demo { display: flex; align-items: center; gap: 14px; }
+    .f-score-demo .mini-ring { --sz: 62px; }
+    .f-score-demo .mini-ring b { font-size: 16px; }
+    .f-score-demo p { font-size: 12px; }
 
-    /* MODAL STYLES */
-    .modal-overlay {
-      position: fixed;
-      top: 0; left: 0; width: 100%; height: 100%;
-      background: rgba(0, 0, 0, 0.7);
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 1000;
-      opacity: 0;
-      pointer-events: none;
-      transition: all 0.3s ease;
+    /* ── STATS ── */
+    .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+    .stat {
+      background: var(--glass); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 26px 22px; text-align: center;
+      transition: border-color .25s;
     }
-    .modal-overlay.active {
-      opacity: 1;
-      pointer-events: all;
+    .stat:hover { border-color: rgba(212,255,50,0.25); }
+    .stat b { display: block; font-family: var(--font-display); font-size: 34px; font-weight: 800; color: var(--lime); letter-spacing: -0.02em; margin-bottom: 8px; }
+    .stat span { font-size: 12.5px; color: var(--muted); line-height: 1.55; display: block; }
+
+    /* ── HOW IT WORKS ── */
+    .hiw { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; counter-reset: step; }
+    .hiw-card {
+      background: var(--glass); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 28px; position: relative; counter-increment: step;
     }
-    .modal-content {
-      background: #16101c;
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: 24px;
-      padding: 40px;
-      width: 90%;
-      max-width: 480px;
+    .hiw-card::before {
+      content: '0' counter(step);
+      font-family: var(--font-display); font-size: 52px; font-weight: 800;
+      color: transparent; -webkit-text-stroke: 1px rgba(212,255,50,0.3);
+      position: absolute; top: 14px; right: 20px; line-height: 1;
+    }
+    .hiw-card h3 { font-family: var(--font-display); font-size: 16.5px; font-weight: 700; margin: 14px 0 8px; }
+    .hiw-card p { font-size: 13.5px; color: var(--muted); }
+    .hiw-icon { width: 42px; height: 42px; border-radius: 12px; background: var(--lime-dim); border: 1px solid rgba(212,255,50,0.2); display: flex; align-items: center; justify-content: center; color: var(--lime); }
+    .hiw-icon svg { width: 20px; height: 20px; stroke: currentColor; }
+
+    /* ── FAQ ── */
+    .faq-list { max-width: 720px; margin: 0 auto; display: flex; flex-direction: column; gap: 12px; }
+    details.faq-item {
+      background: var(--glass); border: 1px solid var(--border);
+      border-radius: 16px; padding: 20px 24px; transition: border-color .25s;
+    }
+    details.faq-item[open] { border-color: rgba(212,255,50,0.25); }
+    details.faq-item summary {
+      cursor: pointer; list-style: none; font-weight: 600; font-size: 15px;
+      display: flex; justify-content: space-between; align-items: center; gap: 14px;
+    }
+    details.faq-item summary::-webkit-details-marker { display: none; }
+    details.faq-item summary::after { content: '+'; font-size: 22px; color: var(--lime); transition: transform .3s; }
+    details.faq-item[open] summary::after { transform: rotate(45deg); }
+    details.faq-item p { margin-top: 12px; font-size: 14px; color: var(--muted); }
+
+    /* ── FINAL CTA ── */
+    .final-cta {
       text-align: center;
+      background: linear-gradient(180deg, var(--glass), rgba(212,255,50,0.05));
+      border: 1px solid rgba(212,255,50,0.18);
+      border-radius: 28px; padding: 70px 30px; position: relative; overflow: hidden;
+    }
+    .final-cta h2 { font-family: var(--font-display); font-size: clamp(26px, 3.4vw, 38px); font-weight: 800; letter-spacing: -0.02em; margin-bottom: 14px; }
+    .final-cta p { color: var(--muted); margin-bottom: 30px; font-size: 15.5px; }
+
+    /* ── FOOTER ── */
+    footer { border-top: 1px solid var(--border); padding: 34px 0; margin-top: 40px; }
+    .foot { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; font-size: 13px; color: var(--faint); }
+    .foot a { color: var(--muted); text-decoration: none; margin-left: 22px; }
+    .foot a:hover { color: var(--lime); }
+    .foot .logo { font-family: var(--font-display); font-weight: 800; color: var(--text); }
+    .foot .logo span { color: var(--lime); }
+
+    .reveal { opacity: 0; transform: translateY(24px); transition: opacity .7s ease, transform .7s ease; }
+    .reveal.visible { opacity: 1; transform: none; }
+
+    /* ── WAITLIST MODAL ── */
+    .modal-overlay {
+      position: fixed; inset: 0; z-index: 1000;
+      background: rgba(4, 6, 5, 0.75);
+      backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+      display: flex; align-items: center; justify-content: center;
+      padding: 24px;
+      opacity: 0; pointer-events: none; transition: opacity .25s ease;
+    }
+    .modal-overlay.active { opacity: 1; pointer-events: all; }
+    .modal-content {
+      background: linear-gradient(180deg, #141a17, #0e1210);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 38px 34px;
+      width: 100%; max-width: 440px; text-align: center;
       position: relative;
-      transform: translateY(20px);
-      transition: all 0.3s ease;
-      box-shadow: 0 24px 64px rgba(0, 0, 0, 0.9), 0 4px 24px rgba(212, 255, 50, 0.05);
+      transform: translateY(16px); transition: transform .25s ease;
+      box-shadow: 0 30px 80px rgba(0,0,0,0.7);
     }
-    .modal-overlay.active .modal-content {
-      transform: translateY(0);
-    }
+    .modal-overlay.active .modal-content { transform: translateY(0); }
     .modal-close {
-      position: absolute;
-      top: 20px; right: 24px;
-      background: none; border: none;
-      color: rgba(255, 255, 255, 0.6);
-      font-size: 24px;
-      cursor: pointer;
-      transition: color 0.3s;
+      position: absolute; top: 16px; right: 18px;
+      background: none; border: none; color: var(--faint);
+      font-size: 24px; cursor: pointer; transition: color .2s;
+      line-height: 1;
     }
-    .modal-close:hover { color: #fff; }
+    .modal-close:hover { color: var(--text); }
     .modal-content h3 {
-      font-family: 'Plus Jakarta Sans', sans-serif;
-      font-size: 28px;
-      font-weight: 800;
-      margin-bottom: 12px;
-      color: #fff;
+      font-family: var(--font-display); font-size: 24px; font-weight: 800;
+      letter-spacing: -0.02em; margin-bottom: 10px;
     }
-    .modal-content p {
-      font-size: 15px;
-      color: rgba(255, 255, 255, 0.7);
-      margin-bottom: 24px;
-      line-height: 1.5;
-    }
+    .modal-content > p { font-size: 14px; color: var(--muted); margin-bottom: 22px; line-height: 1.6; }
     .modal-input {
-      width: 100%;
-      padding: 16px 20px;
+      width: 100%; padding: 14px 16px;
       border-radius: 12px;
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      background: rgba(255, 255, 255, 0.05);
-      color: #fff;
-      font-family: 'Inter', sans-serif;
-      font-size: 15px;
-      margin-bottom: 16px;
-      outline: none;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.04);
+      color: var(--text);
+      font-family: var(--font-body); font-size: 14.5px;
+      margin-bottom: 12px; outline: none;
+      transition: border-color .2s;
     }
-    .modal-input:focus { border-color: #d4ff32; }
+    .modal-input:focus { border-color: rgba(212,255,50,0.5); }
     .modal-btn {
       width: 100%;
-      background: #d4ff32;
-      color: #0d1210;
-      font-weight: 600;
-      font-size: 16px;
-      padding: 16px;
-      border-radius: 12px;
-      border: none;
-      cursor: pointer;
-      transition: all 0.3s ease;
+      background: var(--lime); color: #0d1210;
+      font-family: var(--font-body); font-weight: 700; font-size: 14.5px;
+      padding: 14px; border-radius: 12px; border: none; cursor: pointer;
+      transition: transform .15s, box-shadow .2s;
     }
-    .modal-btn:hover { background: #e4ff5c; color: #0d1210; }
+    .modal-btn:hover { transform: translateY(-1px); box-shadow: 0 8px 30px rgba(212,255,50,0.25); }
     .modal-error {
       display: none;
-      color: #ff6b6b;
-      font-size: 13px;
-      margin-bottom: 12px;
-      text-align: left;
+      color: #ff6b6b; font-size: 12.5px;
+      margin-bottom: 10px; text-align: left;
     }
-    .modal-note {
-      font-size: 12px;
-      color: rgba(255, 255, 255, 0.4);
-      margin-top: 16px;
-    }
+    .modal-note { font-size: 11.5px; color: var(--faint); margin-top: 14px; }
+    .modal-success { color: var(--lime); font-weight: 700; font-size: 17px; margin-top: 18px; }
 
-    /* HOW IT WORKS SECTION */
-    .hiw-wrapper {
-      height: auto;
-      min-height: auto;
-      padding: 60px;
-      align-items: center;
+    @media (max-width: 920px) {
+      .hero { grid-template-columns: 1fr; padding-top: 60px; gap: 44px; }
+      .mockup { transform: none; max-width: 420px; margin: 0 auto; }
+      .journey { grid-template-columns: 1fr; }
+      .j-arrow { transform: rotate(90deg); padding: 4px 0; }
+      .evergreen { grid-template-columns: 1fr; }
+      .stats-grid { grid-template-columns: repeat(2, 1fr); }
+      .hiw { grid-template-columns: 1fr; }
+      .nav-links { display: none; }
     }
-    .hiw-title {
-      font-family: 'Plus Jakarta Sans', sans-serif;
-      font-size: 36px;
-      font-weight: 800;
-      margin-bottom: 48px;
-      text-align: center;
-    }
-    .hiw-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 32px;
-      width: 100%;
-    }
-    .hiw-card {
-      background: rgba(255, 255, 255, 0.03);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      border-radius: 24px;
-      padding: 32px;
-      text-align: center;
-      transition: transform 0.3s ease;
-    }
-    .hiw-card:hover {
-      transform: translateY(-5px);
-      background: rgba(255, 255, 255, 0.05);
-      border-color: rgba(212, 255, 50, 0.3);
-    }
-    .hiw-icon {
-      width: 64px;
-      height: 64px;
-      margin: 0 auto 24px auto;
-      background: rgba(212, 255, 50, 0.1);
-      border-radius: 16px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #d4ff32;
-    }
-    .hiw-icon svg {
-      width: 32px;
-      height: 32px;
-    }
-    .hiw-card h3 {
-      font-size: 20px;
-      margin-bottom: 16px;
-      font-weight: 600;
-    }
-    .hiw-card p {
-      font-size: 14px;
-      line-height: 1.6;
-      color: rgba(255, 255, 255, 0.7);
-    }
-
-    /* RESPONSIVE DESIGN */
-    @media (max-width: 768px) {
-      body {
-        padding: 20px;
-      }
-      .glass-wrapper {
-        height: auto;
-        padding-bottom: 60px;
-      }
-      header {
-        flex-direction: column;
-        gap: 24px;
-        padding: 30px;
-      }
-      main {
-        flex-direction: column;
-        padding: 0 30px;
-        text-align: center;
-      }
-      .hero-features {
-        align-items: center;
-      }
-      .hiw-grid {
-        grid-template-columns: 1fr;
-      }
-      .hiw-wrapper {
-        padding: 40px 20px;
-      }
-      .stats-grid {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 16px;
-      }
-      .stats-wrapper {
-        padding: 30px 20px;
-      }
-      .faq-wrapper {
-        padding: 40px 20px;
-      }
-      .site-footer {
-        flex-direction: column;
-        text-align: center;
-      }
+    @media (max-width: 560px) {
+      .stats-grid { grid-template-columns: 1fr; }
     }
   </style>
 </head>
 <body>
 
-  <div class="glass-wrapper" id="top">
-    <!-- Header -->
-    <header>
-      <div class="logo">Skillsy<span class="logo-accent">.</span></div>
-      <nav>
-        <a href="#top" data-en="Home" data-id="Beranda">Home</a>
-        <a href="#how-it-works" data-en="How it Works" data-id="Cara Kerja">How it Works</a>
-        <a href="#faq" data-en="FAQ" data-id="FAQ">FAQ</a>
-        <a href="mailto:raybunaken@gmail.com" data-en="Contact Us" data-id="Hubungi Kami">Contact Us</a>
-        <button id="langToggle" class="lang-toggle">EN</button>
-      </nav>
-    </header>
+<div class="bg-fx"></div>
 
-    <!-- Hero Section -->
-    <main>
-      <div class="hero-content">
-        <h1 data-en="Hack Your Career.<br>Bypass HR Filters." data-id="Hack Karirmu.<br>Bypass Filter HRD.">Hack Your Career.<br>Bypass HR Filters.</h1>
-        <p class="subtitle" data-en="Stop guessing what recruiters are looking for. Skillsy Copilot automatically dissects your CV and compares it against job requirements from LinkedIn or JobStreet in seconds." data-id="Berhenti menebak-nebak apa yang dicari oleh rekruter. Skillsy Copilot secara otomatis membedah CV kamu dan membandingkannya dengan kriteria lowongan dari LinkedIn atau JobStreet dalam hitungan detik.">Stop guessing what recruiters are looking for. Skillsy Copilot automatically dissects your CV and compares it against job requirements from LinkedIn or JobStreet in seconds.</p>
-        
-        <ul class="hero-features">
-          <li>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-            <span data-en="Instant ATS Score Analysis" data-id="Analisis Skor ATS Secara Instan">Instant ATS Score Analysis</span>
-          </li>
-          <li>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-            <span data-en="Missing Skills Detection (Skill Gap)" data-id="Deteksi Skill yang Hilang (Skill Gap)">Missing Skills Detection (Skill Gap)</span>
-          </li>
-          <li>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-            <span data-en="Direct Integration with LinkedIn & JobStreet" data-id="Terintegrasi Langsung di LinkedIn & JobStreet">Direct Integration with LinkedIn & JobStreet</span>
-          </li>
-        </ul>
+<nav>
+  <a class="nav-logo" href="#">Skillsy<span>.</span></a>
+  <div class="nav-links">
+    <a href="#fitur" data-en="Features" data-id="Fitur">Features</a>
+    <a href="#cara-kerja" data-en="How it Works" data-id="Cara Kerja">How it Works</a>
+    <a href="#faq" data-en="FAQ" data-id="FAQ">FAQ</a>
+  </div>
+  <button class="lang-toggle" id="langToggle">EN</button>
+  <a class="nav-cta" href="#gabung" data-en="Join Waitlist" data-id="Gabung Waitlist">Join Waitlist</a>
+</nav>
 
-        <a href="#" id="installBtn" class="cta-btn" data-en="Join Waitlist" data-id="Daftar Tunggu">Join Waitlist</a>
+<div class="container">
 
-        <div class="supported-by">
-          <div class="supported-text" data-en="Powered By" data-id="Didukung Oleh">Powered By</div>
-          <div class="supported-logos">
-            <div class="supported-logo">Groq<span>LPU Inference</span></div>
+  <header class="hero">
+    <div>
+      <div class="hero-badge"><span class="dot"></span> <span data-en="Early Beta, September 2026" data-id="Early Beta, September 2026">Early Beta, September 2026</span></div>
+      <h1 data-en="Know your odds, <em>before</em> you apply." data-id="Tahu peluangmu, <em>sebelum</em> kamu apply.">Know your odds, <em>before</em> you apply.</h1>
+      <p class="sub" data-en="Skillsy reads job postings on LinkedIn and JobStreet, compares them with your CV, and tells you exactly what is missing. All from your browser, in seconds." data-id="Skillsy membaca lowongan di LinkedIn dan JobStreet, membandingkannya dengan CV kamu, lalu memberi tahu apa yang kurang. Semua dari browser kamu, dalam hitungan detik.">Skillsy reads job postings on LinkedIn and JobStreet, compares them with your CV, and tells you exactly what is missing. All from your browser, in seconds.</p>
+      <div class="hero-ctas">
+        <a class="btn-primary" href="#gabung" data-en="Join Waitlist" data-id="Gabung Waitlist">Join Waitlist</a>
+        <a class="btn-ghost" href="#cara-kerja" data-en="See how it works" data-id="Lihat cara kerja">See how it works</a>
+      </div>
+      <p class="hero-note"><strong data-en="Free" data-id="Gratis">Free</strong> <span data-en="during beta. Your CV is processed in your browser, never on our servers." data-id="selama beta. CV kamu diproses di browser, bukan di server kami.">during beta. Your CV is processed in your browser, never on our servers.</span></p>
+    </div>
+
+    <div class="mockup-wrap reveal">
+      <div class="mockup">
+        <div class="mock-topbar"><i></i><i></i><i></i><span class="title">Skillsy Copilot</span></div>
+        <div class="mock-body">
+          <div class="mock-job">
+            <b>Data Analyst, PT Sejahtera Digital</b>
+            <span>linkedin.com/jobs/view/...</span>
+          </div>
+          <div class="mock-score-row">
+            <div class="ring"><b>78%</b><label>Match</label></div>
+            <div class="mock-score-info">
+              <span class="mock-tag" data-en="Worth trying, fix 2 things first" data-id="Layak dicoba, perbaiki 2 hal">Worth trying, fix 2 things first</span>
+              <div class="mock-bars">
+                <div class="mbar"><span data-en="Experience" data-id="Pengalaman">Experience</span><div class="track"><div class="fill" style="--w:85%; background:#22c55e;"></div></div><b>85</b></div>
+                <div class="mbar"><span data-en="Core skills" data-id="Skill Wajib">Core skills</span><div class="track"><div class="fill" style="--w:71%; background:#22c55e;"></div></div><b>71</b></div>
+                <div class="mbar"><span data-en="Education" data-id="Edukasi">Education</span><div class="track"><div class="fill" style="--w:100%; background:#22c55e;"></div></div><b>100</b></div>
+              </div>
+            </div>
+          </div>
+          <div class="mock-chips">
+            <span class="mchip"><svg viewBox="0 0 24 24" fill="none"><polyline points="20 6 9 17 4 12"/></svg>SQL</span>
+            <span class="mchip"><svg viewBox="0 0 24 24" fill="none"><polyline points="20 6 9 17 4 12"/></svg>Python</span>
+            <span class="mchip"><svg viewBox="0 0 24 24" fill="none"><polyline points="20 6 9 17 4 12"/></svg>Tableau</span>
+            <span class="mchip miss"><svg viewBox="0 0 24 24" fill="none"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>Airflow</span>
+            <span class="mchip miss"><svg viewBox="0 0 24 24" fill="none"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>PySpark</span>
           </div>
         </div>
       </div>
-      <div class="hero-image">
-        <img src="screenshot.png" alt="Skillsy AI Copilot Mockup">
-      </div>
-    </main>
-  </div>
+    </div>
+  </header>
+</div>
 
-  <!-- Stats Strip (BPS data) -->
-  <div class="glass-wrapper stats-wrapper">
-    <div class="stats-header">
-      <h2 class="stats-title" data-en="Why We Built Skillsy" data-id="Kenapa Kami Membangun Skillsy">Why We Built Skillsy</h2>
-      <p class="stats-subtitle" data-en="The job market in Indonesia is brutal. Here are the real numbers behind it, sourced from Badan Pusat Statistik (BPS), Indonesia's official statistics agency." data-id="Pasar kerja di Indonesia itu berat. Ini angka aslinya, bersumber dari Badan Pusat Statistik (BPS), lembaga statistik resmi Indonesia.">The job market in Indonesia is brutal. Here are the real numbers behind it, sourced from Badan Pusat Statistik (BPS), Indonesia's official statistics agency.</p>
+<div class="marquee-section reveal">
+  <div class="marquee-label" data-en="Works on your favorite job boards" data-id="Bekerja di lowongan favoritmu">Works on your favorite job boards</div>
+  <div class="marquee">
+    <div class="marquee-track">
+      <span class="mq-item">LinkedIn</span><span class="mq-item">JobStreet</span><span class="mq-item">Glints</span><span class="mq-item">Kalibrr</span><span class="mq-item">Tech in Asia</span><span class="mq-item">Kintsugi</span><span class="mq-item">MyCareersFuture</span>
+      <span class="mq-item">LinkedIn</span><span class="mq-item">JobStreet</span><span class="mq-item">Glints</span><span class="mq-item">Kalibrr</span><span class="mq-item">Tech in Asia</span><span class="mq-item">Kintsugi</span><span class="mq-item">MyCareersFuture</span>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+
+  <section id="kenapa">
+    <div class="sec-head reveal">
+      <div class="sec-eyebrow" data-en="Why it matters" data-id="Kenapa perlu">Why it matters</div>
+      <h2 data-en="The job market is brutal. The numbers are real." data-id="Pasar kerja itu berat. Angkanya nyata.">The job market is brutal. The numbers are real.</h2>
+      <p data-en="Official data from Badan Pusat Statistik (BPS), Indonesia's statistics agency." data-id="Data resmi dari Badan Pusat Statistik (BPS), lembaga statistik Indonesia.">Official data from Badan Pusat Statistik (BPS), Indonesia's statistics agency.</p>
     </div>
     <div class="stats-grid">
-      <div class="stat-item">
-        <div class="stat-value">7.47M</div>
-        <div class="stat-label" data-en="Openly unemployed Indonesians competing for the same jobs (BPS, Aug 2024)" data-id="Penganggur terbuka di Indonesia yang bersaing memperebutkan pekerjaan yang sama (BPS, Agustus 2024)">Openly unemployed Indonesians competing for the same jobs (BPS, Aug 2024)</div>
+      <div class="stat reveal"><b>7.47M</b><span data-en="Openly unemployed Indonesians competing for the same jobs (BPS, Aug 2024)" data-id="Penganggur terbuka yang bersaing memperebutkan pekerjaan yang sama (BPS, Agustus 2024)">Openly unemployed Indonesians competing for the same jobs (BPS, Aug 2024)</span></div>
+      <div class="stat reveal"><b>4.91%</b><span data-en="National open unemployment rate (BPS, Aug 2024). Every application has to count." data-id="Tingkat Pengangguran Terbuka nasional (BPS, Agustus 2024). Setiap lamaran harus tepat sasaran.">National open unemployment rate (BPS, Aug 2024). Every application has to count.</span></div>
+      <div class="stat reveal"><b>6-12</b><span data-en="Months the average fresh graduate spends job hunting. Skillsy cuts the guessing." data-id="Bulan yang dihabiskan fresh graduate rata-rata untuk mencari kerja. Skillsy memangkas menebak-menebaknya.">Months the average fresh graduate spends job hunting. Skillsy cuts the guessing.</span></div>
+      <div class="stat reveal"><b>Rp 5.28M</b><span data-en="Average salary in Indonesia's highest-paying sector: Information & Communication (BPS, Aug 2025)" data-id="Rata-rata gaji sektor tertinggi di Indonesia: Informasi dan Komunikasi (BPS, Agustus 2025)">Average salary in Indonesia's highest-paying sector: Information & Communication (BPS, Aug 2025)</span></div>
+    </div>
+  </section>
+
+  <section id="fitur">
+    <div class="sec-head reveal">
+      <div class="sec-eyebrow" data-en="The flow" data-id="Alurnya">The flow</div>
+      <h2 data-en="One flow: scan, understand, act" data-id="Satu alur: scan, pahami, aksi">One flow: scan, understand, act</h2>
+      <p data-en="Every feature has its place in your job hunt. Not a random toolbox." data-id="Setiap fitur punya tempatnya di pencarian kerjamu. Bukan kotak alat acak.">Every feature has its place in your job hunt. Not a random toolbox.</p>
+    </div>
+    <div class="journey">
+      <div class="j-stage reveal">
+        <div class="j-stage-head">
+          <span class="j-num">1</span>
+          <div>
+            <span class="j-stage-label" data-en="KNOW" data-id="KETAHUAN">KNOW</span>
+            <span class="j-stage-q" data-en="Is this job worth my effort?" data-id="Layak nggak aku berusaha?">Is this job worth my effort?</span>
+          </div>
+        </div>
+        <div class="f-card">
+          <div class="f-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
+          <h3 data-en="A score you can trust" data-id="Skor yang bisa dipercaya">A score you can trust</h3>
+          <p data-en="Not just a number. Every score shows its breakdown: experience, core skills, plus skills, education. You know exactly where it came from." data-id="Bukan sekadar angka. Setiap skor punya rincian: pengalaman, skill wajib, plus, dan edukasi. Kamu tahu persis dari mana angka itu berasal.">Not just a number. Every score shows its breakdown: experience, core skills, plus skills, education. You know exactly where it came from.</p>
+          <div class="f-visual f-score-demo">
+            <div class="ring mini-ring"><b>82%</b><label>Match</label></div>
+            <p data-en="&quot;Worth applying, but fix these 3 things first.&quot;" data-id="&quot;Layak dicoba, tapi benahi 3 hal ini dulu.&quot;">"Worth applying, but fix these 3 things first."</p>
+          </div>
+        </div>
       </div>
-      <div class="stat-item">
-        <div class="stat-value">6-12</div>
-        <div class="stat-label" data-en="Months the average fresh graduate spends job hunting. Skillsy cuts the guessing game." data-id="Bulan yang dihabiskan fresh graduate rata-rata untuk mencari kerja. Skillsy memangkas menebak-menebaknya.">Months the average fresh graduate spends job hunting. Skillsy cuts the guessing game.</div>
+
+      <div class="j-arrow reveal"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
+
+      <div class="j-stage reveal">
+        <div class="j-stage-head">
+          <span class="j-num">2</span>
+          <div>
+            <span class="j-stage-label" data-en="UNDERSTAND" data-id="PAHAMI">UNDERSTAND</span>
+            <span class="j-stage-q" data-en="Where exactly am I short?" data-id="Kurangnya persis di mana?">Where exactly am I short?</span>
+          </div>
+        </div>
+        <div class="f-card">
+          <div class="f-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></div>
+          <h3 data-en="Skill gap, with evidence" data-id="Skill gap, dengan bukti">Skill gap, with evidence</h3>
+          <p data-en="Every requirement dissected one by one: what you have, what is missing, and what can be bridged from related skills. The proof comes from your own CV." data-id="Requirement lowongan dibedah satu per satu: yang sudah kamu punya, yang kurang, dan yang bisa dijembatani dari skill terkait. Buktinya dari CV kamu sendiri.">Every requirement dissected one by one: what you have, what is missing, and what can be bridged from related skills. The proof comes from your own CV.</p>
+          <div class="f-visual mock-chips">
+            <span class="mchip"><svg viewBox="0 0 24 24" fill="none"><polyline points="20 6 9 17 4 12"/></svg>SQL</span>
+            <span class="mchip miss"><svg viewBox="0 0 24 24" fill="none"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>Kubernetes</span>
+            <span class="mchip miss"><svg viewBox="0 0 24 24" fill="none"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>Docker</span>
+          </div>
+        </div>
       </div>
-      <div class="stat-item">
-        <div class="stat-value">4.91%</div>
-        <div class="stat-label" data-en="National open unemployment rate (BPS, Aug 2024). Every application you send has to count." data-id="Tingkat Pengangguran Terbuka nasional (BPS, Agustus 2024). Setiap lamaran yang kamu kirim harus tepat sasaran.">National open unemployment rate (BPS, Aug 2024). Every application you send has to count.</div>
-      </div>
-      <div class="stat-item">
-        <div class="stat-value">Rp 5.28M</div>
-        <div class="stat-label" data-en="Average salary in Indonesia's highest-paying sector: Information & Communication (BPS, Aug 2025)" data-id="Rata-rata gaji sektor tertinggi di Indonesia: Informasi & Komunikasi (BPS, Agustus 2025)">Average salary in Indonesia's highest-paying sector: Information & Communication (BPS, Aug 2025)</div>
+
+      <div class="j-arrow reveal"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
+
+      <div class="j-stage reveal">
+        <div class="j-stage-head">
+          <span class="j-num">3</span>
+          <div>
+            <span class="j-stage-label" data-en="ACT" data-id="AKSI">ACT</span>
+            <span class="j-stage-q" data-en="What do I do about it now?" data-id="Terus aku ngapain sekarang?">What do I do about it now?</span>
+          </div>
+        </div>
+        <div class="j-stack">
+          <div class="f-card">
+            <div class="f-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg></div>
+            <h3 data-en="ATS keywords, ready to copy" data-id="Keyword ATS siap salin">ATS keywords, ready to copy</h3>
+            <p data-en="The exact keywords ATS systems look for in this posting. Click to copy, paste into your CV." data-id="Kata kunci yang dicari sistem ATS di lowongan ini. Klik untuk menyalin, tempel ke CV kamu.">The exact keywords ATS systems look for in this posting. Click to copy, paste into your CV.</p>
+          </div>
+          <div class="f-card">
+            <div class="f-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></div>
+            <h3 data-en="Automatic cover letters" data-id="Surat lamaran otomatis">Automatic cover letters</h3>
+            <p data-en="Built from your real skills and experience, tailored to this position. Edit, copy, send." data-id="Dirakit dari skill dan pengalaman asli kamu, disesuaikan untuk posisi ini. Edit, salin, kirim.">Built from your real skills and experience, tailored to this position. Edit, copy, send.</p>
+          </div>
+        </div>
       </div>
     </div>
-  </div>
 
-  <!-- How It Works Section -->
-  <div class="glass-wrapper hiw-wrapper" id="how-it-works">
-    <h2 class="hiw-title" data-en="How it Works in 3 Simple Steps" data-id="Cara Kerja dalam 3 Langkah Mudah">How it Works in 3 Simple Steps</h2>
-    <div class="hiw-grid">
-      <div class="hiw-card">
-        <div class="hiw-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>
+    <div class="evergreen reveal">
+      <div class="ev-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        <div>
+          <b data-en="Private by design" data-id="Privat by design">Private by design</b>
+          <span data-en="Your CV is parsed in your browser, never uploaded. No account needed." data-id="CV kamu diproses di browser, tidak pernah diunggah. Tanpa akun.">Your CV is parsed in your browser, never uploaded. No account needed.</span>
         </div>
-        <h3 data-en="1. Open Job Posting" data-id="1. Buka Lowongan">1. Open Job Posting</h3>
-        <p data-en="Browse any job opening on LinkedIn or JobStreet as you normally would." data-id="Buka lowongan pekerjaan apa saja di LinkedIn atau JobStreet seperti biasa.">Browse any job opening on LinkedIn or JobStreet as you normally would.</p>
       </div>
-      <div class="hiw-card">
-        <div class="hiw-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="12" y1="18" x2="12" y2="12"></line><line x1="9" y1="15" x2="15" y2="15"></line></svg>
+      <div class="ev-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        <div>
+          <b data-en="History + insights" data-id="Riwayat + insight">History + insights</b>
+          <span data-en="Your last 50 analyses stored locally, plus the skills you lack most often." data-id="50 analisis terakhir tersimpan lokal, plus skill yang paling sering kamu kurangi.">Your last 50 analyses stored locally, plus the skills you lack most often.</span>
         </div>
-        <h3 data-en="2. Upload your CV" data-id="2. Unggah CV-mu">2. Upload your CV</h3>
-        <p data-en="Click the Skillsy Extension icon and upload your latest PDF CV." data-id="Klik ikon Ekstensi Skillsy dan unggah CV PDF terbarumu.">Click the Skillsy Extension icon and upload your latest PDF CV.</p>
-      </div>
-      <div class="hiw-card">
-        <div class="hiw-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
-        </div>
-        <h3 data-en="3. Get Instant Analysis" data-id="3. Dapatkan Analisis Instan">3. Get Instant Analysis</h3>
-        <p data-en="Click 'Scan' and our AI will instantly highlight skill gaps and provide a matching score." data-id="Klik 'Pindai' dan AI kami akan langsung menyoroti kekurangan skill serta memberikan skor kecocokan.">Click 'Scan' and our AI will instantly highlight skill gaps and provide a matching score.</p>
       </div>
     </div>
-  </div>
+  </section>
 
-  <!-- FAQ Section -->
-  <div class="glass-wrapper faq-wrapper" id="faq">
-    <h2 class="faq-title" data-en="Frequently Asked Questions" data-id="Pertanyaan yang Sering Diajukan">Frequently Asked Questions</h2>
+  <section id="cara-kerja">
+    <div class="sec-head reveal">
+      <div class="sec-eyebrow" data-en="How it works" data-id="Cara kerja">How it works</div>
+      <h2 data-en="Three steps, ten seconds" data-id="Tiga langkah, sepuluh detik">Three steps, ten seconds</h2>
+    </div>
+    <div class="hiw">
+      <div class="hiw-card reveal">
+        <div class="hiw-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></div>
+        <h3 data-en="Open a job posting" data-id="Buka lowongan">Open a job posting</h3>
+        <p data-en="Browse jobs on LinkedIn, JobStreet, Glints, or Kalibrr as usual. Nothing changes in your workflow." data-id="Browse lowongan di LinkedIn, JobStreet, Glints, atau Kalibrr seperti biasa. Nggak ada yang berubah di alur kerjamu.">Browse jobs on LinkedIn, JobStreet, Glints, or Kalibrr as usual. Nothing changes in your workflow.</p>
+      </div>
+      <div class="hiw-card reveal">
+        <div class="hiw-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
+        <h3 data-en="Upload your CV once" data-id="Upload CV sekali">Upload your CV once</h3>
+        <p data-en="Your PDF is read directly in the browser and stored on your device. Once, for every job after that." data-id="PDF CV kamu dibaca langsung di browser dan disimpan di perangkatmu. Cukup sekali, untuk semua lowongan berikutnya.">Your PDF is read directly in the browser and stored on your device. Once, for every job after that.</p>
+      </div>
+      <div class="hiw-card reveal">
+        <div class="hiw-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
+        <h3 data-en="Get instant analysis" data-id="Dapat analisis instan">Get instant analysis</h3>
+        <p data-en="Match score, missing skills, ATS keywords, even a cover letter. Know where you stand before spending effort applying." data-id="Skor kecocokan, daftar kekurangan, keyword ATS, sampai surat lamaran. Tahu posisimu sebelum menghabiskan tenaga apply.">Match score, missing skills, ATS keywords, even a cover letter. Know where you stand before spending effort applying.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="faq">
+    <div class="sec-head reveal">
+      <div class="sec-eyebrow">FAQ</div>
+      <h2 data-en="Questions people ask" data-id="Pertanyaan yang sering muncul">Questions people ask</h2>
+    </div>
     <div class="faq-list">
-      <details class="faq-item">
-        <summary data-en="Is my CV safe? Where is my data stored?" data-id="Apakah CV saya aman? Di mana data saya disimpan?">Is my CV safe? Where is my data stored?</summary>
-        <p data-en="Your CV PDF is parsed entirely inside your browser; the file itself never leaves your device. For analysis, the extracted text (plus the job posting you're viewing) is sent securely to our server, processed by our AI engine, and never stored or shared." data-id="PDF CV kamu diproses sepenuhnya di dalam browser kamu; file-nya tidak pernah meninggalkan perangkatmu. Untuk analisis, teks hasil ekstraksi (beserta lowongan yang kamu lihat) dikirim aman ke server kami, diproses oleh mesin AI kami, dan tidak pernah disimpan atau dibagikan.">Your CV PDF is parsed entirely inside your browser; the file itself never leaves your device. For analysis, the extracted text (plus the job posting you're viewing) is sent securely to our server, processed by our AI engine, and never stored or shared.</p>
+      <details class="faq-item reveal">
+        <summary data-en="Is my CV safe?" data-id="Apakah CV saya aman?">Is my CV safe?</summary>
+        <p data-en="Your CV PDF is parsed entirely inside your browser. The file never leaves your device. For analysis, the extracted text is sent securely to our server, processed by our AI engine, and never stored." data-id="PDF CV kamu diproses sepenuhnya di dalam browser. File-nya tidak pernah meninggalkan perangkatmu. Untuk analisis, teks hasil ekstraksi dikirim aman ke server kami, diproses oleh mesin AI, dan tidak pernah disimpan.">Your CV PDF is parsed entirely inside your browser. The file never leaves your device. For analysis, the extracted text is sent securely to our server, processed by our AI engine, and never stored.</p>
       </details>
-      <details class="faq-item">
-        <summary data-en="Is Skillsy free to use?" data-id="Apakah Skillsy gratis?">Is Skillsy free to use?</summary>
-        <p data-en="Yes. The core features (ATS score, skill gap analysis, and keyword suggestions) are free during beta. Pro features (like AI cover letters at scale) may be paid in the future, but early waitlist members get privileged pricing." data-id="Ya. Fitur intinya (skor ATS, analisis skill gap, dan saran keyword) gratis selama masa beta. Fitur Pro (seperti surat lamaran AI skala besar) mungkin berbayar di masa depan, tetapi member waitlist awal mendapat harga istimewa.">Yes. The core features (ATS score, skill gap analysis, and keyword suggestions) are free during beta. Pro features (like AI cover letters at scale) may be paid in the future, but early waitlist members get privileged pricing.</p>
+      <details class="faq-item reveal">
+        <summary data-en="Is Skillsy free?" data-id="Apakah Skillsy gratis?">Is Skillsy free?</summary>
+        <p data-en="Yes. Core features (score, gap analysis, ATS keywords, cover letters) are free during beta. Early waitlist members get access first." data-id="Ya. Fitur inti (skor, analisis gap, keyword ATS, surat lamaran) gratis selama masa beta. Member waitlist awal mendapat akses lebih dulu.">Yes. Core features (score, gap analysis, ATS keywords, cover letters) are free during beta. Early waitlist members get access first.</p>
       </details>
-      <details class="faq-item">
-        <summary data-en="Which job sites are supported?" data-id="Situs lowongan apa saja yang didukung?">Which job sites are supported?</summary>
-        <p data-en="LinkedIn, JobStreet, Glints, Kalibrr, Tech in Asia, Kintsugi, and MyCareersFuture, with smart fallback extraction that works on most other job boards too." data-id="LinkedIn, JobStreet, Glints, Kalibrr, Tech in Asia, Kintsugi, dan MyCareersFuture, dengan ekstraksi fallback pintar yang juga bekerja di sebagian besar job board lainnya.">LinkedIn, JobStreet, Glints, Kalibrr, Tech in Asia, Kintsugi, and MyCareersFuture, with smart fallback extraction that works on most other job boards too.</p>
+      <details class="faq-item reveal">
+        <summary data-en="Which job boards are supported?" data-id="Situs lowongan apa saja yang didukung?">Which job boards are supported?</summary>
+        <p data-en="LinkedIn, JobStreet, Glints, Kalibrr, Tech in Asia, Kintsugi, and MyCareersFuture, with a smart fallback that works on most other job boards too." data-id="LinkedIn, JobStreet, Glints, Kalibrr, Tech in Asia, Kintsugi, dan MyCareersFuture, dengan fallback pintar yang juga bekerja di sebagian besar job board lain.">LinkedIn, JobStreet, Glints, Kalibrr, Tech in Asia, Kintsugi, and MyCareersFuture, with a smart fallback that works on most other job boards too.</p>
       </details>
-      <details class="faq-item">
-        <summary data-en="How accurate is the match score?" data-id="Seberapa akurat skor kecocokannya?">How accurate is the match score?</summary>
-        <p data-en="Skillsy combines rule-based skill matching (with synonym detection, e.g. ReactJS = React) and AI semantic matching. Transferable skills (like PHP → Python) get partial credit, so the score reflects how a recruiter would realistically assess your profile." data-id="Skillsy menggabungkan pencocokan skill berbasis aturan (dengan deteksi sinonim, mis. ReactJS = React) dan pencocokan semantik AI. Skill yang transferable (seperti PHP → Python) mendapat kredit parsial, sehingga skor mencerminkan cara rekruter menilai profilmu secara realistis.">Skillsy combines rule-based skill matching (with synonym detection, e.g. ReactJS = React) and AI semantic matching. Transferable skills (like PHP → Python) get partial credit, so the score reflects how a recruiter would realistically assess your profile.</p>
-      </details>
-      <details class="faq-item">
-        <summary data-en="When does the beta launch?" data-id="Kapan beta-nya rilis?">When does the beta launch?</summary>
-        <p data-en="Early Beta Access opens this September, with the public Chrome Web Store launch in November. Waitlist members get access first, in order of signup." data-id="Akses Beta Awal dibuka bulan September ini, dengan rilis publik di Chrome Web Store pada November. Member waitlist mendapat akses lebih dulu, sesuai urutan pendaftaran.">Early Beta Access opens this September, with the public Chrome Web Store launch in November. Waitlist members get access first, in order of signup.</p>
+      <details class="faq-item reveal">
+        <summary data-en="How accurate is the score?" data-id="Seberapa akurat skornya?">How accurate is the score?</summary>
+        <p data-en="Scores are computed by a fixed formula over per-requirement judgments, not free-form AI guesses. Skills are matched by a synonym engine, experience is counted in years, and identical inputs always produce identical scores." data-id="Skor dihitung dari formula tetap di atas penilaian per-requirement, bukan karangan bebas AI. Skill dinilai mesin pencocok sinonim, pengalaman dihitung dari tahun, dan hasil yang sama selalu konsisten untuk input yang sama.">Scores are computed by a fixed formula over per-requirement judgments, not free-form AI guesses. Skills are matched by a synonym engine, experience is counted in years, and identical inputs always produce identical scores.</p>
       </details>
     </div>
-  </div>
+  </section>
 
-  <!-- Waitlist Modal -->
-  <div class="modal-overlay" id="waitlistModal">
-    <div class="modal-content">
-      <button class="modal-close" id="closeModal">&times;</button>
-      <h3 data-en="Join the Waitlist" data-id="Daftar Tunggu">Join the Waitlist</h3>
-      <p id="modalDesc" data-en="We are launching on Chrome Web Store this November. Enter your email to get Early Beta Access in September." data-id="Kami akan rilis di Chrome Web Store November ini. Masukkan emailmu untuk dapat Akses Beta di bulan September.">We are launching on Chrome Web Store this November. Enter your email to get Early Beta Access in September.</p>
-      <div id="waitlistForm">
-        <div id="waitlistError" class="modal-error" role="alert"></div>
-        <input type="email" class="modal-input" placeholder="Email address" required id="wlEmail">
-        <button type="button" class="modal-btn" id="wlSubmit" data-en="Get Early Access" data-id="Dapatkan Akses Awal">Get Early Access</button>
-        <div class="modal-note" data-en="No spam. One email when your beta invite is ready." data-id="Tanpa spam. Satu email saat undangan beta-mu siap.">No spam. One email when your beta invite is ready.</div>
-      </div>
-      <div id="waitlistSuccess" style="display: none; color: #d4ff32; font-weight: 600; font-size: 18px; margin-top: 20px;">
-        <span data-en="You're on the list!" data-id="Berhasil mendaftar!">You're on the list!</span>
-      </div>
+  <section id="gabung">
+    <div class="final-cta reveal">
+      <h2 data-en="Stop guessing. Start knowing." data-id="Berhenti menebak. Mulai tahu.">Stop guessing. Start knowing.</h2>
+      <p data-en="Early Beta opens September 2026. Waitlist members get access first, in order." data-id="Early Beta dibuka September 2026. Member waitlist dapat akses lebih dulu, sesuai urutan.">Early Beta opens September 2026. Waitlist members get access first, in order.</p>
+      <a class="btn-primary" href="#gabung" data-en="Join Waitlist" data-id="Gabung Waitlist">Join Waitlist</a>
     </div>
-  </div>
+  </section>
+</div>
 
-  <!-- Footer -->
-  <footer class="site-footer">
-    <div>&copy; 2026 Skillsy. <span data-en="All rights reserved." data-id="Hak cipta dilindungi.">All rights reserved.</span></div>
-    <div class="footer-links">
-      <a href="privacy.html" data-en="Privacy Policy" data-id="Kebijakan Privasi">Privacy Policy</a>
+<footer>
+  <div class="container foot">
+    <div><span class="logo">Skillsy<span>.</span></span> <span data-en="&copy; 2026. All rights reserved." data-id="&copy; 2026. Semua hak dilindungi.">&copy; 2026. All rights reserved.</span></div>
+    <div>
+      <a href="privacy.html" data-en="Privacy" data-id="Privasi">Privacy</a>
       <a href="mailto:raybunaken@gmail.com" data-en="Contact" data-id="Kontak">Contact</a>
-      <a href="investor.html" data-en="For Investors" data-id="Untuk Investor">For Investors</a>
+      <a href="investor.html" data-en="Investors" data-id="Investor">Investors</a>
     </div>
-  </footer>
+  </div>
+</footer>
+
+<!-- Waitlist Modal -->
+<div class="modal-overlay" id="waitlistModal">
+  <div class="modal-content">
+    <button class="modal-close" id="closeModal">&times;</button>
+    <h3 data-en="Join the Waitlist" data-id="Gabung Waitlist">Join the Waitlist</h3>
+    <p data-en="We are launching on the Chrome Web Store this November. Enter your email to get Early Beta Access in September." data-id="Kami rilis di Chrome Web Store November ini. Masukkan emailmu untuk dapat Akses Beta Awal di bulan September.">We are launching on the Chrome Web Store this November. Enter your email to get Early Beta Access in September.</p>
+    <div id="waitlistForm">
+      <div id="waitlistError" class="modal-error" role="alert"></div>
+      <input type="email" class="modal-input" placeholder="name@email.com" required id="wlEmail">
+      <button type="button" class="modal-btn" id="wlSubmit" data-en="Get Early Access" data-id="Dapatkan Akses Awal">Get Early Access</button>
+      <div class="modal-note" data-en="No spam. One email when your beta invite is ready." data-id="Tanpa spam. Satu email saat undangan beta-mu siap.">No spam. One email when your beta invite is ready.</div>
+    </div>
+    <div id="waitlistSuccess" class="modal-success" style="display: none;">
+      <span data-en="You're on the list!" data-id="Kamu masuk daftar!">You're on the list!</span>
+    </div>
+  </div>
+</div>
 
 <script>
-  // ── Language toggle with persistence ──
   const langToggle = document.getElementById('langToggle');
-  const savedLang = localStorage.getItem('skillsy-lang');
-  let currentLang = savedLang === 'id' ? 'id' : 'en';
+  const saved = localStorage.getItem('skillsy-lang');
+  let currentLang = saved === 'id' ? 'id' : 'en';
 
   function applyLang(lang) {
     currentLang = lang;
     document.documentElement.lang = lang;
     langToggle.innerText = lang === 'en' ? 'EN' : 'ID';
     document.querySelectorAll('[data-en]').forEach(el => {
-      el.innerHTML = el.getAttribute(`data-${lang}`);
+      el.innerHTML = el.getAttribute('data-' + lang);
     });
   }
 
@@ -792,8 +731,7 @@
 
   applyLang(currentLang);
 
-  // ── Waitlist Modal Logic ──
-  const installBtn = document.getElementById('installBtn');
+  // ── Waitlist Modal ──
   const waitlistModal = document.getElementById('waitlistModal');
   const closeModal = document.getElementById('closeModal');
   const wlSubmit = document.getElementById('wlSubmit');
@@ -809,34 +747,30 @@
     waitlistError.style.display = 'block';
     wlEmail.style.borderColor = '#ff6b6b';
   }
-
   function clearWaitlistError() {
     waitlistError.style.display = 'none';
     wlEmail.style.borderColor = '';
   }
-
   wlEmail.addEventListener('input', clearWaitlistError);
 
-  installBtn.addEventListener('click', (e) => {
-    e.preventDefault();
-    waitlistModal.classList.add('active');
-    wlEmail.focus();
+  // Semua CTA waitlist membuka modal
+  document.querySelectorAll('a[href="#gabung"]').forEach(a => {
+    a.addEventListener('click', (e) => {
+      e.preventDefault();
+      waitlistModal.classList.add('active');
+      wlEmail.focus();
+    });
   });
-  
-  closeModal.addEventListener('click', () => {
-    waitlistModal.classList.remove('active');
-  });
-  
+
+  closeModal.addEventListener('click', () => waitlistModal.classList.remove('active'));
   waitlistModal.addEventListener('click', (e) => {
     if (e.target === waitlistModal) waitlistModal.classList.remove('active');
   });
-
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape' && waitlistModal.classList.contains('active')) {
       waitlistModal.classList.remove('active');
     }
   });
-
   wlEmail.addEventListener('keydown', (e) => {
     if (e.key === 'Enter') wlSubmit.click();
   });
@@ -851,20 +785,17 @@
       );
       return;
     }
-
     const originalText = wlSubmit.innerText;
-    const loadingText = currentLang === 'id' ? 'Memproses...' : 'Loading...';
-    wlSubmit.innerText = loadingText;
+    wlSubmit.innerText = currentLang === 'id' ? 'Memproses...' : 'Loading...';
     wlSubmit.disabled = true;
     clearWaitlistError();
-    
     try {
       const res = await fetch('https://skillsy.my.id/api/waitlist', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email })
       });
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      if (!res.ok) throw new Error('HTTP ' + res.status);
       waitlistForm.style.display = 'none';
       waitlistSuccess.style.display = 'block';
     } catch (err) {
@@ -879,6 +810,13 @@
       wlSubmit.disabled = false;
     }
   });
+
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); }
+    });
+  }, { threshold: 0.12 });
+  document.querySelectorAll('.reveal').forEach(el => io.observe(el));
 </script>
 </body>
 </html>
