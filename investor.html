@@ -1,354 +1,369 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-<title>Skillsy | Investor Relations</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
-<style>
-:root{
-  /* 🍃 PALETTE - Pure Neutral (Zinc) 🍃 */
-  --bg:#F4F4F5;          /* Zinc 100 */
-  --bg2:#FFFFFF;         /* White */
-  --bg3:#E4E4E7;         /* Zinc 200 */
-  --bg4:#D4D4D8;         /* Zinc 300 */
-  --fg:#18181B;          /* Zinc 900 */
-  --fg-dim:#52525B;      /* Zinc 600 */
-  --dim:#A1A1AA;         /* Zinc 400 */
-  --border:rgba(0,0,0,0.06);
-  --border-strong:rgba(0,0,0,0.12);
-  --glass:rgba(163,230,53,0.1);
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Skillsy | Investor Relations</title>
+  <meta name="description" content="Skillsy is building the AI Job Application Copilot for 7.47M Indonesian job seekers. Deterministic skill-gap analysis today, the application outcome data flywheel tomorrow.">
+  <link rel="icon" type="image/svg+xml" href="logo.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0a0e0c;
+      --lime: #d4ff32;
+      --lime-dim: rgba(212, 255, 50, 0.12);
+      --text: #fafafa;
+      --muted: #a1a1aa;
+      --faint: #52525b;
+      --glass: rgba(255, 255, 255, 0.03);
+      --glass-2: rgba(255, 255, 255, 0.06);
+      --border: rgba(255, 255, 255, 0.08);
+      --radius: 20px;
+      --font-display: 'Plus Jakarta Sans', sans-serif;
+      --font-body: 'Inter', sans-serif;
+      --red: #f87171;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body { font-family: var(--font-body); background: var(--bg); color: var(--text); overflow-x: hidden; line-height: 1.6; }
 
-  /* 🍃 ACCENT - Lime Green 🍃 */
-  --indigo:#BEF264;      /* Lime 300 - vibrant accent */
-  --indigo-dim:rgba(190,242,100,0.25);
-  --indigo-glow:rgba(190,242,100,0.4);
-  
-  --green:#22C55E;
-  --green-dim:rgba(34,197,94,0.15);
-  --red:#EF4444;
-  --red-dim:rgba(239,68,68,0.15);
-  --amber:#F59E0B;
+    .bg-fx { position: fixed; inset: 0; z-index: -1; pointer-events: none; }
+    .bg-fx::before {
+      content: ''; position: absolute; inset: 0;
+      background:
+        radial-gradient(ellipse 60% 40% at 15% 0%, rgba(212,255,50,0.06), transparent 60%),
+        radial-gradient(ellipse 70% 50% at 50% 100%, rgba(212,255,50,0.04), transparent 65%);
+    }
+    .bg-fx::after {
+      content: ''; position: absolute; inset: 0;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+      background-size: 56px 56px;
+      mask-image: radial-gradient(ellipse 90% 60% at 50% 0%, black, transparent 75%);
+      -webkit-mask-image: radial-gradient(ellipse 90% 60% at 50% 0%, black, transparent 75%);
+    }
 
-  --cyan:#65A30D;        /* Lime 600 (Darker hue for readable texts) */
+    .container { max-width: 980px; margin: 0 auto; padding: 0 24px; }
 
-  --r:8px;
-  --r-sm:5px;
-}
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-html{scroll-behavior:smooth}
-body{
-  font-family:'Inter',sans-serif;
-  background:var(--bg);
-  color:var(--fg);
-  min-height:100vh;
-  overflow-x:hidden;
-  -webkit-font-smoothing:antialiased;
-}
-.it{font-family:'Outfit',sans-serif;font-style:italic}
-.u{text-decoration:underline;text-decoration-color:var(--indigo)}
+    nav {
+      position: sticky; top: 16px; z-index: 100;
+      width: max-content; max-width: calc(100% - 32px);
+      margin: 0 auto;
+      display: flex; align-items: center; gap: 24px;
+      padding: 10px 12px 10px 20px;
+      background: rgba(13, 18, 16, 0.7);
+      backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px);
+      border: 1px solid var(--border);
+      border-radius: 100px;
+    }
+    .nav-logo { font-family: var(--font-display); font-weight: 800; font-size: 18px; letter-spacing: -0.02em; color: var(--text); text-decoration: none; }
+    .nav-logo span { color: var(--lime); }
+    .nav-badge {
+      font-size: 10px; font-weight: 800; letter-spacing: 0.1em;
+      color: var(--lime); background: var(--lime-dim);
+      border: 1px solid rgba(212,255,50,0.25);
+      padding: 5px 12px; border-radius: 100px;
+    }
+    .nav-link { color: var(--muted); font-size: 13px; font-weight: 500; text-decoration: none; transition: color .2s; }
+    .nav-link:hover { color: var(--text); }
 
-/* ── NAV ── */
-nav{
-  position:fixed;top:0;width:100%;background:rgba(244,244,245,0.85);
-  backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
-  border-bottom:1px solid var(--border);
-  z-index:100;padding:12px 28px;
-  display:flex;align-items:center;justify-content:space-between;
-}
-.nav-l{display:flex;align-items:center;gap:32px}
-.logo{font-family:'Outfit',sans-serif;font-weight:800;font-size:20px;letter-spacing:-0.5px;display:flex;align-items:center;gap:8px}
-.logo span{color:var(--cyan)}
-.nav-r{display:flex;align-items:center;gap:12px}
-.nav-badge{
-  font-size:10px;font-weight:700;
-  color:var(--fg);background:var(--indigo);
-  padding:4px 10px;border-radius:20px;
-  letter-spacing:1px;font-family:'Outfit',sans-serif;
-}
-.btn-nav{
-  font-size:12px;font-weight:600;color:var(--fg-dim);
-  text-decoration:none;cursor:pointer;
-  transition:color .2s;
-  font-family:'Outfit',sans-serif;
-  text-transform:uppercase;letter-spacing:0.5px;
-}
-.btn-nav:hover{color:var(--fg)}
+    .hero { padding: 84px 0 30px; }
+    .kicker { font-size: 11.5px; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; color: var(--lime); margin-bottom: 14px; }
+    h1 { font-family: var(--font-display); font-size: clamp(34px, 4.6vw, 54px); font-weight: 800; line-height: 1.1; letter-spacing: -0.03em; margin-bottom: 20px; }
+    h1 em { font-style: normal; color: var(--lime); }
+    .hero-sub { font-size: 17px; color: var(--muted); max-width: 640px; }
 
-/* ── LAYOUT ── */
-.wrap{max-width:900px;margin:0 auto;padding:120px 24px 60px}
-.kicker{
-  font-family:'Outfit',sans-serif;
-  font-size:11px;font-weight:700;letter-spacing:2px;
-  text-transform:uppercase;color:var(--cyan);
-  margin-bottom:12px;
-}
-h1,h2,h3{font-family:'Outfit',sans-serif;letter-spacing:-1px}
+    section { padding: 56px 0; }
+    .sec-head { margin-bottom: 34px; }
+    .sec-head h2 { font-family: var(--font-display); font-size: clamp(24px, 3vw, 32px); font-weight: 800; letter-spacing: -0.02em; margin-bottom: 10px; }
+    .sec-head p { color: var(--muted); font-size: 15.5px; max-width: 640px; }
 
-/* ── PITCH SECTION ── */
-.pitch-section{
-  background:var(--bg2);
-  border:1px solid var(--border);
-  border-radius:var(--r);
-  padding:40px;margin-bottom:24px;
-  box-shadow:0 4px 20px rgba(0,0,0,0.03);
-}
-.pitch-title{font-size:28px;font-weight:800;margin-bottom:16px;color:var(--fg)}
-.pitch-desc{font-size:16px;color:var(--fg-dim);line-height:1.7;margin-bottom:24px}
-.highlight-box{
-  background:var(--indigo-dim);
-  border-left:4px solid var(--cyan);
-  padding:20px;border-radius:0 var(--r-sm) var(--r-sm) 0;
-  margin:24px 0;
-}
-.highlight-box p{font-size:16px;font-weight:600;color:var(--cyan);line-height:1.5}
+    .card {
+      background: var(--glass); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 30px;
+      margin-bottom: 18px;
+    }
+    .card h3 { font-family: var(--font-display); font-size: 18px; font-weight: 700; margin-bottom: 10px; }
+    .card p { font-size: 14.5px; color: var(--muted); line-height: 1.7; }
+    .card p + p { margin-top: 10px; }
 
-.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:24px}
-.stat-card{
-  background:var(--bg);border:1px solid var(--border);
-  padding:24px;border-radius:var(--r-sm);
-}
-.stat-num{font-size:36px;font-weight:800;font-family:'Outfit',sans-serif;color:var(--cyan);margin-bottom:8px;letter-spacing:-1px}
-.stat-label{font-size:13px;font-weight:600;color:var(--fg-dim);text-transform:uppercase;letter-spacing:0.5px}
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+    .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+    .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
 
-/* ── AUTH MODAL ── */
-#auth-overlay{
-  position:fixed;inset:0;background:rgba(24,24,27,0.7);
-  backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
-  display:flex;align-items:center;justify-content:center;
-  z-index:9999;transition:opacity 0.3s;
-}
-.auth-box{
-  background:var(--bg2);
-  padding:40px;border-radius:16px;
-  width:100%;max-width:400px;
-  box-shadow:0 20px 40px rgba(0,0,0,0.2);
-  text-align:center;
-  border:1px solid var(--border);
-  animation:popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-}
-@keyframes popIn{
-  0%{transform:scale(0.9);opacity:0}
-  100%{transform:scale(1);opacity:1}
-}
-.auth-box h2{font-size:24px;margin-bottom:8px}
-.auth-box p{font-size:14px;color:var(--dim);margin-bottom:24px}
-.auth-input{
-  width:100%;background:var(--bg);border:1px solid var(--border-strong);
-  padding:14px;border-radius:var(--r-sm);font-size:16px;
-  text-align:center;letter-spacing:2px;font-family:'Outfit',sans-serif;
-  margin-bottom:16px;outline:none;transition:all 0.2s;
-  color:var(--fg);
-}
-.auth-input:focus{border-color:var(--cyan);box-shadow:0 0 0 4px var(--indigo-dim)}
-.auth-btn{
-  width:100%;background:var(--indigo);color:var(--fg);
-  font-family:'Outfit',sans-serif;font-weight:700;font-size:14px;
-  padding:14px;border:none;border-radius:24px;cursor:pointer;
-  transition:all 0.2s;
-}
-.auth-btn:hover{filter:brightness(1.05);transform:translateY(-1px)}
-.auth-error{
-  color:var(--red);font-size:12px;margin-top:12px;font-weight:500;
-  opacity:0;transition:opacity 0.2s;
-}
+    .stat { background: var(--glass); border: 1px solid var(--border); border-radius: 16px; padding: 24px 20px; text-align: center; }
+    .stat b { display: block; font-family: var(--font-display); font-size: 30px; font-weight: 800; color: var(--lime); letter-spacing: -0.02em; margin-bottom: 6px; }
+    .stat span { font-size: 12px; color: var(--muted); line-height: 1.5; display: block; }
 
-#main-content{opacity:0;transition:opacity 0.5s}
+    .quote {
+      background: linear-gradient(180deg, var(--glass), rgba(212,255,50,0.04));
+      border: 1px solid rgba(212,255,50,0.18);
+      border-radius: var(--radius);
+      padding: 26px 30px; margin: 26px 0;
+      font-size: 16.5px; font-weight: 600; color: var(--text); line-height: 1.6;
+    }
 
-/* ── Q&A ── */
-.qa-item{margin-bottom:24px;border-bottom:1px solid var(--border);padding-bottom:24px}
-.qa-item:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0}
-.qa-q{font-size:18px;font-weight:700;color:var(--fg);margin-bottom:8px;font-family:'Outfit',sans-serif}
-.qa-a{font-size:15px;color:var(--fg-dim);line-height:1.6}
+    .flow { display: grid; grid-template-columns: 1fr 26px 1fr 26px 1fr; gap: 10px; align-items: stretch; }
+    .flow-step { background: var(--glass); border: 1px solid var(--border); border-radius: 16px; padding: 20px; display: flex; flex-direction: column; gap: 6px; }
+    .flow-step b { font-size: 13px; color: var(--lime); font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; }
+    .flow-step span { font-size: 13.5px; color: var(--muted); line-height: 1.5; }
+    .flow-arrow { display: flex; align-items: center; justify-content: center; color: var(--lime); opacity: 0.5; }
 
-</style>
+    .timeline { display: flex; flex-direction: column; gap: 14px; }
+    .tl-item {
+      display: grid; grid-template-columns: 130px 1fr; gap: 20px;
+      background: var(--glass); border: 1px solid var(--border);
+      border-radius: 16px; padding: 20px 24px;
+    }
+    .tl-when { font-family: var(--font-display); font-size: 13px; font-weight: 800; color: var(--lime); letter-spacing: 0.04em; }
+    .tl-what b { display: block; font-size: 15px; font-weight: 700; margin-bottom: 4px; }
+    .tl-what span { font-size: 13.5px; color: var(--muted); line-height: 1.55; }
+    .tl-item.next { border-color: rgba(212,255,50,0.25); }
+
+    .qa-item { padding: 20px 0; border-bottom: 1px solid var(--border); }
+    .qa-item:last-child { border-bottom: none; }
+    .qa-q { font-size: 15.5px; font-weight: 700; margin-bottom: 8px; }
+    .qa-a { font-size: 14.5px; color: var(--muted); line-height: 1.65; }
+
+    .contact {
+      text-align: center;
+      background: linear-gradient(180deg, var(--glass), rgba(212,255,50,0.05));
+      border: 1px solid rgba(212,255,50,0.18);
+      border-radius: 24px; padding: 48px 28px; margin-top: 30px;
+    }
+    .contact h2 { font-family: var(--font-display); font-size: 26px; font-weight: 800; margin-bottom: 8px; }
+    .contact p { color: var(--muted); margin-bottom: 24px; }
+    .btn-lime {
+      display: inline-block; background: var(--lime); color: #0d1210;
+      font-weight: 700; font-size: 14px; text-decoration: none;
+      padding: 13px 26px; border-radius: 100px; margin: 0 7px;
+      transition: transform .2s, box-shadow .2s;
+    }
+    .btn-lime:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(212,255,50,0.25); }
+    .btn-outline {
+      display: inline-block; border: 1px solid var(--border); background: var(--glass);
+      color: var(--text); font-weight: 600; font-size: 14px; text-decoration: none;
+      padding: 13px 26px; border-radius: 100px; margin: 0 7px;
+      transition: border-color .2s;
+    }
+    .btn-outline:hover { border-color: rgba(255,255,255,0.25); }
+
+    /* ── AUTH GATE ── */
+    #auth-overlay {
+      position: fixed; inset: 0; z-index: 9999;
+      background: rgba(4, 6, 5, 0.85);
+      backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+      display: flex; align-items: center; justify-content: center; padding: 24px;
+    }
+    .auth-box {
+      background: linear-gradient(180deg, #141a17, #0e1210);
+      border: 1px solid var(--border);
+      border-radius: 24px; padding: 38px 34px;
+      width: 100%; max-width: 420px; text-align: center;
+      box-shadow: 0 30px 80px rgba(0,0,0,0.7);
+      animation: popIn 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.2);
+    }
+    @keyframes popIn { from { transform: scale(0.94); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+    .auth-box h2 { font-family: var(--font-display); font-size: 23px; font-weight: 800; margin-bottom: 8px; }
+    .auth-box > p { font-size: 13.5px; color: var(--muted); margin-bottom: 22px; }
+    .auth-input {
+      width: 100%; padding: 14px 16px; border-radius: 12px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.04); color: var(--text);
+      font-family: var(--font-body); font-size: 14.5px;
+      margin-bottom: 12px; outline: none; text-align: center;
+      transition: border-color .2s;
+    }
+    .auth-input:focus { border-color: rgba(212,255,50,0.5); }
+    .auth-btn {
+      width: 100%; background: var(--lime); color: #0d1210;
+      font-family: var(--font-body); font-weight: 700; font-size: 14px;
+      padding: 14px; border-radius: 100px; border: none; cursor: pointer;
+      transition: transform .15s, box-shadow .2s;
+    }
+    .auth-btn:hover { transform: translateY(-1px); box-shadow: 0 8px 30px rgba(212,255,50,0.25); }
+    .auth-error { color: var(--red); font-size: 12.5px; margin-top: 12px; opacity: 0; transition: opacity .2s; }
+    .auth-note { font-size: 11px; color: var(--faint); margin-top: 14px; }
+
+    #main-content { opacity: 0; transition: opacity .5s; }
+
+    .reveal { opacity: 0; transform: translateY(20px); transition: opacity .6s ease, transform .6s ease; }
+    .reveal.visible { opacity: 1; transform: none; }
+
+    @media (max-width: 860px) {
+      .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr 1fr; }
+      .flow { grid-template-columns: 1fr; }
+      .flow-arrow { transform: rotate(90deg); }
+      .tl-item { grid-template-columns: 1fr; gap: 8px; }
+    }
+    @media (max-width: 560px) { .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; } }
+  </style>
 </head>
 <body>
 
-<!-- AUTH MODAL -->
+<div class="bg-fx"></div>
+
+<!-- AUTH GATE -->
 <div id="auth-overlay">
   <div class="auth-box">
     <h2>Investor Deck Access</h2>
-    <p>Please enter your business email to view the Skillsy Seed Round Pitch Deck.</p>
+    <p>Enter your business email to view the Skillsy seed materials.</p>
     <form id="lead-form" onsubmit="submitEmail(event)">
-      <!-- FormSubmit config -->
       <input type="hidden" name="_captcha" value="false">
       <input type="hidden" name="_subject" value="New Investor Access Request!">
-      
-      <input type="email" class="auth-input" name="email" id="investor-email" placeholder="name@vc.com" required style="text-transform:lowercase; letter-spacing:0.5px;" />
+      <input type="email" class="auth-input" name="email" id="investor-email" placeholder="name@vc.com" required style="text-transform:lowercase;">
       <button type="submit" class="auth-btn" id="submit-btn">GET ACCESS</button>
       <div class="auth-error" id="auth-error">Error. Please try again.</div>
     </form>
-    <div style="font-size:11px;color:var(--dim);margin-top:16px;">We respect your privacy. No spam.</div>
+    <div class="auth-note">We respect your privacy. No spam.</div>
   </div>
 </div>
 
 <div id="main-content">
   <nav>
-    <div class="nav-l">
-      <div class="logo">SKILL<span>SYNC</span></div>
-    </div>
-    <div class="nav-r">
-      <a href="/" class="btn-nav">Back to Home</a>
-      <div class="nav-badge">INVESTOR RELATIONS</div>
-    </div>
+    <a class="nav-logo" href="/">Skillsy<span>.</span></a>
+    <a class="nav-link" href="/">Back to Home</a>
+    <span class="nav-badge">INVESTOR RELATIONS</span>
   </nav>
 
-  <div class="wrap">
-    
-    <div class="kicker">Executive Summary</div>
-    <h1 style="font-size:48px;font-weight:800;margin-bottom:24px;line-height:1.1">Bridging the Gap Between <span class="it" style="color:var(--cyan)">Education</span> &amp; <span class="it" style="color:var(--cyan)">Employment</span>.</h1>
-    
-    <div class="highlight-box">
-      <p>"Skillsy is an AI-powered Career Advisor that automatically identifies the skill gaps in Indonesian fresh graduates and generates a personalized, free learning roadmap to make them highly employable."</p>
-    </div>
+  <div class="container">
 
-    <!-- THE PROBLEM -->
-    <div class="pitch-section">
-      <div class="kicker">The Problem</div>
-      <h2 class="pitch-title">The Skill Mismatch Crisis</h2>
-      <p class="pitch-desc">
-        Indonesia faces a massive youth unemployment rate, primarily driven by a severe skill mismatch. Universities teach theory, but the industry demands practical, up-to-date technical skills. Fresh graduates simply do not know <i>what</i> they need to learn to get hired.
-      </p>
-      <div class="grid-2">
-        <div class="stat-card">
-          <div class="stat-num">7.47M</div>
-          <div class="stat-label">Open Unemployment (BPS 2024)</div>
+    <header class="hero">
+      <div class="kicker">Executive Summary</div>
+      <h1>The AI Job Application Copilot for <em>Indonesia</em>.</h1>
+      <div class="quote">
+        Skillsy turns one CV into a personalized, honest application for every job a user chases: a trustworthy match score today, optimized applications next, and the country's only dataset connecting skills to real hiring outcomes tomorrow.
+      </div>
+      <p class="hero-sub">Chrome extension, currently in closed build. Public beta September 2026, Chrome Web Store launch November 2026. Runs on free-tier infrastructure with near-zero marginal cost per analysis.</p>
+    </header>
+
+    <!-- PROBLEM -->
+    <section>
+      <div class="sec-head">
+        <div class="kicker">The Problem</div>
+        <h2>Applying blind is expensive, and everyone does it.</h2>
+        <p>Job seekers cannot read a posting against their own CV honestly. They overestimate fit, spray applications, and never learn why they were rejected. Official data from Badan Pusat Statistik (BPS):</p>
+      </div>
+      <div class="grid-4">
+        <div class="stat"><b>7.47M</b><span>Openly unemployed competing for the same jobs (BPS, Aug 2024)</span></div>
+        <div class="stat"><b>4.91%</b><span>National open unemployment rate (BPS, Aug 2024)</span></div>
+        <div class="stat"><b>6-12</b><span>Months an average fresh graduate spends job hunting</span></div>
+        <div class="stat"><b>Rp 5.28M</b><span>Average salary, highest-paying sector: Info &amp; Communication (BPS, Aug 2025)</span></div>
+      </div>
+    </section>
+
+    <!-- PRODUCT TODAY -->
+    <section>
+      <div class="sec-head">
+        <div class="kicker">Product Today</div>
+        <h2>Live and working, not a mockup.</h2>
+        <p>The core analysis engine is built, tested end-to-end, and deployed. Every claim below ships in the current build.</p>
+      </div>
+      <div class="flow">
+        <div class="flow-step"><b>1. KNOW</b><span>Deterministic match score with a full breakdown: experience, core skills, plus skills, education. Identical inputs always produce identical scores.</span></div>
+        <div class="flow-arrow"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
+        <div class="flow-step"><b>2. UNDERSTAND</b><span>Per-requirement gap analysis with evidence quoted from the user's own CV, narrated in natural Indonesian by a separate AI stage that cannot change the verdict.</span></div>
+        <div class="flow-arrow"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
+        <div class="flow-step"><b>3. ACT</b><span>One-click ATS keywords and a cover letter assembled from the user's real experience. Works on LinkedIn, JobStreet, Glints, Kalibrr, and 3 more boards.</span></div>
+      </div>
+      <div class="grid-3" style="margin-top:18px;">
+        <div class="card"><h3>Privacy by design</h3><p>The CV PDF is parsed inside the browser and never uploaded. No account required. This is both an ethics choice and a Chrome Web Store distribution advantage.</p></div>
+        <div class="card"><h3>Anti-hallucination by architecture</h3><p>The machine decides, the LLM narrates. Skill verdicts come from a synonym engine with transferable-credit logic; the score is computed by fixed formula, not generated by a model.</p></div>
+        <div class="card"><h3>Unit economics day one</h3><p>A multi-model pipeline tuned to free-tier LLM quotas. Marginal cost per analysis is effectively zero at beta scale, so growth does not burn runway.</p></div>
+      </div>
+    </section>
+
+    <!-- ROADMAP -->
+    <section>
+      <div class="sec-head">
+        <div class="kicker">Roadmap</div>
+        <h2>From analysis tool to application operating system.</h2>
+      </div>
+      <div class="timeline">
+        <div class="tl-item">
+          <div class="tl-when">SEP 2026</div>
+          <div class="tl-what"><b>Early Beta</b><span>Waitlist onboarding, usage telemetry via server persistence (Supabase), extension hardened from real-world scrapes.</span></div>
         </div>
-        <div class="stat-card">
-          <div class="stat-num">16.89%</div>
-          <div class="stat-label">Youth Unemployment (Age 15-24)</div>
+        <div class="tl-item">
+          <div class="tl-when">NOV 2026</div>
+          <div class="tl-what"><b>Chrome Web Store Launch</b><span>Public listing. Content engine begins: the Skillsy Index, a monthly report of the most-demanded skills per role in Indonesia, built from anonymized scan data.</span></div>
+        </div>
+        <div class="tl-item next">
+          <div class="tl-when">NEXT</div>
+          <div class="tl-what"><b>CV Tailor: one CV, every job personalized</b><span>The monetizable core. AI reorders, rephrases, and emphasizes real experience to fit each posting, with an anti-fabrication guard enforced in code: the AI may present experience better, never invent it. PDF rendered client-side, zero server cost.</span></div>
+        </div>
+        <div class="tl-item next">
+          <div class="tl-when">THEN</div>
+          <div class="tl-what"><b>Application tracker and the outcome loop</b><span>Users report interview and offer outcomes. Scores become calibrated against real hiring results, producing Indonesia's only skills-to-outcome dataset. That dataset is the moat: better scores, the Skillsy Index, and B2B licensing.</span></div>
         </div>
       </div>
-    </div>
+    </section>
 
-    <!-- THE SOLUTION -->
-    <div class="pitch-section">
-      <div class="kicker">The Solution</div>
-      <h2 class="pitch-title">AI-Powered Skill Gap Analysis</h2>
-      <p class="pitch-desc">
-        Skillsy solves this by taking the guesswork out of career prep. By inputting their current skills and target job, our AI compares their profile against real-time market data (Jobstreet, LinkedIn) to pinpoint exactly what they are missing.
-      </p>
-      <ul style="list-style:none;padding:0;margin:0">
-        <li style="margin-bottom:12px;display:flex;gap:12px;align-items:center">
-          <div style="background:var(--cyan);color:var(--bg2);width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:bold">1</div>
-          <div style="font-weight:500">Instant CV & Profile Analysis</div>
-        </li>
-        <li style="margin-bottom:12px;display:flex;gap:12px;align-items:center">
-          <div style="background:var(--cyan);color:var(--bg2);width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:bold">2</div>
-          <div style="font-weight:500">Identification of Missing Industry Skills</div>
-        </li>
-        <li style="display:flex;gap:12px;align-items:center">
-          <div style="background:var(--cyan);color:var(--bg2);width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:bold">3</div>
-          <div style="font-weight:500">Automated Free Course Recommendations (Coursera, Dicoding)</div>
-        </li>
-      </ul>
-    </div>
+    <!-- MOAT -->
+    <section>
+      <div class="sec-head">
+        <div class="kicker">Why We Win</div>
+        <h2>Thin today, compounding tomorrow.</h2>
+      </div>
+      <div class="grid-2">
+        <div class="card"><h3>The outcome data flywheel</h3><p>Every scan is anonymous demand data. Every tracked application is supply data. Once outcomes flow in, Skillsy owns the only dataset answering: which skills, presented how, actually get Indonesians hired. Competitors can copy features; they cannot copy accumulated outcomes.</p></div>
+        <div class="card"><h3>Indonesian skill taxonomy</h3><p>A curated synonym and transferable-skill engine mapping how Indonesian employers actually phrase requirements (SLIK, BPJS, KPR, Dicoding-era certification culture). It improves passively with every scan.</p></div>
+        <div class="card"><h3>Trust as product</h3><p>Deterministic scoring, evidence-based verdicts, honest hard-filter warnings, privacy by design. In a market burned by flashy AI tools, being the honest one is positioning nobody is fighting for.</p></div>
+        <div class="card"><h3>Distribution</h3><p>B2B2C via university Career Development Centers for zero-CAC adoption, plus the Skillsy Index as a recurring SEO and PR engine aimed at job seekers themselves.</p></div>
+      </div>
+    </section>
 
     <!-- BUSINESS MODEL -->
-    <div class="pitch-section">
-      <div class="kicker">Monetization</div>
-      <h2 class="pitch-title">Business Model & B2B Strategy</h2>
-      <div class="grid-2" style="margin-top:0">
-        <div>
-          <h3 style="font-size:20px;margin-bottom:8px">B2C Freemium & Affiliates</h3>
-          <p style="font-size:14px;color:var(--fg-dim);line-height:1.6">
-            The core roadmap feature is free, driving massive user growth. We monetize through Affiliate CPA (Cost Per Action) when users upgrade to paid certificates on our partner EdTech platforms. Premium B2C features include Live AI Mock Interviews.
-          </p>
-        </div>
-        <div>
-          <h3 style="font-size:20px;margin-bottom:8px">B2B API Licensing</h3>
-          <p style="font-size:14px;color:var(--fg-dim);line-height:1.6">
-            We license the Skillsy Semantic CV Extraction API to corporate Applicant Tracking Systems (ATS). This allows companies to automatically screen candidates based on competence match percentage.
-          </p>
-        </div>
+    <section>
+      <div class="sec-head">
+        <div class="kicker">Monetization</div>
+        <h2>Free where it spreads, paid where it hurts.</h2>
       </div>
-    </div>
-
-    <!-- TECHNOLOGY ARCHITECTURE -->
-    <div class="pitch-section" style="background:var(--bg); border:1px solid var(--border-strong);">
-      <div class="kicker" style="color:var(--cyan);">Under The Hood</div>
-      <h2 class="pitch-title">Neuro-Symbolic Architecture</h2>
-      <p class="pitch-desc">
-        Skillsy is not a standard LLM wrapper. To prevent AI hallucinations and ensure 100% accurate readiness scores, we utilize a <strong>Neuro-Symbolic</strong> approach combining deterministic Knowledge Graphs with Semantic parsing.
-      </p>
-      
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:32px;">
-        <div style="background:var(--bg2);padding:24px;border-radius:var(--r);border:1px solid var(--border);">
-          <div style="width:40px;height:40px;background:var(--indigo-dim);color:var(--cyan);border-radius:8px;display:flex;align-items:center;justify-content:center;margin-bottom:16px;">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M12 16v-4"></path><path d="M12 8h.01"></path></svg>
-          </div>
-          <h4 style="font-size:16px;margin-bottom:8px;font-family:'Outfit',sans-serif">Deterministic Engine (Symbolic)</h4>
-          <p style="font-size:13.5px;color:var(--dim);line-height:1.6">
-            Skill gap calculation is purely mathematical. We use a proprietary Knowledge Graph updated daily from real-world job portals to compute the exact match percentage. No guessing, 100% deterministic.
-          </p>
-        </div>
-        
-        <div style="background:var(--bg2);padding:24px;border-radius:var(--r);border:1px solid var(--border);">
-          <div style="width:40px;height:40px;background:var(--indigo-dim);color:var(--cyan);border-radius:8px;display:flex;align-items:center;justify-content:center;margin-bottom:16px;">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
-          </div>
-          <h4 style="font-size:16px;margin-bottom:8px;font-family:'Outfit',sans-serif">Semantic Parser (Neuro)</h4>
-          <p style="font-size:13.5px;color:var(--dim);line-height:1.6">
-            Llama 3.3 (via Groq LPU) is strictly utilized at the edge layer to semantically parse messy CV PDFs into structured JSON. Groq guarantees sub-second inference speeds for real-time UX.
-          </p>
-        </div>
-
-        <div style="background:var(--bg2);padding:24px;border-radius:var(--r);border:1px solid var(--border);">
-          <div style="width:40px;height:40px;background:var(--indigo-dim);color:var(--cyan);border-radius:8px;display:flex;align-items:center;justify-content:center;margin-bottom:16px;">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>
-          </div>
-          <h4 style="font-size:16px;margin-bottom:8px;font-family:'Outfit',sans-serif">Tech Stack</h4>
-          <p style="font-size:13.5px;color:var(--dim);line-height:1.6">
-            Frontend is a Vanilla JS SPA running on Vercel Edge for zero-overhead rendering. Backend powered by FastAPI (Python) for asynchronous agentic workflows.
-          </p>
-        </div>
-
-        <div style="background:var(--bg2);padding:24px;border-radius:var(--r);border:1px solid var(--border);">
-          <div style="width:40px;height:40px;background:var(--indigo-dim);color:var(--cyan);border-radius:8px;display:flex;align-items:center;justify-content:center;margin-bottom:16px;">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
-          </div>
-          <h4 style="font-size:16px;margin-bottom:8px;font-family:'Outfit',sans-serif">Context-Aware Advisory</h4>
-          <p style="font-size:13.5px;color:var(--dim);line-height:1.6">
-            The AI Advisor is injected with the computed gap analysis JSON payload, allowing it to provide hyper-personalized mentorship based on factual missing skills, not generic advice.
-          </p>
-        </div>
+      <div class="grid-3">
+        <div class="card"><h3>B2C Freemium</h3><p>Scan, gap analysis, and ATS keywords stay free. Pro subscription unlocks CV Tailor, unlimited optimized applications, and AI mock interviews built on the user's real gap history.</p></div>
+        <div class="card"><h3>B2B Universities</h3><p>Career centers license Skillsy for cohort employability analytics: which skills their graduates actually lack against live market demand.</p></div>
+        <div class="card"><h3>Data products</h3><p>The Skillsy Index and, later, an API licensing outcome-calibrated matching to local ATS vendors and recruiters.</p></div>
       </div>
-    </div>
+    </section>
 
     <!-- Q&A -->
-    <div class="pitch-section">
-      <div class="kicker">Anticipated Questions</div>
-      <h2 class="pitch-title">Investor Q&A</h2>
-      
-      <div class="qa-item">
-        <div class="qa-q">Why use AI instead of a static rule-based system?</div>
-        <div class="qa-a">The job market evolves rapidly. A static system requires manual updates for every new technology (e.g., React, Next.js, LLMs). Our AI understands contextual semantic relationships, allowing it to accurately map a student's project experience to industry demand instantly.</div>
+    <section>
+      <div class="sec-head">
+        <div class="kicker">Anticipated Questions</div>
+        <h2>Investor Q&amp;A</h2>
       </div>
-      
-      <div class="qa-item">
-        <div class="qa-q">What is your Go-To-Market strategy?</div>
-        <div class="qa-a">We are executing a B2B2C approach by partnering with University Career Development Centers (CDC). By embedding Skillsy into university career portals as a graduation requirement or career prep tool, we achieve zero Customer Acquisition Cost (CAC).</div>
+      <div class="card">
+        <div class="qa-item">
+          <div class="qa-q">Is this just an LLM wrapper?</div>
+          <div class="qa-a">The LLM extracts and narrates; it never scores. Verdicts come from a deterministic synonym engine, experience is computed from years, and the final score is a fixed formula over per-requirement judgments. Same input, same output, every time. That reliability is the product.</div>
+        </div>
+        <div class="qa-item">
+          <div class="qa-q">What happens when LinkedIn changes their layout?</div>
+          <div class="qa-a">Scraping selectors are configuration, not code: they can be fixed server-side without republishing the extension. A generic fallback extractor already covers unknown layouts, and analysis quality is designed to survive partial scrapes.</div>
+        </div>
+        <div class="qa-item">
+          <div class="qa-q">Why will users pay?</div>
+          <div class="qa-a">They are not paying for analysis; they are paying per application they care about. One scan optimized into one tailored CV plus cover letter has obvious value at the moment of intent, the same moment JobScan charges roughly USD 50/month for in the US market.</div>
+        </div>
+        <div class="qa-item">
+          <div class="qa-q">What is the go-to-market?</div>
+          <div class="qa-a">Two engines. B2C: Chrome Web Store plus the Skillsy Index content loop for organic acquisition. B2B2C: university career centers embedding Skillsy for near-zero CAC distribution at cohort scale.</div>
+        </div>
+        <div class="qa-item">
+          <div class="qa-q">How do you handle data privacy for CVs?</div>
+          <div class="qa-a">The PDF never leaves the user's browser. Analysis text is processed in memory and not stored. This is documented publicly in our privacy policy and engineered that way from the start, which also simplifies Chrome Web Store compliance.</div>
+        </div>
       </div>
+    </section>
 
-      <div class="qa-item">
-        <div class="qa-q">How do you ensure the accuracy of the roadmap?</div>
-        <div class="qa-a">Our dataset is regularly fine-tuned using scraped data from major job boards in Indonesia (Jobstreet, Kalibrr). The AI compares the user's skills not against theoretical ideals, but against the actual requirements listed by employers this month.</div>
-      </div>
-    </div>
-
-    <!-- CONTACT SECTION -->
-    <div style="margin-top:48px; text-align:center; padding:40px; background:var(--indigo-dim); border:1px solid var(--border); border-radius:12px;">
-      <h2 style="font-size:24px; font-weight:800; font-family:'Outfit',sans-serif; margin-bottom:8px;">Let's Connect</h2>
-      <p style="color:var(--fg-dim); margin-bottom:24px; font-size:15px;">Interested in our Seed Round? Reach out directly to the founder.</p>
-      <div style="display:flex; gap:16px; justify-content:center;">
-        <a href="mailto:raybunaken@gmail.com" class="auth-btn" style="text-decoration:none; display:inline-block; width:auto; padding:12px 24px; border-radius:8px;">
-          EMAIL FOUNDER
-        </a>
-        <a href="https://www.linkedin.com/in/dzaky-rayssa-buntoro-b13694318/" target="_blank" class="auth-btn" style="text-decoration:none; display:inline-block; width:auto; padding:12px 24px; border-radius:8px; background:var(--bg2); color:var(--fg); border:1px solid var(--border-strong);">
-          LINKEDIN PROFILE
-        </a>
-      </div>
+    <div class="contact">
+      <h2>Let's Connect</h2>
+      <p>Interested in the seed round? Reach the founder directly.</p>
+      <a class="btn-lime" href="mailto:raybunaken@gmail.com">EMAIL FOUNDER</a>
+      <a class="btn-outline" href="https://www.linkedin.com/in/dzaky-rayssa-buntoro-b13694318/" target="_blank" rel="noopener">LINKEDIN</a>
     </div>
 
   </div>
@@ -359,6 +374,7 @@ h1,h2,h3{font-family:'Outfit',sans-serif;letter-spacing:-1px}
     if (localStorage.getItem('investor_unlocked') === 'true') {
       document.getElementById('auth-overlay').style.display = 'none';
       document.getElementById('main-content').style.opacity = '1';
+      initReveal();
     }
   });
 
@@ -367,41 +383,31 @@ h1,h2,h3{font-family:'Outfit',sans-serif;letter-spacing:-1px}
     const email = document.getElementById('investor-email').value;
     const btn = document.getElementById('submit-btn');
     const errorMsg = document.getElementById('auth-error');
-    
-    if (!email || !email.includes('@')) {
-      showError('Please enter a valid email address.');
-      return;
-    }
-
+    if (!email || !email.includes('@')) { showError('Please enter a valid email address.'); return; }
     btn.innerText = 'VERIFYING...';
     btn.style.opacity = '0.7';
-    
-    // Submit via AJAX to FormSubmit
     fetch('https://formsubmit.co/ajax/raybunaken@gmail.com', {
       method: 'POST',
-      headers: { 
-        'Content-Type': 'application/json',
-        'Accept': 'application/json'
-      },
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
       body: JSON.stringify({
         email: email,
         _subject: 'New Investor Lead: ' + email,
-        message: 'A new investor has requested access to the Pitch Deck: ' + email
+        message: 'A new investor has requested access to the pitch materials: ' + email
       })
     })
-    .then(response => response.json())
-    .then(data => {
-      // Success
+    .then(r => r.json())
+    .then(() => {
       localStorage.setItem('investor_unlocked', 'true');
-      document.getElementById('auth-overlay').style.opacity = '0';
+      const ov = document.getElementById('auth-overlay');
+      ov.style.opacity = '0';
       setTimeout(() => {
-        document.getElementById('auth-overlay').style.display = 'none';
+        ov.style.display = 'none';
         document.getElementById('main-content').style.opacity = '1';
-        window.scrollTo(0,0);
+        window.scrollTo(0, 0);
+        initReveal();
       }, 300);
     })
-    .catch(error => {
-      // Error
+    .catch(() => {
       showError('Network error. Please try again later.');
       btn.innerText = 'GET ACCESS';
       btn.style.opacity = '1';
@@ -412,18 +418,20 @@ h1,h2,h3{font-family:'Outfit',sans-serif;letter-spacing:-1px}
     const errorMsg = document.getElementById('auth-error');
     errorMsg.innerText = msg;
     errorMsg.style.opacity = '1';
-    document.querySelector('.auth-box').animate([
-      { transform: 'translateX(0px)' },
-      { transform: 'translateX(-10px)' },
-      { transform: 'translateX(10px)' },
-      { transform: 'translateX(-10px)' },
-      { transform: 'translateX(10px)' },
-      { transform: 'translateX(0px)' }
-    ], { duration: 400, easing: 'ease-in-out' });
-    
+    document.querySelector('.auth-box').animate(
+      [{ transform: 'translateX(0)' }, { transform: 'translateX(-8px)' }, { transform: 'translateX(8px)' }, { transform: 'translateX(0)' }],
+      { duration: 350, easing: 'ease-in-out' }
+    );
     setTimeout(() => { errorMsg.style.opacity = '0'; }, 3000);
+  }
+
+  function initReveal() {
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(en => { if (en.isIntersecting) { en.target.classList.add('visible'); io.unobserve(en.target); } });
+    }, { threshold: 0.1 });
+    document.querySelectorAll('.card, .stat, .tl-item, .flow-step, .contact').forEach(el => el.classList.add('reveal'));
+    document.querySelectorAll('.reveal').forEach(el => io.observe(el));
   }
 </script>
 </body>
 </html>
-
