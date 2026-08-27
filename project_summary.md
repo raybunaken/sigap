@@ -108,14 +108,14 @@ Skillsy Copilot solves this by sitting directly inside the user's browser. While
 - [x] Production deployment on Vercel
 - [x] LinkedIn & JobStreet scraping support
 
-### Phase 2 — September 2026 (Early Beta Access)
+### Phase 2 — End of Year 2026 (Beta & Public Launch)
 - [ ] Supabase integration for user accounts & waitlist database
 - [ ] Multi-platform scraping (Glints, Kalibrr, Indeed)
 - [ ] Auto-Tailor CV feature (AI rewrites CV sections to match job)
 - [ ] User history & saved analyses
 - [ ] Beta download distribution to waitlist subscribers
 
-### Phase 3 — November 2026 (Public Launch)
+
 - [ ] Chrome Web Store publication
 - [ ] Premium tier (unlimited scans, priority AI model)
 - [ ] Dashboard for tracking application history
