@@ -324,10 +324,31 @@
     .f-card p { font-size: 13.5px; color: var(--muted); }
     .f-card .f-visual { margin-top: auto; padding-top: 18px; }
 
-    .f-score-demo { display: flex; align-items: center; gap: 14px; }
-    .f-score-demo .mini-ring { --sz: 62px; }
-    .f-score-demo .mini-ring b { font-size: 16px; }
-    .f-score-demo p { font-size: 12px; }
+    .f-score-demo { display: flex; flex-direction: column; gap: 12px; }
+    .f-score-row { display: flex; align-items: center; gap: 12px; }
+    .f-score-demo .mini-ring { --sz: 54px; }
+    .f-score-demo .mini-ring b { font-size: 15px; }
+    .f-score-demo p { font-size: 12px; color: var(--muted); line-height: 1.4; margin: 0; }
+
+    .f-bars { display: flex; flex-direction: column; gap: 6px; }
+    .f-bar-row { display: flex; align-items: center; justify-content: space-between; font-size: 11.5px; }
+    .f-bar-row span { color: var(--muted); }
+    .f-bar-track { flex: 1; height: 5px; background: rgba(255,255,255,0.06); border-radius: 100px; margin: 0 8px; overflow: hidden; }
+    .f-bar-fill { height: 100%; border-radius: 100px; background: #22c55e; }
+
+    .f-req-list { display: flex; flex-direction: column; gap: 8px; }
+    .f-req-item { display: flex; align-items: center; gap: 8px; font-size: 11.5px; padding: 7px 10px; background: rgba(255,255,255,0.025); border: 1px solid var(--border); border-radius: 10px; }
+    .f-req-item .f-tag { font-size: 10px; font-weight: 700; padding: 2px 6px; border-radius: 4px; flex-shrink: 0; }
+    .f-req-item.met .f-tag { background: rgba(34, 197, 94, 0.15); color: #4ade80; border: 1px solid rgba(34, 197, 94, 0.3); }
+    .f-req-item.miss .f-tag { background: rgba(239, 68, 68, 0.15); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.3); }
+    .f-req-item.partial .f-tag { background: rgba(234, 179, 8, 0.15); color: #facc15; border: 1px solid rgba(234, 179, 8, 0.3); }
+    .f-req-item .f-txt { color: var(--text); font-weight: 500; flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+    .f-act-demo { display: flex; flex-direction: column; gap: 10px; }
+    .f-ats-chips { display: flex; gap: 6px; flex-wrap: wrap; }
+    .f-ats-chip { display: inline-flex; align-items: center; gap: 4px; font-size: 11px; font-weight: 600; color: var(--lime); background: var(--lime-dim); border: 1px solid rgba(212,255,50,0.25); padding: 4px 8px; border-radius: 6px; }
+    .f-cl-preview { display: flex; align-items: center; gap: 8px; padding: 8px 12px; background: rgba(255,255,255,0.03); border: 1px solid var(--border); border-radius: 10px; font-size: 12px; color: var(--muted); }
+    .f-cl-preview svg { width: 14px; height: 14px; color: var(--lime); flex-shrink: 0; }
 
     /* ── STATS ── */
     .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
@@ -583,6 +604,7 @@
       <p data-en="Every feature has its place in your job hunt. Not a random toolbox." data-id="Setiap fitur punya tempatnya di pencarian kerjamu. Bukan kotak alat acak.">Every feature has its place in your job hunt. Not a random toolbox.</p>
     </div>
     <div class="journey">
+      <!-- STAGE 1: KNOW -->
       <div class="j-stage reveal">
         <div class="j-stage-head">
           <span class="j-num">1</span>
@@ -594,16 +616,24 @@
         <div class="f-card">
           <div class="f-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
           <h3 data-en="A score you can trust" data-id="Skor yang bisa dipercaya">A score you can trust</h3>
-          <p data-en="Not just a number. Every score shows its breakdown: experience, core skills, plus skills, education. You know exactly where it came from." data-id="Bukan sekadar angka. Setiap skor punya rincian: pengalaman, skill wajib, plus, dan edukasi. Kamu tahu persis dari mana angka itu berasal.">Not just a number. Every score shows its breakdown: experience, core skills, plus skills, education. You know exactly where it came from.</p>
+          <p data-en="Not a random LLM guess. Scores are calculated by a fixed formula across 4 dimensions: experience, core skills, plus skills, and education." data-id="Bukan tebakan bebas AI. Skor dihitung rumus tetap dari 4 dimensi: pengalaman, skill wajib, skill nilai tambah, dan edukasi.">Not a random LLM guess. Scores are calculated by a fixed formula across 4 dimensions: experience, core skills, plus skills, and education.</p>
           <div class="f-visual f-score-demo">
-            <div class="ring mini-ring"><b>82%</b><label>Match</label></div>
-            <p data-en="&quot;Worth applying, but fix these 3 things first.&quot;" data-id="&quot;Layak dicoba, tapi benahi 3 hal ini dulu.&quot;">"Worth applying, but fix these 3 things first."</p>
+            <div class="f-score-row">
+              <div class="ring mini-ring"><b>82%</b><label>Match</label></div>
+              <p data-en="&quot;Worth applying, but close 2 gaps first.&quot;" data-id="&quot;Layak dicoba, tapi benahi 2 hal ini dulu.&quot;">"Worth applying, but close 2 gaps first."</p>
+            </div>
+            <div class="f-bars">
+              <div class="f-bar-row"><span data-en="Experience" data-id="Pengalaman">Experience</span><div class="f-bar-track"><div class="f-bar-fill" style="width:85%;"></div></div><b>85%</b></div>
+              <div class="f-bar-row"><span data-en="Must Skills" data-id="Skill Wajib">Must Skills</span><div class="f-bar-track"><div class="f-bar-fill" style="width:71%;"></div></div><b>71%</b></div>
+              <div class="f-bar-row"><span data-en="Education" data-id="Edukasi">Education</span><div class="f-bar-track"><div class="f-bar-fill" style="width:100%;"></div></div><b>100%</b></div>
+            </div>
           </div>
         </div>
       </div>
 
       <div class="j-arrow reveal"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
 
+      <!-- STAGE 2: UNDERSTAND -->
       <div class="j-stage reveal">
         <div class="j-stage-head">
           <span class="j-num">2</span>
@@ -614,18 +644,28 @@
         </div>
         <div class="f-card">
           <div class="f-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></div>
-          <h3 data-en="Skill gap, with evidence" data-id="Skill gap, dengan bukti">Skill gap, with evidence</h3>
-          <p data-en="Every requirement dissected one by one: what you have, what is missing, and what can be bridged from related skills. The proof comes from your own CV." data-id="Requirement lowongan dibedah satu per satu: yang sudah kamu punya, yang kurang, dan yang bisa dijembatani dari skill terkait. Buktinya dari CV kamu sendiri.">Every requirement dissected one by one: what you have, what is missing, and what can be bridged from related skills. The proof comes from your own CV.</p>
-          <div class="f-visual mock-chips">
-            <span class="mchip"><svg viewBox="0 0 24 24" fill="none"><polyline points="20 6 9 17 4 12"/></svg>SQL</span>
-            <span class="mchip miss"><svg viewBox="0 0 24 24" fill="none"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>Kubernetes</span>
-            <span class="mchip miss"><svg viewBox="0 0 24 24" fill="none"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>Docker</span>
+          <h3 data-en="Requirement Audit & Evidence" data-id="Audit Syarat & Bukti CV">Requirement Audit & Evidence</h3>
+          <p data-en="Every job requirement dissected individually. Clear verdict: Met, Missing, or Transferable, with cited evidence from your CV." data-id="Setiap syarat lowongan dibedah satu per satu. Status jelas: Terpenuhi, Kurang, atau Transferable, dengan kutipan bukti dari CV kamu.">Every job requirement dissected individually. Clear verdict: Met, Missing, or Transferable, with cited evidence from your CV.</p>
+          <div class="f-visual f-req-list">
+            <div class="f-req-item met">
+              <span class="f-tag" data-en="MET" data-id="SESUAI">MET</span>
+              <span class="f-txt" data-en="SQL, Python & Data Analysis" data-id="SQL, Python & Analisis Data">SQL, Python & Data Analysis</span>
+            </div>
+            <div class="f-req-item miss">
+              <span class="f-tag" data-en="MISSING" data-id="KURANG">MISSING</span>
+              <span class="f-txt" data-en="Kubernetes & CI/CD Pipeline" data-id="Kubernetes & CI/CD Pipeline">Kubernetes & CI/CD Pipeline</span>
+            </div>
+            <div class="f-req-item partial">
+              <span class="f-tag" data-en="PIVOT" data-id="SEPAKET">PIVOT</span>
+              <span class="f-txt" data-en="Healthcare data (from Fintech exp)" data-id="Data Kesehatan (Alihan Fintech)">Healthcare data (from Fintech exp)</span>
+            </div>
           </div>
         </div>
       </div>
 
       <div class="j-arrow reveal"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
 
+      <!-- STAGE 3: ACT -->
       <div class="j-stage reveal">
         <div class="j-stage-head">
           <span class="j-num">3</span>
@@ -634,16 +674,21 @@
             <span class="j-stage-q" data-en="What do I do about it now?" data-id="Terus aku ngapain sekarang?">What do I do about it now?</span>
           </div>
         </div>
-        <div class="j-stack">
-          <div class="f-card">
-            <div class="f-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg></div>
-            <h3 data-en="ATS keywords, ready to copy" data-id="Keyword ATS siap salin">ATS keywords, ready to copy</h3>
-            <p data-en="The exact keywords ATS systems look for in this posting. Click to copy, paste into your CV." data-id="Kata kunci yang dicari sistem ATS di lowongan ini. Klik untuk menyalin, tempel ke CV kamu.">The exact keywords ATS systems look for in this posting. Click to copy, paste into your CV.</p>
-          </div>
-          <div class="f-card">
-            <div class="f-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></div>
-            <h3 data-en="Automatic cover letters" data-id="Surat lamaran otomatis">Automatic cover letters</h3>
-            <p data-en="Built from your real skills and experience, tailored to this position. Edit, copy, send." data-id="Dirakit dari skill dan pengalaman asli kamu, disesuaikan untuk posisi ini. Edit, salin, kirim.">Built from your real skills and experience, tailored to this position. Edit, copy, send.</p>
+        <div class="f-card">
+          <div class="f-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></div>
+          <h3 data-en="ATS Keywords & Cover Letter" data-id="Keyword ATS & Surat Lamaran">ATS Keywords & Cover Letter</h3>
+          <p data-en="Copy exact ATS keywords matching recruiter filters, and generate an authentic, personalized cover letter in one click." data-id="Salin keyword ATS persis yang dicari recruiter, dan racik surat lamaran personal yang jujur hanya dalam satu klik.">Copy exact ATS keywords matching recruiter filters, and generate an authentic, personalized cover letter in one click.</p>
+          <div class="f-visual f-act-demo">
+            <div class="f-ats-chips">
+              <span class="f-ats-chip">+ SQL</span>
+              <span class="f-ats-chip">+ ETL Pipeline</span>
+              <span class="f-ats-chip">+ A/B Testing</span>
+              <span class="f-ats-chip">+ Tableau</span>
+            </div>
+            <div class="f-cl-preview">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+              <span data-en="1-Click Custom Cover Letter" data-id="Surat Lamaran 1-Klik Siap Pakai">1-Click Custom Cover Letter</span>
+            </div>
           </div>
         </div>
       </div>
