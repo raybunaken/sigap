@@ -231,10 +231,28 @@
     /* ── MARQUEE ── */
     .marquee-section { padding: 50px 0 30px; }
     .marquee-label { text-align: center; font-size: 11.5px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--faint); margin-bottom: 22px; }
-    .marquee { overflow: hidden; position: relative; -webkit-mask-image: linear-gradient(90deg, transparent, black 12%, black 88%, transparent); mask-image: linear-gradient(90deg, transparent, black 12%, black 88%, transparent); }
-    .marquee-track { display: flex; gap: 48px; width: max-content; animation: scroll 28s linear infinite; }
-    .marquee:hover .marquee-track { animation-play-state: paused; }
-    @keyframes scroll { to { transform: translateX(-50%); } }
+    .marquee {
+      display: flex;
+      overflow: hidden;
+      position: relative;
+      gap: 48px;
+      user-select: none;
+      -webkit-mask-image: linear-gradient(90deg, transparent, black 12%, black 88%, transparent);
+      mask-image: linear-gradient(90deg, transparent, black 12%, black 88%, transparent);
+    }
+    .marquee-group {
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      gap: 48px;
+      min-width: max-content;
+      animation: scrollMarquee 28s linear infinite;
+    }
+    .marquee:hover .marquee-group { animation-play-state: paused; }
+    @keyframes scrollMarquee {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(calc(-100% - 48px)); }
+    }
     .mq-item { font-family: var(--font-display); font-size: 17px; font-weight: 800; color: var(--muted); opacity: .55; white-space: nowrap; transition: opacity .2s, color .2s; }
     .mq-item:hover { opacity: 1; color: var(--text); }
 
@@ -527,8 +545,16 @@
 <div class="marquee-section reveal">
   <div class="marquee-label" data-en="Works on your favorite job boards" data-id="Bekerja di lowongan favoritmu">Works on your favorite job boards</div>
   <div class="marquee">
-    <div class="marquee-track">
+    <div class="marquee-group">
       <span class="mq-item">LinkedIn</span><span class="mq-item">JobStreet</span><span class="mq-item">Glints</span><span class="mq-item">Kalibrr</span><span class="mq-item">Tech in Asia</span><span class="mq-item">Kintsugi</span><span class="mq-item">MyCareersFuture</span>
+    </div>
+    <div class="marquee-group" aria-hidden="true">
+      <span class="mq-item">LinkedIn</span><span class="mq-item">JobStreet</span><span class="mq-item">Glints</span><span class="mq-item">Kalibrr</span><span class="mq-item">Tech in Asia</span><span class="mq-item">Kintsugi</span><span class="mq-item">MyCareersFuture</span>
+    </div>
+    <div class="marquee-group" aria-hidden="true">
+      <span class="mq-item">LinkedIn</span><span class="mq-item">JobStreet</span><span class="mq-item">Glints</span><span class="mq-item">Kalibrr</span><span class="mq-item">Tech in Asia</span><span class="mq-item">Kintsugi</span><span class="mq-item">MyCareersFuture</span>
+    </div>
+    <div class="marquee-group" aria-hidden="true">
       <span class="mq-item">LinkedIn</span><span class="mq-item">JobStreet</span><span class="mq-item">Glints</span><span class="mq-item">Kalibrr</span><span class="mq-item">Tech in Asia</span><span class="mq-item">Kintsugi</span><span class="mq-item">MyCareersFuture</span>
     </div>
   </div>
