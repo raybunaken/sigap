@@ -156,6 +156,11 @@
     .btn-ghost:hover { border-color: rgba(255,255,255,0.2); background: var(--glass-2); }
     .hero-note { font-size: 12.5px; color: var(--faint); }
     .hero-note strong { color: var(--muted); }
+    .hero-partner { display: flex; align-items: center; gap: 10px; margin-top: 22px; flex-wrap: wrap; }
+    .partner-label { font-size: 11.5px; font-weight: 600; color: var(--faint); text-transform: uppercase; letter-spacing: 0.06em; }
+    .partner-badge { display: inline-flex; align-items: center; gap: 7px; font-size: 12.5px; font-weight: 600; color: var(--muted); background: var(--glass-2); border: 1px solid var(--border); padding: 5px 12px; border-radius: 100px; transition: all .2s; }
+    .partner-badge:hover { border-color: rgba(212,255,50,0.35); color: var(--text); background: rgba(212,255,50,0.06); }
+    .partner-badge svg { color: var(--lime); }
 
     /* ── MOCKUP PANEL ── */
     .mockup-wrap { position: relative; }
@@ -471,6 +476,13 @@
         <a class="btn-ghost" href="#cara-kerja" data-en="See how it works" data-id="Lihat cara kerja">See how it works</a>
       </div>
       <p class="hero-note"><strong data-en="Free" data-id="Gratis">Free</strong> <span data-en="during beta. Your CV is processed in your browser, never on our servers." data-id="selama beta. CV kamu diproses di browser, bukan di server kami.">during beta. Your CV is processed in your browser, never on our servers.</span></p>
+      <div class="hero-partner">
+        <span class="partner-label" data-en="Supported by" data-id="Didukung oleh">Supported by</span>
+        <span class="partner-badge">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+          Alibaba Cloud AI Catalyst
+        </span>
+      </div>
     </div>
 
     <div class="mockup-wrap reveal">
