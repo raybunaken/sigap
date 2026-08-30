@@ -7,7 +7,7 @@ Jalankan: python api.py
 import os, json, logging, asyncio, re, pathlib, time
 from datetime import datetime, timezone
 from fastapi import FastAPI, HTTPException, UploadFile, File, APIRouter, Request, Response
-from fastapi.responses import FileResponse, JSONResponse
+from fastapi.responses import FileResponse, JSONResponse, PlainTextResponse
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
 from typing import Optional, List
@@ -1863,6 +1863,12 @@ async def join_waitlist(req: WaitlistRequest):
     # We will connect this to Supabase later.
     logger.info(f"🚀 NEW WAITLIST SIGNUP: {req.email}")
     return {"status": "success", "message": "Email added to waitlist"}
+
+@app.get("/google069a65fad361bad9.html", response_class=PlainTextResponse)
+@api_router.get("/google069a65fad361bad9.html", response_class=PlainTextResponse)
+@api_router_index.get("/google069a65fad361bad9.html", response_class=PlainTextResponse)
+async def google_verification():
+    return "google-site-verification: google069a65fad361bad9.html"
 
 @app.api_route("/{path_name:path}", methods=["GET", "POST", "PUT", "DELETE", "OPTIONS", "HEAD", "PATCH", "TRACE"])
 async def catch_all(path_name: str):
