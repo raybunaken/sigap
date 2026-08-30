@@ -1872,6 +1872,8 @@ async def google_verification():
 
 @app.api_route("/{path_name:path}", methods=["GET", "POST", "PUT", "DELETE", "OPTIONS", "HEAD", "PATCH", "TRACE"])
 async def catch_all(path_name: str):
+    if "google069a65fad361bad9" in path_name:
+        return PlainTextResponse("google-site-verification: google069a65fad361bad9.html")
     return JSONResponse(
         status_code=404,
         content={"detail": f"Not Found in catch_all. Path received: {path_name}"},
