@@ -553,7 +553,7 @@ SKILL_SYNONYMS = {
     "video editing":        ["capcut", "premiere pro", "adobe premiere", "after effects"],
     "figma":                ["figma design", "adobe xd", "ui prototyping", "wireframing"],
     "user research":        ["ux research", "usability testing", "user testing"],
-    "copywriting":          ["persuasive writing", "seo writing", "headline creation", "brand voice alignment"],
+    "copywriting":          ["persuasive writing", "seo writing", "headline creation", "brand voice alignment", "content writing"],
     "agile methodologies":  ["agile", "scrum", "kanban", "agile/scrum", "sprint"],
     "communication":        ["komunikasi", "public speaking", "presentasi", "komunikasi bisnis"],
     "customer service":     ["customer handling", "pelayanan pelanggan", "cs", "customer support"],
@@ -573,6 +573,14 @@ SKILL_SYNONYMS = {
     "vulnerability assessment": ["vulnerability", "pentest", "penetration testing"],
     "bug tracking":         ["bug report", "defect tracking", "jira", "test case"],
     "manual testing":       ["software testing", "qa testing", "test case creation"],
+    # ── NON-IT / GENERAL INDONESIAN WORKFORCE ──────────────────────────────
+    "human resources":      ["hr", "hrd", "recruitment", "rekrutmen", "talent acquisition", "sdm", "hr generalist"],
+    "payroll":              ["penggajian", "bpjs", "bpjs administration", "administrasi bpjs", "bpjs kesehatan", "bpjs ketenagakerjaan"],
+    "content writing":      ["copywriting", "penulisan konten", "article writing"],
+    "sales":                ["penjualan", "telesales", "sales representative", "marketing Executive"],
+    "k3":                   ["keselamatan dan kesehatan kerja", "hse", "k3l"],
+    "str":                  ["surat tanda registrasi"],
+    "administrasi perkantoran": ["administration", "office administration", "admin perkantoran", "pengarsipan"],
 }
 
 def normalize_skill(skill: str) -> str:

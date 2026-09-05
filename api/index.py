@@ -1247,14 +1247,30 @@ def _strict_skills_match(user_skill: str, target_skill: str) -> bool:
     return False
 
 
-def _machine_skill_status(skill: str, cv_skill_pool: list) -> str:
-    """Penilaian skill deterministik: sinonim -> met, transferable -> partial."""
+def _skill_in_text(skill: str, text: str) -> bool:
+    """Cek kehadiran nama skill di teks CV mentah (word boundary, tanpa tanda kurung)."""
+    s = normalize_skill(skill)
+    s = re.sub(r"\(.*?\)", "", s).strip(" .:-")
+    if len(s) < 3:
+        return False
+    return re.search(r"\b" + re.escape(s) + r"\b", text, re.IGNORECASE) is not None
+
+
+def _machine_skill_status(skill: str, cv_skill_pool: list, cv_text: str = "") -> str:
+    """
+    Penilaian skill deterministik: sinonim -> met, transferable -> partial.
+    Jaring pengaman non-IT: skill yang tidak dikenali daftar tapi TERTULIS
+    di CV asli minimal partial (daftar skill Stage B bisa miss untuk
+    kosakata di luar teknologi).
+    """
     for cs in cv_skill_pool:
         if _strict_skills_match(cs, skill):
             return "met"
     for cs in cv_skill_pool:
         if is_transferable(cs, skill):
             return "partial"
+    if cv_text and _skill_in_text(skill, cv_text):
+        return "partial"
     return "missing"
 
 
@@ -1426,7 +1442,7 @@ Technical SKILLS are scored separately by machine, do NOT judge them here.
 
 Tasks:
 1. Estimate the candidate's total years of professional experience from the CV. "cv_years_estimate" MUST be a JSON NUMBER (e.g. 2.5), never a string. Internships count as 0.5.
-2. List ALL concrete skills evidenced in the CV, including skills clearly implied by stated tools (Laravel implies PHP, React implies JavaScript). 5-20 items. NEVER invent a skill that has no textual basis in the CV.
+2. List ALL concrete skills evidenced in the CV, in ANY domain or industry, including skills clearly implied by stated tools (Laravel implies PHP, React implies JavaScript). Include Indonesian terms exactly as written (e.g. "BPJS", "K3", "STR", "rekrutmen", "payroll", "penggajian") plus certifications, licenses, tools, and administrative skills. 5-20 items. NEVER invent a skill that has no textual basis in the CV.
 3. Judge each item in "items_to_judge": status met/partial/missing based on CV evidence.
    - "req": quote or translate the requirement into natural Indonesian, keep it specific (never generic).
    - "detail": ONE sentence in Bahasa Indonesia citing concrete evidence from the CV.
@@ -1471,8 +1487,8 @@ If items_to_judge is empty, return an empty "items" list."""
     ))
 
     # ── STAGE C: skor dihitung kode (deterministik) ────────────────────────
-    must_status = {s: _machine_skill_status(s, cv_skill_pool) for s in must_skills}
-    plus_status = {s: _machine_skill_status(s, cv_skill_pool) for s in plus_skills}
+    must_status = {s: _machine_skill_status(s, cv_skill_pool, cv) for s in must_skills}
+    plus_status = {s: _machine_skill_status(s, cv_skill_pool, cv) for s in plus_skills}
 
     # pengalaman: pakai band tahun bila angka tersedia, else status LLM
     b_items = [i for i in stage_b.get("items", []) if isinstance(i, dict)]
@@ -1823,6 +1839,10 @@ async def serve_investor():
 @app.api_route("/privacy.html", methods=["GET", "HEAD"])
 async def serve_privacy():
     return _serve_static("privacy.html", media_type="text/html")
+
+@app.api_route("/demo.html", methods=["GET", "HEAD"])
+async def serve_demo():
+    return _serve_static("demo.html", media_type="text/html")
 
 @app.api_route("/logo.svg", methods=["GET", "HEAD"])
 def serve_logo():
