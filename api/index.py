@@ -1900,6 +1900,10 @@ async def serve_privacy():
 async def serve_demo():
     return _serve_static("demo.html", media_type="text/html")
 
+@app.api_route("/sigap-engine.html", methods=["GET", "HEAD"])
+async def serve_engine():
+    return _serve_static("sigap-engine.html", media_type="text/html")
+
 @app.api_route("/extension/pdf.min.js", methods=["GET", "HEAD"])
 def serve_pdf_js():
     return _serve_static("extension/pdf.min.js", media_type="application/javascript")
