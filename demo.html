@@ -264,6 +264,10 @@
     }
   };
 
+  // Saat file dibuka langsung dari disk (file://), relative URL tidak punya origin.
+  // Fallback ke API production supaya demo tetap jalan di mana pun dibuka.
+  const API_BASE = location.protocol.startsWith('http') ? '' : 'https://skillsy.my.id';
+
   function fillSample(key) {
     const s = SAMPLES[key];
     document.getElementById('jobTitle').value = s.title;
@@ -303,7 +307,7 @@
     btn.innerText = 'Menganalisis... (sekitar 10 detik)';
 
     try {
-      const res = await fetch('/api/analyze-job', {
+      const res = await fetch(API_BASE + '/api/analyze-job', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'X-Skillsy-Client': getInstallId() },
         body: JSON.stringify({ cv_text: cv, job_title: title, job_description: jd })
