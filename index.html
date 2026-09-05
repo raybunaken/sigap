@@ -477,10 +477,53 @@
     .modal-note { font-size: 11.5px; color: var(--faint); margin-top: 14px; }
     .modal-success { color: var(--lime); font-weight: 700; font-size: 17px; margin-top: 18px; }
 
+    /* ── DEMO BAND ── */
+    .demo-band {
+      display: grid; grid-template-columns: 1.15fr 0.85fr;
+      gap: 44px; align-items: center;
+      background: var(--glass);
+      border: 1px solid rgba(212, 255, 50, 0.18);
+      border-radius: 24px; padding: 44px;
+    }
+    .demo-band .sec-eyebrow { margin-bottom: 12px; }
+    .demo-copy h3 {
+      font-family: var(--font-display);
+      font-size: clamp(22px, 2.6vw, 30px);
+      font-weight: 800; letter-spacing: -0.02em; line-height: 1.2;
+      margin-bottom: 14px;
+    }
+    .demo-copy p { font-size: 15px; color: var(--muted); line-height: 1.7; margin-bottom: 24px; }
+    .demo-cta-row { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+    .demo-cta-note { font-size: 12.5px; color: var(--faint); }
+    .demo-visual {
+      background: linear-gradient(180deg, #141a17, #0e1210);
+      border: 1px solid var(--border);
+      border-radius: 20px; padding: 20px;
+      display: flex; flex-direction: column; gap: 10px;
+      box-shadow: 0 24px 60px rgba(0,0,0,0.5);
+    }
+    .dv-topbar {
+      font-family: ui-monospace, monospace; font-size: 10.5px; color: var(--faint);
+      background: rgba(255,255,255,0.03); border: 1px solid var(--border);
+      border-radius: 8px; padding: 6px 10px; margin-bottom: 4px;
+    }
+    .dv-box {
+      background: rgba(255,255,255,0.03); border: 1px dashed var(--border);
+      border-radius: 12px; padding: 11px 14px;
+      font-size: 13px; font-weight: 600;
+      display: flex; justify-content: space-between; align-items: center; gap: 10px;
+    }
+    .dv-box span { font-size: 11px; font-weight: 400; color: var(--faint); }
+    .dv-arrow { display: flex; justify-content: center; color: var(--lime); opacity: 0.6; }
+    .dv-result { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 4px; }
+    .dv-ring { --sz: 64px; }
+    .dv-ring b { font-size: 17px; }
+
     @media (max-width: 920px) {
       .hero { grid-template-columns: 1fr; padding-top: 60px; gap: 44px; }
       .mockup { transform: none; max-width: 420px; margin: 0 auto; }
       .journey { grid-template-columns: 1fr; }
+      .demo-band { grid-template-columns: 1fr; padding: 30px 24px; gap: 28px; }
       .j-arrow { transform: rotate(90deg); padding: 4px 0; }
       .evergreen { grid-template-columns: 1fr; }
       .stats-grid { grid-template-columns: repeat(2, 1fr); }
@@ -499,7 +542,7 @@
 <nav>
   <a class="nav-logo" href="#">Skillsy<span>.</span></a>
   <div class="nav-links">
-    <a href="demo.html" data-en="Demo" data-id="Demo">Demo</a>
+    <a href="#demo" data-en="Demo" data-id="Demo">Demo</a>
     <a href="#fitur" data-en="Features" data-id="Fitur">Features</a>
     <a href="#cara-kerja" data-en="How it Works" data-id="Cara Kerja">How it Works</a>
     <a href="#faq" data-en="FAQ" data-id="FAQ">FAQ</a>
@@ -517,7 +560,6 @@
       <p class="sub" data-en="Skillsy reads job postings on LinkedIn and JobStreet, compares them with your CV, and tells you exactly what is missing. All from your browser, in seconds." data-id="Skillsy membaca lowongan di LinkedIn dan JobStreet, membandingkannya dengan CV kamu, lalu memberi tahu apa yang kurang. Semua dari browser kamu, dalam hitungan detik.">Skillsy reads job postings on LinkedIn and JobStreet, compares them with your CV, and tells you exactly what is missing. All from your browser, in seconds.</p>
       <div class="hero-ctas">
         <a class="btn-primary" href="#gabung" data-en="Join Waitlist" data-id="Gabung Waitlist">Join Waitlist</a>
-        <a class="btn-ghost" href="demo.html" data-en="Try the Free Demo" data-id="Coba Demo Gratis">Try the Free Demo</a>
         <a class="btn-ghost" href="#cara-kerja" data-en="See how it works" data-id="Lihat cara kerja">See how it works</a>
       </div>
       <p class="hero-note"><strong data-en="Free" data-id="Gratis">Free</strong> <span data-en="during beta. Your CV is processed in your browser, never on our servers." data-id="selama beta. CV kamu diproses di browser, bukan di server kami.">during beta. Your CV is processed in your browser, never on our servers.</span></p>
@@ -740,6 +782,33 @@
     </div>
   </section>
 
+  <!-- LIVE DEMO BAND -->
+  <section id="demo">
+    <div class="demo-band reveal">
+      <div class="demo-copy">
+        <div class="sec-eyebrow" data-en="Live Demo" data-id="Demo Langsung" style="text-align:left;">Live Demo</div>
+        <h3 data-en="But Skillsy is an extension. Why is there a demo on the web?" data-id="Lho, Skillsy kan extension. Kenapa demonya di web?">But Skillsy is an extension. Why is there a demo on the web?</h3>
+        <p data-en="Fair question. The extension lives next to your job tabs, that is where the full experience belongs: auto-reading postings, saving your CV, one-click scans. The demo exists so you can feel the engine first, before installing anything. Same machine, same score, zero commitment, and it works on your phone too." data-id="Pertanyaan yang wajar. Extension itu hidup di samping tab lowonganmu, di situlah pengalaman penuhnya: membaca lowongan otomatis, menyimpan CV, scan satu klik. Demonya ada supaya kamu bisa merasakan mesinnya dulu, sebelum memasang apa pun. Mesin yang sama, skor yang sama, tanpa komitmen, dan bisa dari HP juga.">Fair question. The extension lives next to your job tabs, that is where the full experience belongs: auto-reading postings, saving your CV, one-click scans. The demo exists so you can feel the engine first, before installing anything. Same machine, same score, zero commitment, and it works on your phone too.</p>
+        <div class="demo-cta-row">
+          <a class="btn-primary" href="demo.html" data-en="Open the Live Demo" data-id="Buka Demo Langsung">Open the Live Demo</a>
+          <span class="demo-cta-note" data-en="No install. No signup. Free." data-id="Tanpa install. Tanpa daftar. Gratis.">No install. No signup. Free.</span>
+        </div>
+      </div>
+      <div class="demo-visual" aria-hidden="true">
+        <div class="dv-topbar">skillsy.my.id/demo.html</div>
+        <div class="dv-box">CV kamu<span>tempel teks CV</span></div>
+        <div class="dv-box">Lowongan<span>tempel requirements</span></div>
+        <div class="dv-arrow">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 19 5 12"/></svg>
+        </div>
+        <div class="dv-result">
+          <div class="ring dv-ring"><b>82%</b><label>Match</label></div>
+          <span class="mock-tag" data-en="Worth applying" data-id="Layak diapply">Worth applying</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <section id="faq">
     <div class="sec-head reveal">
       <div class="sec-eyebrow">FAQ</div>
@@ -768,9 +837,8 @@
   <section id="gabung">
     <div class="final-cta reveal">
       <h2 data-en="Stop guessing. Start knowing." data-id="Berhenti menebak. Mulai tahu.">Stop guessing. Start knowing.</h2>
-      <p data-en="Beta opens later this year. Waitlist members get access first, in order. Want to see it now? The demo is live." data-id="Beta dibuka akhir tahun ini. Member waitlist dapat akses lebih dulu, sesuai urutan. Mau lihat sekarang? Demonya sudah live.">Beta opens later this year. Waitlist members get access first, in order. Want to see it now? The demo is live.</p>
+      <p data-en="Beta opens later this year. Waitlist members get access first, in order." data-id="Beta dibuka akhir tahun ini. Member waitlist dapat akses lebih dulu, sesuai urutan.">Beta opens later this year. Waitlist members get access first, in order.</p>
       <a class="btn-primary" href="#gabung" data-en="Join Waitlist" data-id="Gabung Waitlist">Join Waitlist</a>
-      <p style="margin-top: 18px; margin-bottom: 0;"><a href="demo.html" style="color: var(--lime); font-weight: 600; text-decoration: none; border-bottom: 1px dashed rgba(212,255,50,0.4);" data-en="or try the free demo right away" data-id="atau langsung coba demo gratisnya">or try the free demo right away</a></p>
     </div>
   </section>
 </div>
