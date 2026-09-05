@@ -63,6 +63,14 @@
       padding: 12px; outline: none; transition: border-color .2s;
     }
     .input-card textarea:focus { border-color: rgba(212,255,50,0.45); }
+    .cv-upload-row { display: flex; align-items: center; gap: 10px; margin-top: 10px; flex-wrap: wrap; }
+    .cv-upload-btn {
+      background: rgba(255,255,255,0.05); border: 1px solid var(--border);
+      color: var(--text); font-family: var(--font-body); font-size: 12px; font-weight: 600;
+      padding: 8px 14px; border-radius: 100px; cursor: pointer; transition: all .2s;
+    }
+    .cv-upload-btn:hover { border-color: rgba(212,255,50,0.35); color: var(--lime); }
+    .cv-file-name { font-size: 11.5px; color: var(--muted); }
     .input-card textarea::placeholder { color: var(--faint); }
     .input-title { display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px; }
     .input-title input {
@@ -188,7 +196,14 @@
   <div class="demo-grid">
     <div class="input-card">
       <label for="cvText">Teks CV kamu</label>
-      <textarea id="cvText" placeholder="Tempel teks CV di sini. Buka PDF CV kamu, select all, copy, paste. Pengalaman, pendidikan, dan skill akan dibaca." spellcheck="false"></textarea>
+      <textarea id="cvText" placeholder="Tempel teks CV di sini, atau upload PDF-nya lewat tombol di bawah. Pengalaman, pendidikan, dan skill akan dibaca." spellcheck="false"></textarea>
+      <div class="cv-upload-row">
+        <button type="button" class="cv-upload-btn" onclick="document.getElementById('cvFile').click()">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px; margin-right:5px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>Upload PDF CV
+        </button>
+        <span class="cv-file-name" id="cvFileName"></span>
+        <input type="file" id="cvFile" accept="application/pdf,.pdf" style="display:none">
+      </div>
     </div>
     <div class="input-card">
       <label for="jobDesc">Deskripsi lowongan</label>
@@ -249,6 +264,40 @@
   <a href="mailto:raybunaken@gmail.com">Kontak</a>
   &copy; 2026 Skillsy
 </footer>
+
+<script src="/extension/pdf.min.js"></script>
+<script>
+  // ── PDF CV upload: diparse di browser, file tidak pernah diunggah ──
+  document.getElementById('cvFile').addEventListener('change', async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    clearErr();
+    const nameEl = document.getElementById('cvFileName');
+    if (file.size > 10 * 1024 * 1024) { err('Ukuran PDF maksimal 10MB.'); return; }
+    nameEl.textContent = 'membaca ' + file.name + '...';
+
+    try {
+      if (typeof pdfjsLib === 'undefined') throw new Error('Pembaca PDF belum termuat. Refresh halaman atau tempel teks manual.');
+      pdfjsLib.GlobalWorkerOptions.workerSrc = '/extension/pdf.worker.min.js';
+      const buf = await file.arrayBuffer();
+      const pdf = await pdfjsLib.getDocument({ data: buf }).promise;
+      let text = '';
+      const maxPages = Math.min(pdf.numPages, 15);
+      for (let p = 1; p <= maxPages; p++) {
+        const page = await pdf.getPage(p);
+        const content = await page.getTextContent();
+        text += content.items.map(i => i.str).join(' ') + '\n\n';
+      }
+      text = text.replace(/[ \t]+/g, ' ').trim();
+      if (text.length < 50) throw new Error('Teks tidak terbaca dari PDF ini (kemungkinan hasil scan/gambar). Tempel teks manual ya.');
+      document.getElementById('cvText').value = text;
+      nameEl.innerHTML = '<b style="color: var(--green);">&#10003; ' + file.name + '</b> (' + text.length.toLocaleString('id-ID') + ' karakter terbaca, bisa kamu edit di atas)';
+    } catch (e2) {
+      nameEl.textContent = '';
+      err(e2.message || 'Gagal membaca PDF.');
+    }
+  });
+</script>
 
 <script>
   const SAMPLES = {
