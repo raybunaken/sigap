@@ -186,6 +186,32 @@
     .g-verdict.match { display: block; background: rgba(74,222,128,0.1); border: 1px solid rgba(74,222,128,0.35); color: var(--green); }
     .g-verdict.mismatch { display: block; background: rgba(248,113,113,0.1); border: 1px solid rgba(248,113,113,0.35); color: var(--red); }
     .g-honesty { margin-top: 16px; font-size: 12px; color: var(--faint); line-height: 1.6; }
+    .g-honesty b { color: var(--muted); }
+    .g-tabs { display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; }
+    .g-tab {
+      background: var(--glass); border: 1px solid var(--border);
+      color: var(--muted); font-family: var(--font-body);
+      font-size: 12.5px; font-weight: 600; padding: 8px 16px;
+      border-radius: 100px; cursor: pointer; transition: all .2s;
+    }
+    .g-tab:hover { color: var(--text); }
+    .g-tab.active { background: var(--lime-dim); border-color: rgba(212,255,50,0.35); color: var(--lime); }
+    #ownInputs textarea {
+      width: 100%; min-height: 110px; resize: vertical;
+      background: rgba(255,255,255,0.03); border: 1px solid var(--border);
+      border-radius: 12px; color: var(--text);
+      font-family: var(--font-body); font-size: 12.5px; line-height: 1.55;
+      padding: 12px; outline: none; margin-bottom: 10px; transition: border-color .2s;
+    }
+    #ownInputs textarea:focus { border-color: rgba(212,255,50,0.45); }
+    #ownInputs input[type="text"] {
+      width: 100%; padding: 11px 14px;
+      background: rgba(255,255,255,0.03); border: 1px solid var(--border);
+      border-radius: 12px; color: var(--text);
+      font-family: var(--font-body); font-size: 13px; outline: none;
+      transition: border-color .2s;
+    }
+    #ownInputs input[type="text"]:focus { border-color: rgba(212,255,50,0.45); }
 
     /* cta */
     .end-cta { text-align: center; background: linear-gradient(180deg, var(--glass), rgba(212,255,50,0.05)); border: 1px solid rgba(212,255,50,0.18); border-radius: 24px; padding: 44px 28px; margin: 30px 0 20px; }
@@ -344,7 +370,19 @@
     <h2>Run it twice. Right now. On this page.</h2>
     <div class="gadget">
       <h3>Live determinism check</h3>
-      <p class="g-desc">This button runs our real production engine on a real (HR) CV and job posting, <b>twice, back to back</b>. If the scores differ, our entire pitch is wrong and you should close this tab. If they match, that is the point.</p>
+      <p class="g-desc">This runs our real production engine <b>twice, back to back</b>, on the same input. If the scores differ, our entire pitch is wrong and you should close this tab. And because a curated sample is easy to dismiss: <b>use your own CV and your own job posting.</b> Try to break it.</p>
+
+      <div class="g-tabs">
+        <button class="g-tab active" id="gTabSample" onclick="setProofMode('sample')">Curated sample (HR)</button>
+        <button class="g-tab" id="gTabOwn" onclick="setProofMode('own')">Your own CV &amp; job</button>
+      </div>
+
+      <div id="ownInputs" style="display: none;">
+        <input type="text" id="ownTitle" placeholder="Job title, cth: HR Generalist" style="width: 100%; margin-bottom: 10px;">
+        <textarea id="ownCv" placeholder="Paste your CV text here (any domain, any language)" spellcheck="false"></textarea>
+        <textarea id="ownJd" placeholder="Paste the job description here" spellcheck="false"></textarea>
+      </div>
+
       <button class="g-run-btn" id="proofBtn" onclick="runProof()">Run the proof (twice)</button>
       <div class="g-status" id="gStatus">idle</div>
       <div class="runs">
@@ -353,7 +391,7 @@
         <div class="run-tile" id="tile2"><span class="rl">Run 2</span><span class="rs">?</span><span class="rd"></span></div>
       </div>
       <div class="g-verdict" id="gVerdict"></div>
-      <p class="g-honesty" id="gHonesty">Each live proof costs us roughly 20k tokens of API budget. We think showing the work is worth more than the tokens. Results are cached on your device so repeat views do not cost anything.</p>
+      <p class="g-honesty" id="gHonesty">Each live proof costs us roughly 20k tokens of API budget. We think showing the work is worth more than the tokens. The curated sample result is cached on your device; your own inputs are never cached or stored. One honest caveat: this proves <b>consistency</b>, not correctness. Two identical wrong scores are still wrong. Accuracy is measured separately against a human-labeled benchmark, and that number will be published here when it is ready.</p>
     </div>
   </section>
 
@@ -404,10 +442,45 @@
     return d;
   }
 
+  let proofMode = 'sample';
+
+  function setProofMode(mode) {
+    proofMode = mode;
+    document.getElementById('gTabSample').classList.toggle('active', mode === 'sample');
+    document.getElementById('gTabOwn').classList.toggle('active', mode === 'own');
+    document.getElementById('ownInputs').style.display = mode === 'own' ? 'block' : 'none';
+    clearErrProof();
+  }
+
+  function errProof(msg) {
+    const s = document.getElementById('gStatus');
+    s.textContent = 'error: ' + msg;
+    s.style.color = 'var(--red)';
+  }
+  function clearErrProof() {
+    const s = document.getElementById('gStatus');
+    s.textContent = 'idle';
+    s.style.color = '';
+  }
+
+  function proofInput() {
+    if (proofMode === 'sample') {
+      return { cv: SAMPLE.cv, jd: SAMPLE.jd, title: SAMPLE.title, cacheKey: CACHE_KEY, cacheable: true };
+    }
+    const cv = document.getElementById('ownCv').value.trim();
+    const jd = document.getElementById('ownJd').value.trim();
+    const title = document.getElementById('ownTitle').value.trim() || 'Your target job';
+    if (cv.length < 50) { errProof('CV text is too short. Paste at least a few paragraphs.'); return null; }
+    if (jd.length < 30) { errProof('Job description is too short.'); return null; }
+    return { cv, jd, title, cacheKey: null, cacheable: false };
+  }
+
   async function runProof() {
     const btn = document.getElementById('proofBtn');
     const status = document.getElementById('gStatus');
     const verdict = document.getElementById('gVerdict');
+    const input = proofInput();
+    if (!input) return;
     btn.disabled = true;
     verdict.className = 'g-verdict';
     ['tile1', 'tile2'].forEach(id => {
@@ -421,7 +494,13 @@
       const results = [];
       for (let i = 1; i <= 2; i++) {
         status.textContent = 'Run ' + i + ': engine working (Stage A to D, ~6 seconds)...';
-        const d = await analyzeOnce(i);
+        const res = await fetch(API_BASE + '/api/analyze-job', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'X-Skillsy-Client': 'sigap-proof-' + i },
+          body: JSON.stringify({ cv_text: input.cv, job_title: input.title, job_description: input.jd })
+        });
+        const d = await res.json();
+        if (d.error) throw new Error(d.error);
         results.push(d);
         tileState(i, d.readiness_score, 'live, just now');
       }
@@ -430,19 +509,22 @@
       const sameBd = JSON.stringify(results[0].score_breakdown) === JSON.stringify(results[1].score_breakdown);
       if (sameScore && sameBd) {
         verdict.classList.add('match');
-        verdict.textContent = 'IDENTICAL. Run 1 = Run 2 = ' + results[0].readiness_score + '%, full breakdown matches.';
+        verdict.textContent = 'IDENTICAL. Run 1 = Run 2 = ' + results[0].readiness_score + '%, full breakdown matches.'
+          + (input.cacheable ? '' : ' On YOUR inputs.');
       } else {
         verdict.classList.add('mismatch');
         verdict.textContent = 'MISMATCH (' + results[0].readiness_score + ' vs ' + results[1].readiness_score + '). Please report this to us: it means our determinism guarantee broke.';
       }
-      localStorage.setItem(CACHE_KEY, JSON.stringify({
-        s1: results[0].readiness_score, s2: results[1].readiness_score,
-        bd1: results[0].score_breakdown, bd2: results[1].score_breakdown,
-        at: new Date().toISOString()
-      }));
+      if (input.cacheable) {
+        localStorage.setItem(input.cacheKey, JSON.stringify({
+          s1: results[0].readiness_score, s2: results[1].readiness_score,
+          bd1: results[0].score_breakdown, bd2: results[1].score_breakdown,
+          at: new Date().toISOString()
+        }));
+      }
       status.textContent = 'done.';
     } catch (e) {
-      status.textContent = 'error: ' + e.message;
+      errProof(e.message);
     } finally {
       btn.disabled = false;
     }
