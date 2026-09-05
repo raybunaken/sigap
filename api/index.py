@@ -1904,6 +1904,10 @@ async def serve_demo():
 async def serve_engine():
     return _serve_static("sigap-engine.html", media_type="text/html")
 
+@app.api_route("/og-1200x630.png", methods=["GET", "HEAD"])
+def serve_og():
+    return _serve_static("social/og-1200x630.png", media_type="image/png")
+
 @app.api_route("/extension/pdf.min.js", methods=["GET", "HEAD"])
 def serve_pdf_js():
     return _serve_static("extension/pdf.min.js", media_type="application/javascript")
