@@ -9,5 +9,11 @@
       "source": "/api/(.*)",
       "destination": "/api/index.py?vpath=$1"
     }
+  ],
+  "crons": [
+    {
+      "path": "/api/ping",
+      "schedule": "0 2 * * *"
+    }
   ]
 }

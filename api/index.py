@@ -59,6 +59,47 @@ MODEL_JUDGE   = "openai/gpt-oss-120b"
 MODEL_NARRATE = "openai/gpt-oss-20b"
 GROQ_URL     = "https://api.groq.com/openai/v1/chat/completions"
 
+# ── SUPABASE (opsional: semua fitur degrade mulus kalau belum diset) ──────
+# Dipakai untuk: waitlist persisten, log scan anonim (Skillsy Index),
+# dan heartbeat harian biar project free-tier tidak di-pause.
+SUPABASE_URL  = os.getenv("SUPABASE_URL", "").rstrip("/")
+SUPABASE_KEY  = os.getenv("SUPABASE_SERVICE_KEY", "")
+SUPABASE_ON   = bool(SUPABASE_URL and SUPABASE_KEY)
+
+async def supabase_insert(table: str, payload: dict, ignore_dupes: bool = False) -> bool:
+    """Insert satu baris via PostgREST. False kalau tidak dikonfigurasi/gagal."""
+    if not SUPABASE_ON:
+        return False
+    headers = {
+        "apikey": SUPABASE_KEY,
+        "Authorization": f"Bearer {SUPABASE_KEY}",
+        "Content-Type": "application/json",
+        "Prefer": ("resolution=ignore-duplicates," if ignore_dupes else "") + "return=minimal",
+    }
+    try:
+        async with httpx.AsyncClient(timeout=8) as client:
+            res = await client.post(f"{SUPABASE_URL}/rest/v1/{table}", headers=headers, json=payload)
+            if res.status_code not in (200, 201):
+                logger.error(f"Supabase insert {table}: HTTP {res.status_code} {res.text[:150]}")
+                return False
+            return True
+    except Exception as e:
+        logger.error(f"Supabase insert {table}: {e}")
+        return False
+
+async def supabase_ping() -> bool:
+    """Query ringan untuk menjaga project free-tier tetap aktif."""
+    if not SUPABASE_ON:
+        return False
+    headers = {"apikey": SUPABASE_KEY, "Authorization": f"Bearer {SUPABASE_KEY}"}
+    try:
+        async with httpx.AsyncClient(timeout=8) as client:
+            res = await client.get(f"{SUPABASE_URL}/rest/v1/waitlist?select=id&limit=1", headers=headers)
+            return res.status_code == 200
+    except Exception as e:
+        logger.error(f"Supabase ping: {e}")
+        return False
+
 # ── SKILL PATTERNS (satu sumber, untuk regex fallback CV parsing) ─────────
 SKILL_PATTERNS = [
     "Python", "JavaScript", "TypeScript", "Java", "Go", "PHP", "Kotlin", "Dart", "SQL", "R",
@@ -864,7 +905,7 @@ api_router_index = APIRouter(prefix="/api/index.py")
 @api_router.get("/health")
 @api_router_index.get("/health")
 def health():
-    return {"status": "ok", "groq": bool(GROQ_API_KEY), "jobs": len(PEKERJAAN_DATABASE)}
+    return {"status": "ok", "groq": bool(GROQ_API_KEY), "supabase": SUPABASE_ON, "jobs": len(PEKERJAAN_DATABASE)}
 
 @app.get("/jobs")
 @api_router.get("/jobs")
@@ -1763,6 +1804,21 @@ async def analyze_job(req: AnalyzeJobRequest):
             "error": "Server AI sedang sibuk (kemungkinan kena limit sesaat). "
                      "Tunggu sekitar 30 detik lalu coba lagi."
         }
+
+    # Log scan anonim untuk Skillsy Index: TANPA teks CV, tanpa identitas.
+    # Fire-and-forget: tidak pernah memperlambat atau menggagalkan respons.
+    try:
+        asyncio.create_task(supabase_insert("scans", {
+            "job_title": job_title[:200],
+            "seniority": result.get("seniority_level") or None,
+            "readiness_score": result.get("readiness_score"),
+            "min_years_required": result.get("min_years_required"),
+            "must_skills": [s.get("req") for s in (result.get("requirements_check") or [])][:12],
+            "missing_skills": result.get("missing_skills") or [],
+        }, ignore_dupes=True))
+    except Exception as e:
+        logger.warning(f"scan log skip: {e}")
+
     return result
 
 class CoverLetterRequest(BaseModel):
@@ -1879,10 +1935,23 @@ class WaitlistRequest(BaseModel):
 @api_router.post("/waitlist", tags=["Waitlist"])
 @api_router_index.post("/waitlist", tags=["Waitlist"])
 async def join_waitlist(req: WaitlistRequest):
-    # For now, just log the email to Vercel logs so it's not lost.
-    # We will connect this to Supabase later.
-    logger.info(f"🚀 NEW WAITLIST SIGNUP: {req.email}")
+    email = req.email.strip().lower()
+    if SUPABASE_ON:
+        saved = await supabase_insert("waitlist", {"email": email}, ignore_dupes=True)
+        if saved:
+            logger.info(f"WAITLIST tersimpan di Supabase: {email}")
+            return {"status": "success", "message": "Email added to waitlist"}
+        logger.warning(f"WAITLIST gagal insert Supabase, fallback log: {email}")
+    logger.info(f"WAITLIST (log saja, Supabase belum aktif): {email}")
     return {"status": "success", "message": "Email added to waitlist"}
+
+@app.get("/api/ping", tags=["System"])
+@api_router.get("/api/ping", tags=["System"])
+@api_router_index.get("/api/ping", tags=["System"])
+async def ping():
+    """Dipanggil cron harian Vercel agar project Supabase free-tier tidak di-pause."""
+    ok = await supabase_ping()
+    return {"status": "ok", "supabase": ok}
 
 @app.get("/google069a65fad361bad9.html", response_class=PlainTextResponse)
 @api_router.get("/google069a65fad361bad9.html", response_class=PlainTextResponse)
