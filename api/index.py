@@ -1900,6 +1900,14 @@ async def serve_privacy():
 async def serve_demo():
     return _serve_static("demo.html", media_type="text/html")
 
+@app.api_route("/extension/pdf.min.js", methods=["GET", "HEAD"])
+def serve_pdf_js():
+    return _serve_static("extension/pdf.min.js", media_type="application/javascript")
+
+@app.api_route("/extension/pdf.worker.min.js", methods=["GET", "HEAD"])
+def serve_pdf_worker():
+    return _serve_static("extension/pdf.worker.min.js", media_type="application/javascript")
+
 @app.api_route("/logo.svg", methods=["GET", "HEAD"])
 def serve_logo():
     return _serve_static("logo.svg", media_type="image/svg+xml")
