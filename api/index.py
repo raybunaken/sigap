@@ -4,7 +4,7 @@ Backend: FastAPI + Groq (Llama 3.3)
 Jalankan: python api.py
 """
 
-import os, json, logging, asyncio, re, pathlib, time
+import os, json, logging, asyncio, re, pathlib, time, zlib
 from datetime import datetime, timezone
 from fastapi import FastAPI, HTTPException, UploadFile, File, APIRouter, Request, Response
 from fastapi.responses import FileResponse, JSONResponse, PlainTextResponse
@@ -274,6 +274,9 @@ async def groq_request(
     # reasoning_effort low menjaga token tetap untuk jawaban sebenarnya.
     if use_model.startswith("openai/gpt-oss"):
         base_payload["reasoning_effort"] = "low"
+    # Seed deterministik per isi prompt: input sama -> seed sama -> output
+    # jauh lebih stabil antar-run (dikurangi varian ekstraksi, DEVLOG-002).
+    base_payload["seed"] = zlib.crc32(json.dumps(messages, ensure_ascii=False, default=str).encode()) & 0x7FFFFFFF
     use_json_mode = bool(response_format)
 
     for key in GROQ_API_KEYS:
@@ -1511,6 +1514,9 @@ Tasks:
 3. Judge each item in "items_to_judge": status met/partial/missing based on CV evidence.
    - EDUCATION rules: Indonesian D4 (diploma 4) and Sarjana Terapan EQUAL a bachelor degree (S1). If the requirement says "or related field" / "sederajat", a field with transferable coursework is MET and a loosely adjacent field is PARTIAL (never missing just because the major name differs). SMK counts only if the requirement explicitly allows below-bachelor.
    - EXPERIENCE rules: judge RELEVANCE to this job's domain, not total years worked. "Minimum 3 years experience in data analysis" for a sales analyst is PARTIAL or MISSING even if they have 5 years of sales experience - state the domain mismatch in the detail. Adjacent domains (e.g. business analyst vs data analyst) = PARTIAL. Unrelated domains (e.g. nurse vs data analyst) = MISSING.
+   - Count ALL professional work experience toward total years (cv_years_estimate). Do NOT subtract employment gaps - gaps are life events, not lost experience.
+   - Domain suitability bands: SAME domain with enough years = MET. ADJACENT/related domain (e.g. business analyst vs data analyst, backend vs fullstack) = PARTIAL. UNRELATED domain = MISSING.
+   - SKILL LISTING rules: copy skill names as written in the CV, KEEPING any level qualifier in parentheses exactly (e.g. write "Flutter (beginner)" or "SQL (dasar)" - never strip the qualifier).
    - "req": quote or translate the requirement into natural Indonesian, keep it specific (never generic).
    - "detail": ONE sentence in Bahasa Indonesia citing concrete evidence from the CV.
 
