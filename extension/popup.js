@@ -2,6 +2,7 @@
 let cvText = '';
 let cvName = '';
 let activeResultData = null; // current result shown in view-result
+let lastTailored = null;      // last tailored resume (v2 blocks)
 let activeJobData = null;    // job info (title, description) for cover letter
 
 const API_URL = 'https://skillsy.my.id';
@@ -801,37 +802,95 @@ document.addEventListener('DOMContentLoaded', async () => {
       if (data.error) throw new Error(data.error);
 
       const t = data.tailored || {};
+      lastTailored = t;
       const badge = document.getElementById('tailorBadge');
+      const problems = (data.dropped_fabricated || 0) + (data.unverified_entries || 0);
       if (data.verified) {
         badge.className = 'tailor-badge ok';
-        badge.textContent = '✓ Terverifikasi: semua isi berasal dari CV-mu, tidak ada yang dikarang.';
+        badge.textContent = '✓ Terverifikasi: seluruh isi (termasuk kontak & tanggal) berasal dari CV-mu.';
       } else {
         badge.className = 'tailor-badge warn';
-        badge.textContent = `⚠ ${data.dropped_fabricated} saran dibuang otomatis karena tidak ada buktinya di CV-mu.`;
+        badge.textContent = `⚠ ${problems} bagian dibuang/tandai karena tidak terlacak ke CV-mu. Periksa sebelum kirim.`;
       }
+
+      const head = document.getElementById('tsHeader');
+      head.innerHTML = `
+        <div class="ts-name">${t.name || ''}</div>
+        ${t.headline ? `<div class="ts-headline">${t.headline}</div>` : ''}
+        ${t.contact ? `<div class="ts-contact">${t.contact}</div>` : ''}`;
       document.getElementById('tsSummary').textContent = t.summary || '';
-      document.getElementById('tsSections').innerHTML = (t.sections || []).map(sec =>
-        `<h4>${sec.heading}</h4><ul>${(sec.bullets || []).map(b => `<li>${b}</li>`).join('')}</ul>`
-      ).join('');
+      document.getElementById('tsSections').innerHTML = (t.blocks || []).map(b => {
+        if (b.type === 'h') return `<h4>${b.text}</h4>`;
+        if (b.type === 'p') return `<p class="ts-para">${b.text}</p>`;
+        if (b.type === 'entry') {
+          const meta = b.meta ? `<span class="ts-meta">${b.meta}</span>` : '';
+          const sub = b.subtitle ? `<div class="ts-sub">${b.subtitle}</div>` : '';
+          return `<div class="ts-entry"><div class="ts-er"><span class="ts-et">${b.title}</span>${meta}</div>${sub}<ul>${(b.bullets || []).map(x => `<li>${x}</li>`).join('')}</ul></div>`;
+        }
+        return '';
+      }).join('');
       document.getElementById('tailorKeywordNote').textContent = t.keyword_note || '';
       document.getElementById('tailor-loading').style.display = 'none';
       document.getElementById('tailor-content').style.display = 'flex';
 
-      document.getElementById('tailor-print').onclick = () => window.print();
-      document.getElementById('tailor-copy').onclick = () => {
-        let txt = (t.summary || '') + '\n\n';
-        (t.sections || []).forEach(sec => {
-          txt += sec.heading.toUpperCase() + '\n';
-          (sec.bullets || []).forEach(b => { txt += '- ' + b + '\n'; });
-          txt += '\n';
+      // PDF: buka tab baru berisi halaman print-ready (print di side panel tidak andal)
+      document.getElementById('tailor-print').onclick = () => {
+        const esc = s => String(s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        let body = `<h1>${esc(t.name)}</h1>`;
+        if (t.headline) body += `<div class="hl">${esc(t.headline)}</div>`;
+        if (t.contact) body += `<div class="ct">${esc(t.contact)}</div>`;
+        (t.blocks || []).forEach(b => {
+          if (b.type === 'h') body += `<h2>${esc(b.text)}</h2>`;
+          else if (b.type === 'p') body += `<p>${esc(b.text)}</p>`;
+          else if (b.type === 'entry') {
+            body += `<div class="er"><span class="et">${esc(b.title)}</span><span class="em">${esc(b.meta || '')}</span></div>`;
+            if (b.subtitle) body += `<div class="es">${esc(b.subtitle)}</div>`;
+            if ((b.bullets || []).length) body += '<ul>' + b.bullets.map(x => `<li>${esc(x)}</li>`).join('') + '</ul>';
+          }
         });
-        if ((t.skills || []).length) txt += 'SKILLS\n' + t.skills.join(', ') + '\n';
+        const html = `<!DOCTYPE html><html><head><meta charset="utf-8"><title>CV - Skillsy</title><style>
+          body{font-family:Arial,Helvetica,sans-serif;color:#111;max-width:800px;margin:0 auto;padding:56px 24px 24px;line-height:1.45}
+          h1{text-align:center;margin:0;font-size:26px;letter-spacing:.5px}
+          .hl{text-align:center;color:#1a56db;font-weight:600;margin:2px 0}
+          .ct{text-align:center;font-size:12px;margin-bottom:16px}
+          h2{font-size:14px;text-transform:uppercase;letter-spacing:.06em;border-bottom:1.5px solid #333;padding-bottom:2px;margin:20px 0 8px}
+          .er{display:flex;justify-content:space-between;align-items:baseline;font-weight:700;margin-top:12px}
+          .em{font-weight:400;font-size:12px}
+          .es{font-style:italic;font-size:12.5px;margin-bottom:4px}
+          ul{margin:4px 0 8px;padding-left:20px}li{margin-bottom:4px;font-size:13px}
+          p{font-size:13px}
+          .bar{position:fixed;top:0;left:0;right:0;background:#111;color:#fff;padding:10px;text-align:center;font-family:sans-serif;font-size:13px;z-index:9}
+          @media print{.bar{display:none}body{padding-top:16px}}
+        </style></head><body>
+        <div class="bar">Ctrl+P lalu pilih "Save as PDF" &nbsp;•&nbsp; Dibuat dengan Skillsy Copilot</div>
+        ${body}
+        <script>window.onload=function(){setTimeout(function(){window.print()},500)}<\/script>
+        </body></html>`;
+        const blob = new Blob([html], { type: 'text/html' });
+        chrome.tabs.create({ url: URL.createObjectURL(blob) });
+      };
+
+      document.getElementById('tailor-copy').onclick = () => {
+        let txt = '';
+        if (t.name) txt += t.name + '\n';
+        if (t.headline) txt += t.headline + '\n';
+        if (t.contact) txt += t.contact + '\n';
+        txt += '\n' + (t.summary || '') + '\n\n';
+        (t.blocks || []).forEach(b => {
+          if (b.type === 'h') txt += b.text.toUpperCase() + '\n';
+          else if (b.type === 'p') txt += b.text + '\n';
+          else if (b.type === 'entry') {
+            txt += b.title + (b.subtitle ? ' | ' + b.subtitle : '') + (b.meta ? ' | ' + b.meta : '') + '\n';
+            (b.bullets || []).forEach(x => { txt += '- ' + x + '\n'; });
+            txt += '\n';
+          }
+        });
         navigator.clipboard.writeText(txt).then(() => {
           document.getElementById('tailor-copy').textContent = '✓ Tersalin';
           setTimeout(() => { document.getElementById('tailor-copy').textContent = 'Copy sebagai teks'; }, 1500);
         });
       };
-    } catch (e) {
+      } catch (e) {
       showView('view-result');
       const st = document.getElementById('analyze-status');
       st.textContent = '⚠ ' + e.message;

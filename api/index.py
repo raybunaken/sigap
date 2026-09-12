@@ -1942,12 +1942,14 @@ async def tailor_cv(req: TailorRequest, request: Request):
     job_desc = req.job_description[:6000]
     ats_keywords = [k for k in req.ats_keywords if isinstance(k, str) and k.strip()][:8]
 
-    prompt = f"""You are an expert ATS resume writer. Produce a tailored version of this candidate's resume for ONE specific job.
+    prompt = f"""You are an expert ATS resume writer. Rewrite this candidate's FULL resume, tailored to ONE specific job.
 
-STRICT RULES (violations make the output useless):
-- Use ONLY facts, skills, tools, numbers and achievements that literally appear in the candidate's CV. NEVER invent, exaggerate, or add anything.
-- You MAY: reorder sections and bullets, rephrase wording, merge duplicates, and emphasize whatever best matches this job.
-- Weave the provided ATS keywords into bullets ONLY where the CV already gives supporting evidence.
+STRICT RULES:
+- Reproduce the COMPLETE resume: contact header, EVERY section, EVERY role/education/project entry. NEVER drop entries or contact info.
+- Use ONLY facts from the CV (numbers, skills, companies, dates, achievements). NEVER invent or embellish.
+- Copy company names, role titles, institution names and dates VERBATIM from the CV.
+- You MAY reorder sections/bullets, rephrase bullet wording, merge duplicates, emphasize job-relevant items, and weave ATS keywords only where the CV gives supporting evidence.
+- The headline may be angled toward the job title only if the CV supports it.
 - Write in the SAME language as the CV.
 
 JOB TITLE: {job_title}
@@ -1955,76 +1957,103 @@ JOB TITLE: {job_title}
 JOB DESCRIPTION:
 {job_desc}
 
-ATS KEYWORDS to weave in where evidence exists: {json.dumps(ats_keywords, ensure_ascii=False) if ats_keywords else "none provided"}
+ATS KEYWORDS to weave where evidence exists: {json.dumps(ats_keywords, ensure_ascii=False) if ats_keywords else "none provided"}
 
 CANDIDATE CV:
 {cv}
 
-Return ONLY valid JSON with this exact shape:
+Return ONLY valid JSON:
 {{
-  "summary": "2-3 kalimat ringkasan profesional yang ditujukan untuk lowongan ini",
-  "sections": [
-    {{"heading": "PROFESSIONAL EXPERIENCE", "bullets": ["bullet akomplishi 1", "bullet 2"]}},
-    {{"heading": "SKILLS", "bullets": ["skill A, skill B, ..."]}}
+  "name": "verbatim from CV",
+  "headline": "from CV, optionally angled toward the job",
+  "contact": "verbatim contact line(s): phone | email | city",
+  "summary": "2-3 kalimat ringkasan profesional untuk lowongan ini",
+  "blocks": [
+    {{"type": "h", "text": "PROFESSIONAL SUMMARY"}},
+    {{"type": "p", "text": "..."}},
+    {{"type": "h", "text": "PROFESSIONAL EXPERIENCE"}},
+    {{"type": "entry", "title": "Company/institution verbatim", "subtitle": "Role verbatim", "meta": "Dates verbatim | Location", "bullets": ["tailored bullet", "..."]}}
   ],
-  "skills_order": ["skill paling relevan untuk lowongan ini dulu", "..."],
-  "keyword_note": "satu kalimat Bahasa Indonesia: keyword ATS mana yang diselipkan di mana"
+  "keyword_note": "satu kalimat Bahasa Indonesia: keyword ATS mana diselipkan di mana"
 }}
-Sections: keep the CV's real structure (experience, projects, education). 4-7 bullets per section max, each under 200 characters."""
+Include ALL original sections: summary, EVERY work role, education, projects, skills."""
 
     tailored = await _groq_json([
         {"role": "system", "content": "Reply ONLY with valid JSON. No other text."},
         {"role": "user", "content": prompt},
-    ], max_tokens=2200, model=MODEL_JUDGE)
+    ], max_tokens=3200, model=MODEL_JUDGE)
     if not tailored:
         return {"error": "Server AI sedang sibuk. Coba lagi 30 detik lagi."}
 
-    cv_skill_pool = regex_extract_skills(cv)
+    # ── GUARD ANTI-FABRIKASI v2 ──
+    def norm(s: str) -> str:
+        return re.sub(r"\s+", " ", s).strip().lower()
 
-    # ── GUARD ANTI-FABRIKASI ──
+    cv_norm = norm(cv)
     dropped = 0
-    sections_out = []
-    for sec in tailored.get("sections", []):
-        if not isinstance(sec, dict) or not sec.get("heading"):
+    unverified_entries = 0
+    blocks_out = []
+    for b in tailored.get("blocks", []):
+        if not isinstance(b, dict):
             continue
-        bullets_out = []
-        for b in sec.get("bullets", []):
-            if not isinstance(b, str) or not b.strip():
-                continue
-            if _digits_ok(b, cv):
-                bullets_out.append(_plain_dashes(b.strip())[:260])
+        btype = b.get("type")
+        if btype == "h" and b.get("text"):
+            blocks_out.append({"type": "h", "text": _plain_dashes(str(b["text"]).strip())[:80]})
+        elif btype == "p" and b.get("text"):
+            txt = _plain_dashes(str(b["text"]).strip())
+            if _digits_ok(txt, cv):
+                blocks_out.append({"type": "p", "text": txt[:800]})
             else:
                 dropped += 1
-        if bullets_out:
-            sections_out.append({"heading": str(sec["heading"])[:60], "bullets": bullets_out[:8]})
-
-    skills_out = []
-    for s in tailored.get("skills_order", []):
-        if isinstance(s, str) and s.strip() and _skill_allowed(s, cv_skill_pool, cv):
-            skills_out.append(_clean_skill_name(s)[:40])
-    skills_out = list(dict.fromkeys(skills_out))[:15]
+        elif btype == "entry" and b.get("title"):
+            title = _plain_dashes(str(b["title"]).strip())[:110]
+            subtitle = _plain_dashes(str(b.get("subtitle", "")).strip())[:130]
+            meta = _plain_dashes(str(b.get("meta", "")).strip())[:130]
+            bullets = []
+            for bl in b.get("bullets", []):
+                if not isinstance(bl, str) or not bl.strip():
+                    continue
+                if _digits_ok(bl, cv):
+                    bullets.append(_plain_dashes(bl.strip())[:280])
+                else:
+                    dropped += 1
+            if norm(title) not in cv_norm:
+                unverified_entries += 1
+            entry = {"type": "entry", "title": title, "bullets": bullets}
+            if subtitle:
+                entry["subtitle"] = subtitle
+                if norm(subtitle) not in cv_norm:
+                    unverified_entries += 1
+            if meta:
+                entry["meta"] = meta
+            if bullets or title:
+                blocks_out.append(entry)
 
     summary = _plain_dashes(str(tailored.get("summary", "")).strip())[:600]
     summary_ok = _digits_ok(summary, cv)
     if summary and not summary_ok:
         dropped += 1
 
+    verified = dropped == 0 and unverified_entries == 0
+
     # catat pemakaian (untuk kuota harian)
     await supabase_insert("tailor_log", {"client_id": client_id or "unknown"})
 
     return {
         "tailored": {
+            "name": _plain_dashes(str(tailored.get("name", ""))).strip()[:120],
+            "headline": _plain_dashes(str(tailored.get("headline", ""))).strip()[:130],
+            "contact": _plain_dashes(str(tailored.get("contact", ""))).strip()[:220],
             "summary": summary,
-            "summary_verified": summary_ok,
-            "sections": sections_out,
-            "skills": skills_out,
+            "blocks": blocks_out,
             "keyword_note": _plain_dashes(str(tailored.get("keyword_note", "")))[:300],
         },
         "dropped_fabricated": dropped,
-        "verified": dropped == 0,
+        "unverified_entries": unverified_entries,
+        "verified": verified,
         "daily_used": used + 1,
         "daily_limit": TAILOR_DAILY_LIMIT,
-        "tailor_version": 1,
+        "tailor_version": 2,
     }
 
 # ── MAIN ──────────────────────────────────────────────────────────────────

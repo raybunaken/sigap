@@ -719,3 +719,14 @@ body {
     font-size: 11pt;
   }
 }
+
+/* ── CV TAILOR v2: header + entry struktur resume ───────────────────────── */
+#tailorSheet .ts-name { font-size: 17px; font-weight: 800; text-align: center; letter-spacing: 0.03em; }
+#tailorSheet .ts-headline { font-size: 12.5px; font-weight: 600; text-align: center; color: #1a56db; margin-top: 1px; }
+#tailorSheet .ts-contact { font-size: 10.5px; text-align: center; color: #444; margin: 2px 0 12px 0; }
+#tailorSheet .ts-para { margin: 0 0 10px 0; }
+#tailorSheet .ts-entry { margin-bottom: 12px; }
+#tailorSheet .ts-er { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+#tailorSheet .ts-et { font-weight: 700; font-size: 12.5px; }
+#tailorSheet .ts-meta { font-size: 10.5px; color: #555; white-space: nowrap; }
+#tailorSheet .ts-sub { font-style: italic; font-size: 11.5px; margin: 1px 0 4px 0; }
