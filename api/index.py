@@ -1950,6 +1950,7 @@ STRICT RULES:
 - Copy company names, role titles, institution names and dates VERBATIM from the CV.
 - You MAY reorder sections/bullets, rephrase bullet wording, merge duplicates, emphasize job-relevant items, and weave ATS keywords only where the CV gives supporting evidence.
 - The headline may be angled toward the job title only if the CV supports it.
+- For SKILLS: group items by category (Technical Stack, Management & Strategy, Languages, Certifications, etc. following the CV's own grouping), with the most job-relevant items first in each group.
 - Write in the SAME language as the CV.
 
 JOB TITLE: {job_title}
@@ -1972,7 +1973,9 @@ Return ONLY valid JSON:
     {{"type": "h", "text": "PROFESSIONAL SUMMARY"}},
     {{"type": "p", "text": "..."}},
     {{"type": "h", "text": "PROFESSIONAL EXPERIENCE"}},
-    {{"type": "entry", "title": "Company/institution verbatim", "subtitle": "Role verbatim", "meta": "Dates verbatim | Location", "bullets": ["tailored bullet", "..."]}}
+    {{"type": "entry", "title": "Company/institution verbatim", "subtitle": "Role verbatim", "meta": "Dates verbatim | Location", "bullets": ["tailored bullet", "..."]}},
+    {{"type": "h", "text": "SKILLS & CERTIFICATIONS"}},
+    {{"type": "skills", "groups": [{{"cat": "Technical Stack", "items": ["Python", "SQL"]}}, {{"cat": "Languages", "items": ["English"]}}]}}
   ],
   "keyword_note": "satu kalimat Bahasa Indonesia: keyword ATS mana diselipkan di mana"
 }}
@@ -2005,6 +2008,19 @@ Include ALL original sections: summary, EVERY work role, education, projects, sk
                 blocks_out.append({"type": "p", "text": txt[:800]})
             else:
                 dropped += 1
+        elif btype == "skills" and isinstance(b.get("groups"), list):
+            groups_out = []
+            for g in b["groups"]:
+                if not isinstance(g, dict) or not g.get("cat"):
+                    continue
+                items = []
+                for it in g.get("items", []):
+                    if isinstance(it, str) and it.strip() and _skill_allowed(it, cv_skill_pool, cv):
+                        items.append(_clean_skill_name(it)[:50])
+                if items:
+                    groups_out.append({"cat": str(g["cat"])[:50], "items": list(dict.fromkeys(items))[:12]})
+            if groups_out:
+                blocks_out.append({"type": "skills", "groups": groups_out})
         elif btype == "entry" and b.get("title"):
             title = _plain_dashes(str(b["title"]).strip())[:110]
             subtitle = _plain_dashes(str(b.get("subtitle", "")).strip())[:130]

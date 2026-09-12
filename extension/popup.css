@@ -730,3 +730,7 @@ body {
 #tailorSheet .ts-et { font-weight: 700; font-size: 12.5px; }
 #tailorSheet .ts-meta { font-size: 10.5px; color: #555; white-space: nowrap; }
 #tailorSheet .ts-sub { font-style: italic; font-size: 11.5px; margin: 1px 0 4px 0; }
+
+/* skills per kategori di lembar CV */
+#tailorSheet .ts-sgroup { margin-bottom: 5px; }
+#tailorSheet .ts-sgroup b { font-weight: 700; }

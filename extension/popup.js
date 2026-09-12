@@ -825,6 +825,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       document.getElementById('tsSections').innerHTML = (t.blocks || []).map(b => {
         if (b.type === 'h') return `<h4>${b.text}</h4>`;
         if (b.type === 'p') return `<p class="ts-para">${b.text}</p>`;
+        if (b.type === 'skills') return `<div class="ts-sgroups">${(b.groups || []).map(g => `<div class="ts-sgroup"><b>${g.cat}:</b> ${(g.items || []).join(' &nbsp;•&nbsp; ')}</div>`).join('')}</div>`;
         if (b.type === 'entry') {
           const meta = b.meta ? `<span class="ts-meta">${b.meta}</span>` : '';
           const sub = b.subtitle ? `<div class="ts-sub">${b.subtitle}</div>` : '';
@@ -846,6 +847,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         (t.blocks || []).forEach(b => {
           if (b.type === 'h') body += `<h2>${esc(b.text)}</h2>`;
           else if (b.type === 'p') body += `<p>${esc(b.text)}</p>`;
+          else if (b.type === 'skills') body += (b.groups || []).map(g => `<div class="sg"><b>${esc(g.cat)}:</b> ${g.items.map(esc).join(' &nbsp;•&nbsp; ')}</div>`).join('');
           else if (b.type === 'entry') {
             body += `<div class="er"><span class="et">${esc(b.title)}</span><span class="em">${esc(b.meta || '')}</span></div>`;
             if (b.subtitle) body += `<div class="es">${esc(b.subtitle)}</div>`;
@@ -883,6 +885,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         (t.blocks || []).forEach(b => {
           if (b.type === 'h') txt += b.text.toUpperCase() + '\n';
           else if (b.type === 'p') txt += b.text + '\n';
+          else if (b.type === 'skills') (b.groups || []).forEach(g => { txt += g.cat + ': ' + (g.items || []).join(', '); });
           else if (b.type === 'entry') {
             txt += b.title + (b.subtitle ? ' | ' + b.subtitle : '') + (b.meta ? ' | ' + b.meta : '') + '\n';
             (b.bullets || []).forEach(x => { txt += '- ' + x + '\n'; });
