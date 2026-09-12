@@ -784,7 +784,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (!activeResultData || !activeJobData || !cvText) return;
     showView('view-tailor');
     document.getElementById('tailor-loading').style.display = 'flex';
-    document.getElementById('tailor-content').style.display = 'none';
+    document.getElementById('tailor-content').style.display = 'flex';
+    document.getElementById('tailorError').style.display = 'none';
+    document.querySelector('.tailor-actions').style.display = 'flex';
+    document.getElementById('tailor-content').style.visibility = 'hidden';
     try {
       const installId = await getInstallId();
       const res = await fetch(`${API_URL}/api/tailor-cv`, {
@@ -832,6 +835,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       document.getElementById('tailorKeywordNote').textContent = t.keyword_note || '';
       document.getElementById('tailor-loading').style.display = 'none';
       document.getElementById('tailor-content').style.display = 'flex';
+      document.getElementById('tailor-content').style.visibility = 'visible';
 
       // PDF: buka tab baru berisi halaman print-ready (print di side panel tidak andal)
       document.getElementById('tailor-print').onclick = () => {
@@ -891,9 +895,14 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
       };
       } catch (e) {
-      showView('view-result');
-      const st = document.getElementById('analyze-status');
-      st.textContent = '⚠ ' + e.message;
+      // tetap di view tailor dan tampilkan error di sini (dulu nyasar ke Beranda)
+      document.getElementById('tailor-loading').style.display = 'none';
+      const te = document.getElementById('tailorError');
+      te.textContent = '⚠ ' + e.message + ' — coba lagi.';
+      te.style.display = 'block';
+      const tc = document.getElementById('tailor-content');
+      tc.style.display = 'flex';
+      document.getElementById('tailor-print').parentElement.style.display = 'none';
     }
   });
 
