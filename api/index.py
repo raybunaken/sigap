@@ -1989,6 +1989,8 @@ Include ALL original sections: summary, EVERY work role, education, projects, sk
         return {"error": "Server AI sedang sibuk. Coba lagi 30 detik lagi."}
 
     # ── GUARD ANTI-FABRIKASI v2 ──
+    cv_skill_pool = regex_extract_skills(cv)
+
     def norm(s: str) -> str:
         return re.sub(r"\s+", " ", s).strip().lower()
 
