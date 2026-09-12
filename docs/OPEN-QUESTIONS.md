@@ -13,20 +13,19 @@ STATUS: OPEN (menunggu) | DECIDED (sudah diputuskan) | ACTION-USER (menunggu aks
 
 ## OPEN
 
-### Q1 - Lantai faktor domain pengalaman: 0.0 atau 0.25?
-[OPEN - dibawa ke Gemini via PLAN-001 bagian 5]
-Kandidat pivot lintas-domain: faktor pengalaman missing = 0.0 (kejujuran total,
-pilihan ZCode) atau lantai 0.25 (pengalaman umum tetap dihargai sedikit)?
-Terlihat di run-4: perawat vs data analyst = 30 (dengan 0.0). Gemini diminta
-beri opini berbasis data 10 kasus.
+### Q1 - Lantai faktor domain pengalaman: 0.0 atau 0.25? -> [DECIDED: 0.0]
+[DECIDED oleh user setelah penjelasan ZCode, 13 Sep 2026]
+Argumen yang diterima: 0.0 gampang dijelaskan ("pengalaman di bidang lain tidak
+dihitung untuk lowongan ini") dan 30 vs 36 praktis tidak mengubah keputusan user
+(dua-duanya bilang skip). Dampak nyata lantai 0.25 cuma +/-6 poin di kasus pivot.
+Skor tetap terkirim ke Gemini untuk opini kedua, tapi keputusan tidak menunggu.
 
-### Q2 - Apakah mekanisme perkalian (band x faktor) perlu diterapkan ke kategori lain?
-[OPEN - untuk diskusi berikutnya]
-Saat ini faktor domain hanya mengalikan kategori Pengalaman. Pertanyaan jangka
-panjang: apakah plus_skills atau edukasi juga perlu faktor relevansi, atau
-cukup pengalaman saja? Pendapat ZCode: cukup pengalaman + skill wajib (yang
-sudah dinilai mesin per-skill); menambah faktor ke semua kategori = kompleksitas
-tanpa bukti masalah.
+### Q2 - Apakah mekanisme perkalian (band x faktor) perlu diterapkan ke kategori lain? -> [DECIDED: tidak]
+[DECIDED oleh user setelah penjelasan ZCode, 13 Sep 2026]
+Faktor domain cukup di kategori Pengalaman saja. Alasan: skill wajib sudah
+dinilai per-skill terhadap CV (yang tidak punya = 0), jadi mengalikan faktor
+domain lagi = hukuman ganda untuk hal yang sama. Pengalaman spesial karena
+satu-satunya kategori yang menghitung "tahun" secara buta domain.
 
 ### Q3 - Varian judgment LLM pada kasus borderline (2A: 92 -> 80)
 [OPEN - dicatat di DEVLOG-002 bagian 4]

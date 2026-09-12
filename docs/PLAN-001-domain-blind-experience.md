@@ -52,6 +52,12 @@ Pola: **kasus selaras tidak bergerak; semua pivot turun ke wilayah jujur.**
 
 ## 5. Pertanyaan Terbuka untuk Gemini Advisor
 
+*UPDATE 13 Sep 2026: Q1 dan Q2 di bawah sudah DIPUTUSKAN oleh user tanpa
+menunggu - lantai 0.0 dipilih (argumen: mudah dijelaskan, dampak praktis
+kecil), dan faktor domain cukup di kategori Pengalaman saja (skill wajib
+sudah dihukum per-skill; faktor ulang = hukuman ganda). Pendapat Gemini
+tetap dipersilakan sebagai review setelah keputusan.*
+
 1. **Lantai faktor:** missing domain = 0.0 (kejujuran total, pilihan penulis) atau diberi lantai 0.25 (pengalaman umum tetap dihargai sedikit)? Trade-off: 0.0 lebih tegas tapi kasus pivot jadi terlihat "hampir tidak punya peluang".
 2. **Apakah perkalian ini berisiko "double punishment"?** Kandidat pivot sudah kena skill wajib 0 - apakah pengalaman 0 membuat mereka patah semangat? (Catatan penulis: pivot suggestions + learning roadmap adalah jalur bantuan mereka.)
 3. **Perlu tidaknya ditampilkan ke user** angka faktor domain secara eksplisit di breakdown (transparansi vs kompleksitas UI).
