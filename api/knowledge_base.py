@@ -581,6 +581,11 @@ SKILL_SYNONYMS = {
     "k3":                   ["keselamatan dan kesehatan kerja", "hse", "k3l"],
     "str":                  ["surat tanda registrasi"],
     "administrasi perkantoran": ["administration", "office administration", "admin perkantoran", "pengarsipan"],
+    # ── RETAIL & OPERATIONS ────────────────────────────────────────────────
+    "retail operations":    ["operasional toko", "store operations", "operasional retail", "retail store", "supervisor toko"],
+    "stocktaking":          ["stock opname", "inventory count", "penghitungan stok", "audit stok"],
+    "team leadership":      ["memimpin tim", "kepemimpinan tim", "team management", "supervisi tim", "lead team", "memimpin cabang"],
+    "expired goods control": ["fefo", "fe fo", "barang expired", "pengendalian expired", "pengurangan expired"],
 }
 
 def normalize_skill(skill: str) -> str:

@@ -1312,8 +1312,14 @@ def _machine_skill_status(skill: str, cv_skill_pool: list, cv_text: str = "") ->
     di CV asli minimal partial (daftar skill Stage B bisa miss untuk
     kosakata di luar teknologi).
     """
+    QUALIFIER_RE = re.compile(
+        r"\((?:beginner|basic|dasar|pemula|junior|masih belajar|sedang belajar)[^)]*\)"
+        r"|(beginner|dasar|pemula)", re.IGNORECASE)
     for cs in cv_skill_pool:
         if _strict_skills_match(cs, skill):
+            # CV menulis kualifikasi level (cth "Flutter (beginner)") -> partial
+            if QUALIFIER_RE.search(cs):
+                return "partial"
             return "met"
     for cs in cv_skill_pool:
         if is_transferable(cs, skill):
@@ -1362,6 +1368,16 @@ def _sanitize_skill_list(skills: list, max_items: int) -> list:
         s = _clean_skill_name(raw)
         if not s or len(s) < 2 or len(s) > 40 or WORK_MODE_RE.search(s):
             continue
+        if "/" in s:
+            parts = [p2.strip() for p2 in s.split("/") if p2.strip()]
+            if parts and any(len(p2) == 1 for p2 in parts):
+                # token gabung dgn bagian 1 huruf (cth C/C++) dipecah
+                for p2 in parts:
+                    k2 = normalize_skill(p2)
+                    if k2 not in seen:
+                        seen.add(k2)
+                        cleaned.append(p2)
+                continue
         if re.match(r"^[a-z]/[a-z]$", s.lower()):  # fragment aneh spt "and/or"
             continue
         key = normalize_skill(s)
@@ -1493,6 +1509,7 @@ Tasks:
 1. Estimate the candidate's total years of professional experience from the CV. "cv_years_estimate" MUST be a JSON NUMBER (e.g. 2.5), never a string. Internships count as 0.5.
 2. List ALL concrete skills evidenced in the CV, in ANY domain or industry, including skills clearly implied by stated tools (Laravel implies PHP, React implies JavaScript). Include Indonesian terms exactly as written (e.g. "BPJS", "K3", "STR", "rekrutmen", "payroll", "penggajian") plus certifications, licenses, tools, and administrative skills. 5-20 items. NEVER invent a skill that has no textual basis in the CV.
 3. Judge each item in "items_to_judge": status met/partial/missing based on CV evidence.
+   - EDUCATION rules: Indonesian D4 (diploma 4) and Sarjana Terapan EQUAL a bachelor degree (S1). If the requirement says "or related field" / "sederajat", a field with transferable coursework is MET and a loosely adjacent field is PARTIAL (never missing just because the major name differs). SMK counts only if the requirement explicitly allows below-bachelor.
    - "req": quote or translate the requirement into natural Indonesian, keep it specific (never generic).
    - "detail": ONE sentence in Bahasa Indonesia citing concrete evidence from the CV.
 

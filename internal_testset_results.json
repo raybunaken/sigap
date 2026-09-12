@@ -1,0 +1,134 @@
+[
+ {
+  "label": "1A aligned",
+  "score": 60,
+  "seniority": "Mid Level",
+  "matched": [
+   "STM32",
+   "ESP32",
+   "FreeRTOS",
+   "LoRaWAN",
+   "MQTT"
+  ],
+  "missing": [
+   "C/C++",
+   "OTA update systems"
+  ],
+  "synthesis": "Lowongan ini mid-level di industri embedded, dan kamu hampir siap di sisi teknis. Kekuatan utamamu terletak pada pengalaman firmware STM32, FreeRTOS, dan OTA lewat LoRaWAN, serta integrasi MQTT. Kelem"
+ },
+ {
+  "label": "1B pivot",
+  "score": 51,
+  "seniority": "Senior",
+  "matched": [],
+  "missing": [
+   "React",
+   "TypeScript",
+   "CSS",
+   "REST API"
+  ],
+  "synthesis": "Lowongan ini senior di bidang frontend, dan kamu hampir siap di sisi pengalaman teknis. Kekuatan utamamu adalah pemahaman arsitektur perangkat keras dan OTA, yang memberi dasar kuat untuk mengelola st"
+ },
+ {
+  "label": "2A aligned",
+  "score": 100,
+  "seniority": "Senior",
+  "matched": [
+   "Kubernetes",
+   "Terraform",
+   "Prometheus",
+   "Grafana"
+  ],
+  "missing": [],
+  "synthesis": "Lowongan ini mid-level di industri e-commerce, dan kamu hampir siap di sisi infrastruktur. Kekuatan utamamu terletak pada pengalaman Kubernetes, observability, dan automasi Terraform, yang langsung re"
+ },
+ {
+  "label": "2B pivot",
+  "score": 40,
+  "seniority": "Senior",
+  "matched": [],
+  "missing": [
+   "Figma",
+   "Adobe Illustrator",
+   "branding",
+   "layout"
+  ],
+  "synthesis": "Lowongan ini junior graphic designer, dan kamu hampir siap di sisi pengalaman kerja, tapi belum punya alat desain. Kekuatanmu terletak pada pemahaman sistem dan logika, yang bisa membantu dalam strukt"
+ },
+ {
+  "label": "3A aligned",
+  "score": 89,
+  "seniority": "Senior",
+  "matched": [
+   "Unity",
+   "C#",
+   "performance optimization"
+  ],
+  "missing": [
+   "mobile games"
+  ],
+  "synthesis": "Lowongan ini mid-level di industri game mobile, dan kamu hampir siap di sisi teknis. Kekuatan utamamu terletak pada pengalaman Unity dan optimasi performa, serta kemampuan kolaborasi lintas tim. Kelem"
+ },
+ {
+  "label": "3B pivot",
+  "score": 70,
+  "seniority": "Senior",
+  "matched": [
+   "Flutter"
+  ],
+  "missing": [
+   "Play Store",
+   "REST API"
+  ],
+  "synthesis": "Lowongan ini mid-level di industri aplikasi mobile, dan kamu hampir siap di sisi pengalaman serta Flutter. Kekuatanmu terletak pada 4 tahun pengembangan game Unity dan optimasi performa, yang memberi "
+ },
+ {
+  "label": "4A aligned",
+  "score": 89,
+  "seniority": "Mid Level",
+  "matched": [
+   "asuhan keperawatan lengkap"
+  ],
+  "missing": [
+   "dokumentasi"
+  ],
+  "synthesis": "Lowongan ini mid-level di ruang rawat inap, dan kamu hampir siap di sisi pengalaman serta asuhan keperawatan. Kekuatan utamamu terletak pada 3 tahun praktik di ruang rawat dan IGD serta kemampuan doku"
+ },
+ {
+  "label": "4B pivot",
+  "score": 55,
+  "seniority": "Mid Level",
+  "matched": [],
+  "missing": [
+   "SQL",
+   "Python",
+   "Tableau"
+  ],
+  "synthesis": "Lowongan ini mid-level di industri data, dan kamu hampir siap di sisi pengalaman kerja. Kekuatanmu terletak pada 3 tahun pengalaman di rumah sakit, yang memberi pemahaman mendalam tentang proses data "
+ },
+ {
+  "label": "5A aligned",
+  "score": 68,
+  "seniority": "Senior",
+  "matched": [
+   "Training"
+  ],
+  "missing": [
+   "Retail Operations",
+   "Team Leadership",
+   "Stocktaking",
+   "Expired Goods Control"
+  ],
+  "synthesis": "Lowongan ini mid-level di industri ritel, dan kamu hampir siap di sisi pengalaman serta training. Kekuatan utamamu adalah pengelolaan operasional toko dan peningkatan akurasi stock opname. Kelemahan u"
+ },
+ {
+  "label": "5B semi",
+  "score": 40,
+  "seniority": "Senior",
+  "matched": [],
+  "missing": [
+   "WMS"
+  ],
+  "synthesis": "Lowongan ini mid-level di industri fulfillment, dan kamu hampir siap di sisi operasional dan pengelolaan stok. Kekuatan utamamu terletak pada pengalaman mengelola dua cabang, audit harian, dan pelatih"
+ }
+]
