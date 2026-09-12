@@ -10,7 +10,8 @@ Dua seri dokumen untuk jejak keputusan teknis Skillsy:
 | File | Status | Ringkas |
 |---|---|---|
 | [DEVLOG-001-eval-baseline-and-4-fixes.md](DEVLOG-001-eval-baseline-and-4-fixes.md) | Selesai | Test set 10 kasus pertama; 4 bug ditemukan & diperbaiki; selaras 81.2 -> 87.2 |
-| [PLAN-001-domain-blind-experience.md](PLAN-001-domain-blind-experience.md) | PROPOSED | Perbaikan pengalaman buta domain: band tahun x faktor relevansi |
+| [PLAN-001-domain-blind-experience.md](PLAN-001-domain-blind-experience.md) | Diimplementasi | Pengalaman buta domain: band tahun x faktor relevansi |
+| [DEVLOG-002-experience-domain-factor.md](DEVLOG-002-experience-domain-factor.md) | Selesai | Bukti eksekusi PLAN-001: selaras netral, pivot -17 rata-rata ke arah jujur |
 
 ## Konvensi
 

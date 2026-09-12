@@ -1,6 +1,6 @@
 # PLAN-001 - Memperbaiki "Pengalaman Buta Domain"
 
-- **Status:** PROPOSAL - MENUNGGU KEPUTUSAN (belum diimplementasi)
+- **Status:** DISETUJUI & DIIMPLEMENTASI - lihat [DEVLOG-002](DEVLOG-002-experience-domain-factor.md) untuk bukti. Keputusan lantai: memakai skala global 0.0/0.5/1.0 (tanpa lantai 0.25).
 - **Penulis:** ZCode — untuk cross-review oleh Gemini advisor
 - **Terkait:** DEVLOG-001 (temuan dari eval baseline 10 kasus)
 
