@@ -1491,7 +1491,7 @@ min_years must be a number or null (null if not stated)."""
     items_to_judge = []
     if min_years:
         items_to_judge.append({
-            "req": f"Minimal {min_years} tahun pengalaman kerja relevan",
+            "req": f"Minimal {min_years} tahun pengalaman kerja yang relevan dengan bidang {job_title}",
             "type": "experience",
         })
     if education_req:
