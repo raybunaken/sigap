@@ -27,19 +27,16 @@ dinilai per-skill terhadap CV (yang tidak punya = 0), jadi mengalikan faktor
 domain lagi = hukuman ganda untuk hal yang sama. Pengalaman spesial karena
 satu-satunya kategori yang menghitung "tahun" secara buta domain.
 
-### Q3 - Varian judgment LLM pada kasus borderline (2A: 92 -> 80)
-[OPEN - dicatat di DEVLOG-002 bagian 4]
-Kasus jelas selaras (SRE vs SRE, 9 tahun) dinilai pengalaman "partial" pada
-satu run dan "met" pada run lain -> skor bergeser 12 poin. Kandidat mitigasi:
-parameter seed Groq untuk reproducibility, atau prompt dengan contoh borderline.
-ZCode's thought: prioritas sedang — hanya kena kasus borderline, tapi kelihatan
-oleh user yang teliti.
+### Q3 - Varian judgment LLM pada kasus borderline (2A: 92 -> 80) -> [RESOLVED]
+[FIXED 13 Sep 2026 - lihat DEVLOG-003]
+Solusi: seed deterministik per isi prompt (Groq mendukung seed) + aturan pita
+kesesuaian domain eksplisit + gap tidak mengurangi tahun. Hasil: 3 run
+beruntun identik 88/88/88, spread 12 -> 0 poin.
 
-### Q4 - Skill dengan qualifier level: verifikasi e2e belum terpicu
-[OPEN - dari eval run-3]
-Fix "Flutter (beginner)" -> partial lulus unit test, tapi pada run-4 Stage B
-kebetulan tidak menulis qualifier di daftar skill, jadi jalur e2e-nya tidak
-teruji. Perlu CV uji yang eksplisit menulis qualifier.
+### Q4 - Skill dengan qualifier level: verifikasi e2e -> [RESOLVED]
+[VERIFIED 13 Sep 2026 - lihat DEVLOG-003]
+Stage B kini wajib menyalin qualifier verbatim ("Flutter (beginner)", "SQL
+(dasar)"). Production 2 run beruntun: score 92/92, Flutter partial konsisten.
 
 ### Q5 - PDF 1 halaman: trade-off zoom ekstrem
 [OPEN - keputusan desain nanti]

@@ -12,6 +12,7 @@ Dua seri dokumen untuk jejak keputusan teknis Skillsy:
 | [DEVLOG-001-eval-baseline-and-4-fixes.md](DEVLOG-001-eval-baseline-and-4-fixes.md) | Selesai | Test set 10 kasus pertama; 4 bug ditemukan & diperbaiki; selaras 81.2 -> 87.2 |
 | [PLAN-001-domain-blind-experience.md](PLAN-001-domain-blind-experience.md) | Diimplementasi | Pengalaman buta domain: band tahun x faktor relevansi |
 | [DEVLOG-002-experience-domain-factor.md](DEVLOG-002-experience-domain-factor.md) | Selesai | Bukti eksekusi PLAN-001: selaras netral, pivot -17 rata-rata ke arah jujur |
+| [DEVLOG-003-seed-and-judgment-rules.md](DEVLOG-003-seed-and-judgment-rules.md) | Selesai | Seed deterministik + aturan judgment: varian skor 12 -> 0 poin |
 | [OPEN-QUESTIONS.md](OPEN-QUESTIONS.md) | Berjalan | Log pertanyaan, pikiran, dan keputusan ZCode + status aksi user |
 
 ## Konvensi
