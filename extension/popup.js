@@ -855,22 +855,31 @@ document.addEventListener('DOMContentLoaded', async () => {
           }
         });
         const html = `<!DOCTYPE html><html><head><meta charset="utf-8"><title>CV - Skillsy</title><style>
-          body{font-family:Arial,Helvetica,sans-serif;color:#111;max-width:800px;margin:0 auto;padding:56px 24px 24px;line-height:1.45}
-          h1{text-align:center;margin:0;font-size:26px;letter-spacing:.5px}
-          .hl{text-align:center;color:#1a56db;font-weight:600;margin:2px 0}
-          .ct{text-align:center;font-size:12px;margin-bottom:16px}
-          h2{font-size:14px;text-transform:uppercase;letter-spacing:.06em;border-bottom:1.5px solid #333;padding-bottom:2px;margin:20px 0 8px}
-          .er{display:flex;justify-content:space-between;align-items:baseline;font-weight:700;margin-top:12px}
-          .em{font-weight:400;font-size:12px}
-          .es{font-style:italic;font-size:12.5px;margin-bottom:4px}
-          ul{margin:4px 0 8px;padding-left:20px}li{margin-bottom:4px;font-size:13px}
-          p{font-size:13px}
-          .bar{position:fixed;top:0;left:0;right:0;background:#111;color:#fff;padding:10px;text-align:center;font-family:sans-serif;font-size:13px;z-index:9}
-          @media print{.bar{display:none}body{padding-top:16px}}
+          @page{size:A4;margin:0}
+          body{font-family:Arial,Helvetica,sans-serif;color:#111;margin:0;padding:10mm 11mm;line-height:1.38}
+          h1{text-align:center;margin:0;font-size:21px;letter-spacing:.5px}
+          .hl{text-align:center;color:#1a56db;font-weight:600;font-size:12px;margin:2px 0}
+          .ct{text-align:center;font-size:10.5px;margin-bottom:12px}
+          h2{font-size:12.5px;text-transform:uppercase;letter-spacing:.06em;border-bottom:1.2px solid #333;padding-bottom:2px;margin:13px 0 6px}
+          .er{display:flex;justify-content:space-between;align-items:baseline;font-weight:700;margin-top:8px}
+          .em{font-weight:400;font-size:10px}
+          .es{font-style:italic;font-size:11px;margin-bottom:3px}
+          ul{margin:3px 0 6px;padding-left:18px}li{margin-bottom:2px;font-size:11px}
+          p{font-size:11px}
+          .sg{font-size:10.5px;margin-bottom:4px}.sg b{font-weight:700}
+          .bar{position:fixed;top:0;left:0;right:0;background:#111;color:#fff;padding:9px;text-align:center;font-family:sans-serif;font-size:12px;z-index:9}
+          #resume{transform-origin:top left}
+          @media print{.bar{display:none}}
         </style></head><body>
-        <div class="bar">Ctrl+P lalu pilih "Save as PDF" &nbsp;•&nbsp; Dibuat dengan Skillsy Copilot</div>
-        ${body}
-        <script>window.onload=function(){setTimeout(function(){window.print()},500)}<\/script>
+        <div class="bar">Dipadatkan otomatis jadi 1 halaman A4 &nbsp;•&nbsp; Ctrl+P lalu pilih "Save as PDF" &nbsp;•&nbsp; Skillsy Copilot</div>
+        <div id="resume" style="padding-top:30px">${body}</div>
+        <script>window.onload=function(){
+          var r=document.getElementById('resume');
+          var avail=1040; // tinggi A4 (1123px) dikurangi padding vertikal
+          var h=r.scrollHeight;
+          if(h>avail){r.style.zoom=(avail/h).toFixed(3)}
+          setTimeout(function(){window.print()},450)
+        }<\/script>
         </body></html>`;
         const blob = new Blob([html], { type: 'text/html' });
         chrome.tabs.create({ url: URL.createObjectURL(blob) });
