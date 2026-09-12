@@ -48,6 +48,10 @@ from api.knowledge_base import (
 
 # ── CONFIG ────────────────────────────────────────────────────────────────
 GROQ_API_KEY = os.getenv("GROQ_API_KEY", "")
+# Multi-key: kuota 8k token/menit itu PER KEY. Key kedua (akun terpisah)
+# dipakai sebagai overflow: kalau key utama kena 429 dua kali beruntun,
+# rotasi otomatis. Cerebras dinonaktifkan: free tier-nya kini berbayar.
+GROQ_API_KEYS = [k for k in [GROQ_API_KEY, os.getenv("GROQ_API_KEY_2", "")] if k]
 GROQ_MODEL   = "openai/gpt-oss-120b"
 # Kuota gratis Groq 8k token/menit PER MODEL. Satu scan membakar ~10-13k
 # token, jadi pipeline dipecah ke beberapa model supaya tiap stage punya
@@ -249,23 +253,16 @@ async def groq_request(
     model: Optional[str] = None,
 ) -> Optional[str]:
     """
-    Satu-satunya fungsi yang panggil Groq API.
-    Return content string, atau None kalau gagal.
-    - Retry 429 dengan menunggu sesuai header x-ratelimit-reset-tokens
-      (jendela kuota gratis cuma ~12-30 detik, jadi tunggu yang benar,
-      bukan backoff 1-2 detik yang pasti gagal).
-    - Model reasoning (gpt-oss) kadang menolak response_format json_object
-      pada prompt kompleks: panggilan diulang tanpa json mode, parser
-      _extract_json yang membersihkan sisanya.
+    Satu-satunya fungsi yang memanggil LLM. Multi-key: kalau key utama kena
+    429 dua kali beruntun (kuota per-key terpisah), rotasi ke key berikutnya.
+    - 429 pertama: tunggu sesuai header x-ratelimit-reset-tokens lalu retry.
+    - Model reasoning (gpt-oss) kadang menolak response_format json_object:
+      ulangi tanpa json mode; content kosong (reasoning memakan budget):
+      ulangi dengan max_tokens digandakan.
     """
-    if not GROQ_API_KEY:
+    if not GROQ_API_KEYS:
         return None
     use_model = model or GROQ_MODEL
-    headers = {"Authorization": f"Bearer {GROQ_API_KEY}", "Content-Type": "application/json"}
-
-    async def _post(payload: dict) -> httpx.Response:
-        async with httpx.AsyncClient(timeout=timeout) as client:
-            return await client.post(GROQ_URL, headers=headers, json=payload)
 
     base_payload = {
         "model": use_model,
@@ -279,46 +276,57 @@ async def groq_request(
         base_payload["reasoning_effort"] = "low"
     use_json_mode = bool(response_format)
 
-    for attempt in range(4):
-        payload = dict(base_payload)
-        if response_format and use_json_mode:
-            payload["response_format"] = response_format
-        try:
-            res = await _post(payload)
-            if res.status_code == 429:
-                reset = res.headers.get("x-ratelimit-reset-tokens", "")
-                wait_s = 2.0
-                try:
-                    # format "12.33s"
-                    wait_s = min(float(str(reset).rstrip("s")) + 0.5, 20.0)
-                except ValueError:
-                    pass
-                logger.warning(f"Groq 429 ({use_model}), tunggu {wait_s:.1f}s lalu retry...")
-                await asyncio.sleep(wait_s)
+    for key in GROQ_API_KEYS:
+        headers = {"Authorization": f"Bearer {key}", "Content-Type": "application/json"}
+        rate_limited = 0
+        for attempt in range(4):
+            payload = dict(base_payload)
+            if response_format and use_json_mode:
+                payload["response_format"] = response_format
+            try:
+                async with httpx.AsyncClient(timeout=timeout) as client:
+                    res = await client.post(GROQ_URL, headers=headers, json=payload)
+                if res.status_code == 429:
+                    rate_limited += 1
+                    if rate_limited >= 2:
+                        logger.warning(f"Groq 429 dua kali untuk key ini, rotasi ke key berikutnya...")
+                        break
+                    reset = res.headers.get("x-ratelimit-reset-tokens", "")
+                    wait_s = 2.0
+                    try:
+                        wait_s = min(float(str(reset).rstrip("s")) + 0.5, 20.0)
+                    except ValueError:
+                        pass
+                    logger.warning(f"Groq 429 ({use_model}), tunggu {wait_s:.1f}s lalu retry...")
+                    await asyncio.sleep(wait_s)
+                    continue
+                if res.status_code in (401, 403):
+                    # key mati/expired: key ini tidak akan pernah berhasil,
+                    # langsung rotasi ke key berikutnya
+                    logger.warning(f"Groq 401/403 (key tidak valid), rotasi ke key berikutnya...")
+                    break
+                if res.status_code == 400 and use_json_mode:
+                    # model reasoning kadang gagal validasi json_object:
+                    # ulangi tanpa json mode (output tetap diparse _extract_json)
+                    logger.warning("Groq 400 dengan json_object, retry tanpa json mode...")
+                    use_json_mode = False
+                    continue
+                data = res.json()
+                if "choices" not in data:
+                    logger.error(f"Groq no choices: {data}")
+                    return None
+                content = data["choices"][0]["message"]["content"]
+                if content and content.strip():
+                    return content.strip()
+                # content kosong = reasoning menghabiskan budget token;
+                # ulangi dengan budget lebih besar
+                logger.warning(
+                    f"Groq content kosong ({use_model}), retry dengan max_tokens lebih besar..."
+                )
+                base_payload["max_tokens"] = min(base_payload["max_tokens"] * 2, 6000)
                 continue
-            if res.status_code == 400 and use_json_mode:
-                # model reasoning kadang gagal validasi json_object:
-                # ulangi tanpa json mode (output tetap diparse _extract_json)
-                logger.warning("Groq 400 dengan json_object, retry tanpa json mode...")
-                use_json_mode = False
-                continue
-            data = res.json()
-            if "choices" not in data:
-                logger.error(f"Groq no choices: {data}")
-                return None
-            content = data["choices"][0]["message"]["content"]
-            if content and content.strip():
-                return content.strip()
-            # content kosong = reasoning menghabiskan budget token;
-            # ulangi dengan budget lebih besar
-            logger.warning(
-                f"Groq content kosong ({use_model}), retry dengan max_tokens lebih besar..."
-            )
-            base_payload["max_tokens"] = min(base_payload["max_tokens"] * 2, 6000)
-            continue
-        except Exception as e:
-            logger.error(f"Groq error (attempt {attempt+1}): {e}")
-            if attempt < 3:
+            except Exception as e:
+                logger.error(f"Groq error (attempt {attempt+1}): {e}")
                 await asyncio.sleep(1)
     return None
 
@@ -905,7 +913,7 @@ api_router_index = APIRouter(prefix="/api/index.py")
 @api_router.get("/health")
 @api_router_index.get("/health")
 def health():
-    return {"status": "ok", "groq": bool(GROQ_API_KEY), "supabase": SUPABASE_ON, "jobs": len(PEKERJAAN_DATABASE)}
+    return {"status": "ok", "groq": bool(GROQ_API_KEYS), "groq_keys": len(GROQ_API_KEYS), "supabase": SUPABASE_ON, "jobs": len(PEKERJAAN_DATABASE)}
 
 @app.get("/jobs")
 @api_router.get("/jobs")
