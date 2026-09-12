@@ -900,9 +900,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       const te = document.getElementById('tailorError');
       te.textContent = '⚠ ' + e.message + ' — coba lagi.';
       te.style.display = 'block';
-      const tc = document.getElementById('tailor-content');
-      tc.style.display = 'flex';
-      document.getElementById('tailor-print').parentElement.style.display = 'none';
+      document.getElementById('tailor-content').style.display = 'none';
     }
   });
 
