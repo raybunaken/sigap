@@ -179,6 +179,7 @@ function renderResult(data, jobData) {
       const rows = Object.entries(bd).map(([k, v]) => {
         const pct = Math.max(0, Math.min(100, v.score || 0));
         const color = pct >= 70 ? '#22c55e' : pct >= 45 ? '#f59e0b' : '#ef4444';
+        const note = v.note ? `<div class="bd-note">${v.note}</div>` : '';
         return `
           <div class="breakdown-row">
             <div class="breakdown-row-top">
@@ -186,6 +187,7 @@ function renderResult(data, jobData) {
               <span class="breakdown-row-vals"><span class="pct">${pct}</span><span class="w">bobot ${v.weight}%</span></span>
             </div>
             <div class="breakdown-track"><div class="breakdown-fill" style="width:${pct}%; background:${color};"></div></div>
+            ${note}
           </div>`;
       }).join('');
       bdEl.innerHTML = `<div class="breakdown-title">Dari Mana Skor Ini?</div>${rows}`;

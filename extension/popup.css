@@ -734,3 +734,5 @@ body {
 /* skills per kategori di lembar CV */
 #tailorSheet .ts-sgroup { margin-bottom: 5px; }
 #tailorSheet .ts-sgroup b { font-weight: 700; }
+
+.bd-note { font-size: 10.5px; color: var(--text-faint); line-height: 1.4; margin-top: 1px; }

@@ -1510,6 +1510,7 @@ Tasks:
 2. List ALL concrete skills evidenced in the CV, in ANY domain or industry, including skills clearly implied by stated tools (Laravel implies PHP, React implies JavaScript). Include Indonesian terms exactly as written (e.g. "BPJS", "K3", "STR", "rekrutmen", "payroll", "penggajian") plus certifications, licenses, tools, and administrative skills. 5-20 items. NEVER invent a skill that has no textual basis in the CV.
 3. Judge each item in "items_to_judge": status met/partial/missing based on CV evidence.
    - EDUCATION rules: Indonesian D4 (diploma 4) and Sarjana Terapan EQUAL a bachelor degree (S1). If the requirement says "or related field" / "sederajat", a field with transferable coursework is MET and a loosely adjacent field is PARTIAL (never missing just because the major name differs). SMK counts only if the requirement explicitly allows below-bachelor.
+   - EXPERIENCE rules: judge RELEVANCE to this job's domain, not total years worked. "Minimum 3 years experience in data analysis" for a sales analyst is PARTIAL or MISSING even if they have 5 years of sales experience - state the domain mismatch in the detail. Adjacent domains (e.g. business analyst vs data analyst) = PARTIAL. Unrelated domains (e.g. nurse vs data analyst) = MISSING.
    - "req": quote or translate the requirement into natural Indonesian, keep it specific (never generic).
    - "detail": ONE sentence in Bahasa Indonesia citing concrete evidence from the CV.
 
@@ -1556,14 +1557,29 @@ If items_to_judge is empty, return an empty "items" list."""
     must_status = {s: _machine_skill_status(s, cv_skill_pool, cv) for s in must_skills}
     plus_status = {s: _machine_skill_status(s, cv_skill_pool, cv) for s in plus_skills}
 
-    # pengalaman: pakai band tahun bila angka tersedia, else status LLM
+    # pengalaman (PLAN-001): band tahun x faktor relevansi domain.
+    # Band tahun hanya menghitung lama kerja; faktor domain (dari verdict
+    # Stage B atas item pengalaman) memastikan tahun di bidang lain tidak
+    # dihitung penuh untuk lowongan ini.
     b_items = [i for i in stage_b.get("items", []) if isinstance(i, dict)]
     exp_items = [i for i in b_items if i.get("type") == "experience"]
-    exp_score = _years_ratio_score(cv_years, min_years)
-    if exp_score is None and exp_items:
-        exp_score = {"met": 1.0, "partial": 0.5}.get(exp_items[0].get("status"), 0.0)
-    if exp_score is None:
-        exp_score = 0.5  # tidak ada data -> netral konservatif
+    band = _years_ratio_score(cv_years, min_years)
+    if band is None and exp_items:
+        band = {"met": 1.0, "partial": 0.5}.get(exp_items[0].get("status"), 0.0)
+    if band is None:
+        band = 0.5  # tidak ada data -> netral konservatif
+
+    exp_status = exp_items[0].get("status") if exp_items else None
+    domain_note = None
+    if exp_status == "partial":
+        domain_factor = 0.5
+        domain_note = "skor pengalaman disesuaikan: bidangmu berdekatan, bukan identik (faktor 0.5)"
+    elif exp_status == "missing":
+        domain_factor = 0.0
+        domain_note = "skor pengalaman disesuaikan: latar belakangmu belum selaras dengan bidang lowongan ini (faktor 0)"
+    else:
+        domain_factor = 1.0
+    exp_score = round(band * domain_factor, 2)
 
     edu_items = [i for i in b_items if i.get("type") == "education"]
     edu_score = _items_pct([i.get("status") for i in edu_items])
@@ -1719,7 +1735,7 @@ Return ONLY valid JSON:
         "advice": advice,
         "synthesis": synthesis,
         "score_breakdown": {
-            "experience": {"score": round(exp_score * 100), "weight": 25},
+            "experience": {"score": round(exp_score * 100), "weight": 25, "note": domain_note},
             "must_skills": {"score": round(must_score * 100), "weight": 45},
             "plus_skills": {"score": round(plus_score * 100), "weight": 15},
             "education": {"score": round(edu_score * 100), "weight": 15},
