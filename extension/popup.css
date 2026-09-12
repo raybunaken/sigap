@@ -687,3 +687,35 @@ body {
 .tip-card svg { width: 16px; height: 16px; stroke: var(--accent-neon); flex-shrink: 0; margin-top: 1px; }
 .tip-label { font-size: 9.5px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.09em; color: var(--text-faint); display: block; margin-bottom: 2px; }
 .tip-card p { font-size: 11.5px; color: var(--text-muted); line-height: 1.5; margin: 0; }
+
+/* ── CV TAILOR VIEW ─────────────────────────────────────────────────────── */
+.tailor-badge {
+  font-size: 11.5px; font-weight: 700; line-height: 1.5;
+  border-radius: 12px; padding: 9px 12px;
+}
+.tailor-badge.ok { background: rgba(74,222,128,0.08); border: 1px solid rgba(74,222,128,0.3); color: #86efac; }
+.tailor-badge.warn { background: rgba(251,191,36,0.08); border: 1px solid rgba(251,191,36,0.3); color: #fcd34d; }
+#tailorSheet {
+  background: #ffffff; color: #111111;
+  border-radius: 12px; padding: 20px 18px;
+  font-size: 12.5px; line-height: 1.55;
+}
+#tailorSheet .ts-summary { font-style: italic; margin: 0 0 12px 0; }
+#tailorSheet h4 {
+  font-size: 12px; margin: 14px 0 6px 0;
+  text-transform: uppercase; letter-spacing: 0.05em;
+  border-bottom: 1px solid #dddddd; padding-bottom: 3px;
+}
+#tailorSheet ul { margin: 0; padding-left: 18px; }
+#tailorSheet li { margin-bottom: 5px; }
+.tailor-actions { display: flex; flex-direction: column; gap: 10px; }
+
+@media print {
+  body * { visibility: hidden !important; }
+  #tailorSheet, #tailorSheet * { visibility: visible !important; }
+  #tailorSheet {
+    position: absolute; top: 0; left: 0; width: 100%;
+    border-radius: 0; padding: 0;
+    font-size: 11pt;
+  }
+}

@@ -165,7 +165,7 @@ async def rate_limit_middleware(request: Request, call_next):
     path = request.url.path
     is_costly = any(
         p in path
-        for p in ("/analyze-job", "/generate-cover-letter", "/parse-cv", "/chat")
+        for p in ("/analyze-job", "/generate-cover-letter", "/parse-cv", "/chat", "/tailor-cv")
     )
     if is_costly and request.method == "POST":
         client_ip = (
@@ -1877,6 +1877,155 @@ Tulis HANYA teks cover letter-nya langsung. Tidak ada label, tidak ada markdown.
         return {"error": "Gagal generate cover letter. Coba lagi."}
 
     return {"cover_letter": result}
+
+# ── CV TAILOR v1: susun ulang CV untuk satu lowongan ──────────────────────
+# Janji produknya: AI boleh menyusun, memparafrasa, dan menonjolkan yang
+# sudah ada - DILARANG mengarang. Guard di kode menegakkan itu: angka dan
+# skill di setiap bullet wajib terlacak ke CV asli; pelanggar dibuang.
+TAILOR_DAILY_LIMIT = 10
+
+class TailorRequest(BaseModel):
+    cv_text: str = Field(..., min_length=50, max_length=40000)
+    job_title: str = Field(..., min_length=1, max_length=300)
+    job_description: str = Field(..., min_length=30, max_length=20000)
+    ats_keywords: List[str] = Field(default=[], max_length=15)
+
+async def tailor_daily_count(client_id: str) -> int:
+    """Hitung pemakaian tailor hari ini (UTC) untuk satu install-ID."""
+    if not SUPABASE_ON or not client_id:
+        return 0
+    today = datetime.now(timezone.utc).strftime("%Y-%m-%d")
+    headers = {
+        "apikey": SUPABASE_KEY,
+        "Authorization": f"Bearer {SUPABASE_KEY}",
+        "Prefer": "count=exact",
+    }
+    try:
+        async with httpx.AsyncClient(timeout=8) as client:
+            res = await client.get(
+                f"{SUPABASE_URL}/rest/v1/tailor_log",
+                params={"client_id": f"eq.{client_id}", "created_at": f"gte.{today}T00:00:00Z"},
+                headers=headers,
+            )
+            cr = res.headers.get("content-range", "")  # format: "0-4/5"
+            total = cr.rsplit("/", 1)[-1]
+            return int(total) if total.isdigit() else 0
+    except Exception as e:
+        logger.error(f"tailor_daily_count: {e}")
+        return 0
+
+def _digits_ok(text: str, cv_text: str) -> bool:
+    """Semua angka dalam teks wajib terlacak di CV asli (normalisasi pemisah ribuan)."""
+    nums = re.findall(r"\d+", text)
+    cv_digits = re.sub(r"[.,]", "", cv_text)
+    for n in nums:
+        if n not in cv_text and n not in cv_digits:
+            return False
+    return True
+
+def _skill_allowed(skill: str, cv_skill_pool: list, cv_text: str) -> bool:
+    return any(_strict_skills_match(cs, skill) for cs in cv_skill_pool) or _skill_in_text(skill, cv_text)
+
+@app.post("/tailor-cv", tags=["Extension"])
+@api_router.post("/tailor-cv", tags=["Extension"])
+@api_router_index.post("/tailor-cv", tags=["Extension"])
+async def tailor_cv(req: TailorRequest, request: Request):
+    client_id = request.headers.get("x-skillsy-client", "")
+    used = await tailor_daily_count(client_id)
+    if used >= TAILOR_DAILY_LIMIT:
+        return JSONResponse(status_code=429, content={
+            "error": f"Daily tailor limit reached ({TAILOR_DAILY_LIMIT}/day during beta). Resets at midnight UTC."
+        })
+
+    cv = req.cv_text[:8000]
+    job_title = req.job_title[:200]
+    job_desc = req.job_description[:6000]
+    ats_keywords = [k for k in req.ats_keywords if isinstance(k, str) and k.strip()][:8]
+
+    prompt = f"""You are an expert ATS resume writer. Produce a tailored version of this candidate's resume for ONE specific job.
+
+STRICT RULES (violations make the output useless):
+- Use ONLY facts, skills, tools, numbers and achievements that literally appear in the candidate's CV. NEVER invent, exaggerate, or add anything.
+- You MAY: reorder sections and bullets, rephrase wording, merge duplicates, and emphasize whatever best matches this job.
+- Weave the provided ATS keywords into bullets ONLY where the CV already gives supporting evidence.
+- Write in the SAME language as the CV.
+
+JOB TITLE: {job_title}
+
+JOB DESCRIPTION:
+{job_desc}
+
+ATS KEYWORDS to weave in where evidence exists: {json.dumps(ats_keywords, ensure_ascii=False) if ats_keywords else "none provided"}
+
+CANDIDATE CV:
+{cv}
+
+Return ONLY valid JSON with this exact shape:
+{{
+  "summary": "2-3 kalimat ringkasan profesional yang ditujukan untuk lowongan ini",
+  "sections": [
+    {{"heading": "PROFESSIONAL EXPERIENCE", "bullets": ["bullet akomplishi 1", "bullet 2"]}},
+    {{"heading": "SKILLS", "bullets": ["skill A, skill B, ..."]}}
+  ],
+  "skills_order": ["skill paling relevan untuk lowongan ini dulu", "..."],
+  "keyword_note": "satu kalimat Bahasa Indonesia: keyword ATS mana yang diselipkan di mana"
+}}
+Sections: keep the CV's real structure (experience, projects, education). 4-7 bullets per section max, each under 200 characters."""
+
+    tailored = await _groq_json([
+        {"role": "system", "content": "Reply ONLY with valid JSON. No other text."},
+        {"role": "user", "content": prompt},
+    ], max_tokens=2200, model=MODEL_JUDGE)
+    if not tailored:
+        return {"error": "Server AI sedang sibuk. Coba lagi 30 detik lagi."}
+
+    cv_skill_pool = regex_extract_skills(cv)
+
+    # ── GUARD ANTI-FABRIKASI ──
+    dropped = 0
+    sections_out = []
+    for sec in tailored.get("sections", []):
+        if not isinstance(sec, dict) or not sec.get("heading"):
+            continue
+        bullets_out = []
+        for b in sec.get("bullets", []):
+            if not isinstance(b, str) or not b.strip():
+                continue
+            if _digits_ok(b, cv):
+                bullets_out.append(_plain_dashes(b.strip())[:260])
+            else:
+                dropped += 1
+        if bullets_out:
+            sections_out.append({"heading": str(sec["heading"])[:60], "bullets": bullets_out[:8]})
+
+    skills_out = []
+    for s in tailored.get("skills_order", []):
+        if isinstance(s, str) and s.strip() and _skill_allowed(s, cv_skill_pool, cv):
+            skills_out.append(_clean_skill_name(s)[:40])
+    skills_out = list(dict.fromkeys(skills_out))[:15]
+
+    summary = _plain_dashes(str(tailored.get("summary", "")).strip())[:600]
+    summary_ok = _digits_ok(summary, cv)
+    if summary and not summary_ok:
+        dropped += 1
+
+    # catat pemakaian (untuk kuota harian)
+    await supabase_insert("tailor_log", {"client_id": client_id or "unknown"})
+
+    return {
+        "tailored": {
+            "summary": summary,
+            "summary_verified": summary_ok,
+            "sections": sections_out,
+            "skills": skills_out,
+            "keyword_note": _plain_dashes(str(tailored.get("keyword_note", "")))[:300],
+        },
+        "dropped_fabricated": dropped,
+        "verified": dropped == 0,
+        "daily_used": used + 1,
+        "daily_limit": TAILOR_DAILY_LIMIT,
+        "tailor_version": 1,
+    }
 
 # ── MAIN ──────────────────────────────────────────────────────────────────
 app.include_router(api_router)

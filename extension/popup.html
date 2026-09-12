@@ -167,6 +167,39 @@
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
       Generate Cover Letter
     </button>
+
+    <button id="tailor-btn" class="btn-secondary">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+      Buat CV Tailored (ATS)
+    </button>
+  </div>
+
+  <!-- VIEW: CV TAILOR -->
+  <div id="view-tailor" class="view">
+    <div class="result-header">
+      <button class="btn-ghost" id="back-to-result-tailor">← Kembali</button>
+      <div class="result-header-info"><span class="result-title">CV Tailored untuk Lowongan Ini</span></div>
+    </div>
+    <div id="tailor-loading" style="display:flex; flex-direction:column; align-items:center; gap:10px; padding:40px 10px; text-align:center;">
+      <div class="spinner"></div>
+      <h3>Menyusun CV tailored...</h3>
+      <p style="font-size:12px; color:var(--text-muted);">Menata ulang CV-mu untuk lowongan ini. Hanya fakta dari CV yang dipakai.</p>
+    </div>
+    <div id="tailor-content" style="display:none; flex-direction:column; gap:12px;">
+      <div class="tailor-badge" id="tailorBadge"></div>
+      <div id="tailorSheet">
+        <p class="ts-summary" id="tsSummary"></p>
+        <div id="tsSections"></div>
+      </div>
+      <div class="tailor-actions">
+        <button id="tailor-print" class="btn-primary">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+          Print / Simpan PDF
+        </button>
+        <button id="tailor-copy" class="btn-ghost">Copy sebagai teks</button>
+      </div>
+      <p class="hint-text" id="tailorKeywordNote"></p>
+    </div>
   </div>
 
   <!-- VIEW: COVER LETTER -->

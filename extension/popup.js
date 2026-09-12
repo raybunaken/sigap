@@ -774,6 +774,70 @@ document.addEventListener('DOMContentLoaded', async () => {
     showView('view-home');
     setNavActive('home');
   });
+  // ── CV Tailor ──
+  document.getElementById('back-to-result-tailor').addEventListener('click', () => {
+    showView('view-result');
+  });
+
+  document.getElementById('tailor-btn').addEventListener('click', async () => {
+    if (!activeResultData || !activeJobData || !cvText) return;
+    showView('view-tailor');
+    document.getElementById('tailor-loading').style.display = 'flex';
+    document.getElementById('tailor-content').style.display = 'none';
+    try {
+      const installId = await getInstallId();
+      const res = await fetch(`${API_URL}/api/tailor-cv`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'X-Skillsy-Client': installId },
+        body: JSON.stringify({
+          cv_text: cvText,
+          job_title: activeJobData.title,
+          job_description: activeJobData.description || '',
+          ats_keywords: activeResultData.ats_keywords || []
+        })
+      });
+      const data = await res.json();
+      if (res.status === 429) throw new Error(data.error || 'Kuota harian CV Tailor habis (10/hari).');
+      if (data.error) throw new Error(data.error);
+
+      const t = data.tailored || {};
+      const badge = document.getElementById('tailorBadge');
+      if (data.verified) {
+        badge.className = 'tailor-badge ok';
+        badge.textContent = '✓ Terverifikasi: semua isi berasal dari CV-mu, tidak ada yang dikarang.';
+      } else {
+        badge.className = 'tailor-badge warn';
+        badge.textContent = `⚠ ${data.dropped_fabricated} saran dibuang otomatis karena tidak ada buktinya di CV-mu.`;
+      }
+      document.getElementById('tsSummary').textContent = t.summary || '';
+      document.getElementById('tsSections').innerHTML = (t.sections || []).map(sec =>
+        `<h4>${sec.heading}</h4><ul>${(sec.bullets || []).map(b => `<li>${b}</li>`).join('')}</ul>`
+      ).join('');
+      document.getElementById('tailorKeywordNote').textContent = t.keyword_note || '';
+      document.getElementById('tailor-loading').style.display = 'none';
+      document.getElementById('tailor-content').style.display = 'flex';
+
+      document.getElementById('tailor-print').onclick = () => window.print();
+      document.getElementById('tailor-copy').onclick = () => {
+        let txt = (t.summary || '') + '\n\n';
+        (t.sections || []).forEach(sec => {
+          txt += sec.heading.toUpperCase() + '\n';
+          (sec.bullets || []).forEach(b => { txt += '- ' + b + '\n'; });
+          txt += '\n';
+        });
+        if ((t.skills || []).length) txt += 'SKILLS\n' + t.skills.join(', ') + '\n';
+        navigator.clipboard.writeText(txt).then(() => {
+          document.getElementById('tailor-copy').textContent = '✓ Tersalin';
+          setTimeout(() => { document.getElementById('tailor-copy').textContent = 'Copy sebagai teks'; }, 1500);
+        });
+      };
+    } catch (e) {
+      showView('view-result');
+      const st = document.getElementById('analyze-status');
+      st.textContent = '⚠ ' + e.message;
+    }
+  });
+
   document.getElementById('back-to-result-btn').addEventListener('click', () => {
     showView('view-result');
   });
