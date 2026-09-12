@@ -1,0 +1,19 @@
+# Docs Index - Skillsy Decision Log
+
+Dua seri dokumen untuk jejak keputusan teknis Skillsy:
+
+- **`PLAN-00X-*.md`** — proposal & desain SEBELUM dieksekusi (status: proposed/decided)
+- **`DEVLOG-00X-*.md`** — perubahan yang SUDAH diterapkan + efek + bukti pengukuran
+
+## Daftar
+
+| File | Status | Ringkas |
+|---|---|---|
+| [DEVLOG-001-eval-baseline-and-4-fixes.md](DEVLOG-001-eval-baseline-and-4-fixes.md) | Selesai | Test set 10 kasus pertama; 4 bug ditemukan & diperbaiki; selaras 81.2 -> 87.2 |
+| [PLAN-001-domain-blind-experience.md](PLAN-001-domain-blind-experience.md) | PROPOSED | Perbaikan pengalaman buta domain: band tahun x faktor relevansi |
+
+## Konvensi
+
+- Semua angka di dokumen ini adalah hasil pengukuran nyata terhadap production engine, bukan estimasi.
+- Test set ada di root: `internal_testset_run*.py` (5 CV x 2 JD per CV).
+- Dokumen ditulis agar bisa dibaca AI advisor tanpa konteks percakapan.
