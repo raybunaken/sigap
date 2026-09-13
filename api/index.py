@@ -1492,9 +1492,14 @@ min_years must be a number or null (null if not stated)."""
 
     # ── STAGE B: penilaian per-item oleh LLM (non-skill; skill dinilai mesin) ──
     items_to_judge = []
+    title_clean = job_title.strip()
+    if not title_clean or title_clean.lower() in ("lowongan", "job", "position", "lowongan kerja"):
+        domain_ref = "bidang lowongan ini (simpulkan dari deskripsi di atas)"
+    else:
+        domain_ref = f"bidang {title_clean}"
     if min_years:
         items_to_judge.append({
-            "req": f"Minimal {min_years} tahun pengalaman kerja yang relevan dengan bidang {job_title}",
+            "req": f"Minimal {min_years} tahun pengalaman kerja yang relevan dengan {domain_ref}",
             "type": "experience",
         })
     if education_req:
@@ -1562,6 +1567,13 @@ If items_to_judge is empty, return an empty "items" list."""
     # ── STAGE C: skor dihitung kode (deterministik) ────────────────────────
     must_status = {s: _machine_skill_status(s, cv_skill_pool, cv) for s in must_skills}
     plus_status = {s: _machine_skill_status(s, cv_skill_pool, cv) for s in plus_skills}
+    # PLAN-002 Fix C: plus-item yang gagal match literal tetap bisa partial
+    # jika Stage B menemukan bukti terkait di CV (konsep dengan nama berbeda).
+    # LLM tidak pernah bisa mengangkat ke met - itu tetap hak mesin.
+    llm_plus = {}
+    for pe in stage_b.get("plus_evidence", []):
+        if isinstance(pe, dict) and isinstance(pe.get("skill"), str) and pe.get("status") in ("met", "partial", "missing"):
+            llm_plus[normalize_skill(pe["skill"])] = pe
 
     # pengalaman (PLAN-001): band tahun x faktor relevansi domain.
     # Band tahun hanya menghitung lama kerja; faktor domain (dari verdict
@@ -1585,6 +1597,9 @@ If items_to_judge is empty, return an empty "items" list."""
         domain_note = "skor pengalaman disesuaikan: latar belakangmu belum selaras dengan bidang lowongan ini (faktor 0)"
     else:
         domain_factor = 1.0
+    # PLAN-002 Fix D: pengalaman yang RELEVAN meski pendek tidak boleh nol total
+    if domain_factor > 0 and band < 0.25:
+        band = 0.25
     exp_score = round(band * domain_factor, 2)
 
     edu_items = [i for i in b_items if i.get("type") == "education"]
@@ -1646,6 +1661,17 @@ If items_to_judge is empty, return an empty "items" list."""
     for s in must_skills:
         requirements_check.append(skill_item(s, must_status[s], is_plus=False))
     for s in plus_skills:
+        st = plus_status[s]
+        if st == "missing":
+            pe = llm_plus.get(normalize_skill(s))
+            if pe and pe.get("status") in ("partial", "met"):
+                plus_status[s] = "partial"
+                requirements_check.append({
+                    "req": f"{s} (nilai plus)",
+                    "status": "partial",
+                    "detail": _plain_dashes(str(pe.get("evidence", "")))[:280] or f"Ada bukti terkait '{s}' di CV kamu.",
+                })
+                continue
         requirements_check.append(skill_item(s, plus_status[s], is_plus=True))
     requirements_check = requirements_check[:12]
 
@@ -1785,6 +1811,7 @@ Return JSON with these fields:
 4. "seniority_fit": ONE short sentence evaluating their years of experience vs the exact requirement. Use "Lowongan ini", DO NOT use the acronym "JD".
 5. "requirements_check": Array of 5-7 MOST IMPORTANT HARD REQUIREMENTS.
    - "req": MUST BE A DIRECT TRANSLATION/QUOTE. (e.g., "3-5 tahun pengalaman financial analytics"). NEVER use generic words.
+  TOOL FAMILY rule: if a requirement names a parent tool/platform with included features or variants in parentheses ("Proficiency in Excel, including XLOOKUP and Power Query", "CRM platforms (Salesforce preferred)"), extract the PARENT as the must_skill ("Microsoft Excel", "CRM platforms") and put the named features/variants in plus_skills. Never split a parent tool's features into separate hard requirements.
    - "status": "missing", "met", or "partial".
    - "detail": ONE sentence in Bahasa Indonesia explaining WHY based on the CV. Use "Lowongan ini" instead of "JD".
 

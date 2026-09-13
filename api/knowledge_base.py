@@ -575,6 +575,7 @@ SKILL_SYNONYMS = {
     "manual testing":       ["software testing", "qa testing", "test case creation"],
     # ── NON-IT / GENERAL INDONESIAN WORKFORCE ──────────────────────────────
     "human resources":      ["hr", "hrd", "recruitment", "rekrutmen", "talent acquisition", "sdm", "hr generalist"],
+    "crm":                  ["crm platforms", "crm systems", "crm architecture", "crm software", "crm integration"],
     "payroll":              ["penggajian", "bpjs", "bpjs administration", "administrasi bpjs", "bpjs kesehatan", "bpjs ketenagakerjaan"],
     "content writing":      ["copywriting", "penulisan konten", "article writing"],
     "sales":                ["penjualan", "telesales", "sales representative", "marketing Executive"],
