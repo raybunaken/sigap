@@ -49,6 +49,19 @@ data: seberapa sering user mencapai zoom ekstrem.
 
 ## ACTION-USER
 
+### Q5 - Inkonsistensi aturan tool family antar-run (Stage A)
+[OPEN - dari DEVLOG-004]
+Aturan "tool induk = must, fitur turunan = plus" tidak selalu diikuti Stage A
+pada input nyata (phrasing bervariasi) -> Pivot Tables/Power Query kadang
+masih jadi must terpisah. Kandidat: validasi output Stage A terhadap aturan
+secara programatis, atau 2-pass extraction.
+
+### Q6 - Same-domain-short-years dinilai missing (faktor 0)
+[OPEN - dari DEVLOG-004]
+Sales Ops Analyst (6 bulan) vs Sales Ops Specialist (min 2 tahun) -> faktor 0
+padahal domain sama persis. Kandidat: band parsial 0.25-0.4 untuk domain
+cocok, atau pisahkan penilaian "tahun" dan "relevansi" di Stage B.
+
 ### E1 - Konvensi re-run eval setelah tiap perubahan engine (baru)
 [OPEN - usulan ZCode, menunggu kesepakatan]
 Seed Groq itu best-effort: kalau Groq mengubah infrastruktur inferensi,

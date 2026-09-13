@@ -1,6 +1,6 @@
 # PLAN-002 - Real-World Calibration: 4 Fixes dari Tes CV Nyata Pertama
 
-- **Status:** PROPOSED - MENUNGGU EKSEKUSI
+- **Status:** DIIMPLEMENTASI SEBAGIAN - 16 -> 32 (di bawah proyeksi 40-55); isu tersisa di [DEVLOG-004](DEVLOG-004-real-world-calibration.md)
 - **Penulis:** ZCode — untuk cross-review oleh Gemini advisor
 - **Pemicu:** Tes nyata pertama lewat demo page (CV Data Strategy vs lowongan "Sales Operations Specialist" B2B) -> skor 16%, padahal penilaian manusia jujur menempatkan kandidat ini 60-70 (dia literalnya Sales Operations Analyst yang melamar Sales Operations Specialist, hanya kurang tool spesifik)
 
