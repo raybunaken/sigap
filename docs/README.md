@@ -15,6 +15,7 @@ Dua seri dokumen untuk jejak keputusan teknis Skillsy:
 | [DEVLOG-003-seed-and-judgment-rules.md](DEVLOG-003-seed-and-judgment-rules.md) | Selesai | Seed deterministik + aturan judgment: varian skor 12 -> 0 poin |
 | [PLAN-002-real-world-calibration.md](PLAN-002-real-world-calibration.md) | Sebagian | Kalibrasi tes CV nyata: 16 -> 32; isu varian ekstraksi aktif |
 | [DEVLOG-004-real-world-calibration.md](DEVLOG-004-real-world-calibration.md) | Selesai | Bukti eksekusi PLAN-002 + 2 isu terbuka berikutnya |
+| [PLAN-003-global-taxonomy-layer.md](PLAN-003-global-taxonomy-layer.md) | PROPOSED | ESCO/Lightcast sebagai lapis taksonomi global + LLM semantic tier; akhir dari kamus manual |
 | [OPEN-QUESTIONS.md](OPEN-QUESTIONS.md) | Berjalan | Log pertanyaan, pikiran, dan keputusan ZCode + status aksi user |
 
 ## Konvensi
