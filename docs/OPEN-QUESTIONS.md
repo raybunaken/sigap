@@ -49,6 +49,13 @@ data: seberapa sering user mencapai zoom ekstrem.
 
 ## ACTION-USER
 
+### E1 - Konvensi re-run eval setelah tiap perubahan engine (baru)
+[OPEN - usulan ZCode, menunggu kesepakatan]
+Seed Groq itu best-effort: kalau Groq mengubah infrastruktur inferensi,
+varian bisa kembali tanpa kita sadari. Satu-satunya penangkal: jalankan ulang
+internal_testset (10 kasus, ~3 menit) setiap kali prompt/formula diubah, dan
+sekali sebulan sebagai deteksi dini. Belum dibakukan sebagai checklist.
+
 ### A1 - Vercel Analytics belum di-enable
 [OPEN] Tinggal klik dashboard Vercel -> Analytics -> Enable (gratis). Tanpa ini
 kita buta soal traffic homepage baru.
