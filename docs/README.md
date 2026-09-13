@@ -13,6 +13,7 @@ Dua seri dokumen untuk jejak keputusan teknis Skillsy:
 | [PLAN-001-domain-blind-experience.md](PLAN-001-domain-blind-experience.md) | Diimplementasi | Pengalaman buta domain: band tahun x faktor relevansi |
 | [DEVLOG-002-experience-domain-factor.md](DEVLOG-002-experience-domain-factor.md) | Selesai | Bukti eksekusi PLAN-001: selaras netral, pivot -17 rata-rata ke arah jujur |
 | [DEVLOG-003-seed-and-judgment-rules.md](DEVLOG-003-seed-and-judgment-rules.md) | Selesai | Seed deterministik + aturan judgment: varian skor 12 -> 0 poin |
+| [PLAN-002-real-world-calibration.md](PLAN-002-real-world-calibration.md) | PROPOSED | Kalibrasi dari tes CV nyata pertama: 4 fix (16% -> target 40-55) |
 | [OPEN-QUESTIONS.md](OPEN-QUESTIONS.md) | Berjalan | Log pertanyaan, pikiran, dan keputusan ZCode + status aksi user |
 
 ## Konvensi
