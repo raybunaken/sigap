@@ -56,9 +56,8 @@ varian bisa kembali tanpa kita sadari. Satu-satunya penangkal: jalankan ulang
 internal_testset (10 kasus, ~3 menit) setiap kali prompt/formula diubah, dan
 sekali sebulan sebagai deteksi dini. Belum dibakukan sebagai checklist.
 
-### A1 - Vercel Analytics belum di-enable
-[OPEN] Tinggal klik dashboard Vercel -> Analytics -> Enable (gratis). Tanpa ini
-kita buta soal traffic homepage baru.
+### A1 - Vercel Analytics -> [SELESAI]
+[User mengaktifkan 13 Sep 2026] Traffic homepage terpantau mulai sekarang.
 
 ### A2 - Rotasi service key Supabase
 [OPEN - saran keamanan] service key sempat lewat chat. Setelah stabil, rotate
